@@ -1,0 +1,57 @@
+<?php
+
+namespace Application\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Speaker
+ *
+ * @ORM\Table(name="speaker", indexes={@ORM\Index(name="speaker_fk_language", columns={"fk_language"})})
+ * @ORM\Entity
+ */
+class Speaker
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="smallint", nullable=false, options={"unsigned"=true})
+     */
+    private $status;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="hash", type="string", length=32, nullable=false)
+     */
+    private $hash = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="word", type="string", length=1000, nullable=false)
+     */
+    private $word = '';
+
+    /**
+     * @var \Application\Entity\Language
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Language")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_language", referencedColumnName="id")
+     * })
+     */
+    private $fkLanguage;
+
+
+}
+

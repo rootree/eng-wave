@@ -1,0 +1,47 @@
+<?php
+
+namespace Application\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * UserLanguage
+ *
+ * @ORM\Table(name="language")
+ * @ORM\Entity
+ */
+class UserLanguage
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="iso2", type="string", length=2, nullable=false)
+     */
+    private $iso2 = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=30, nullable=false)
+     */
+    private $title = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title_en", type="string", length=30, nullable=false)
+     */
+    private $titleEn = '';
+
+
+}
+

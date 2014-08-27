@@ -1,0 +1,114 @@
+<?php
+
+namespace Application\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Word
+ *
+ * @ORM\Table(name="word", indexes={@ORM\Index(name="user", columns={"fk_user"}), @ORM\Index(name="group", columns={"fk_words_group"}), @ORM\Index(name="FK_language_souce", columns={"fk_language_source"}), @ORM\Index(name="FK_language_target", columns={"fk_language_target"}), @ORM\Index(name="word_fk_speaker_source", columns={"fk_speaker_source"}), @ORM\Index(name="word_fk_speaker_target", columns={"fk_speaker_target"})})
+ * @ORM\Entity
+ */
+class Word
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="source", type="string", length=1000, nullable=true)
+     */
+    private $source;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="target", type="string", length=1000, nullable=true)
+     */
+    private $target;
+
+    /**
+     * @var \Application\Entity\Speaker
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Speaker")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_speaker_target", referencedColumnName="id")
+     * })
+     */
+    private $fkSpeakerTarget;
+
+    /**
+     * @var \Application\Entity\Language
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Language")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_language_source", referencedColumnName="id")
+     * })
+     */
+    private $fkLanguageSource;
+
+    /**
+     * @var \Application\Entity\Language
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Language")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_language_target", referencedColumnName="id")
+     * })
+     */
+    private $fkLanguageTarget;
+
+    /**
+     * @var \Application\Entity\WordsGroup
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\WordsGroup")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_words_group", referencedColumnName="id")
+     * })
+     */
+    private $fkWordsGroup;
+
+    /**
+     * @var \Application\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_user", referencedColumnName="id")
+     * })
+     */
+    private $fkUser;
+
+    /**
+     * @var \Application\Entity\Speaker
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Speaker")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_speaker_source", referencedColumnName="id")
+     * })
+     */
+    private $fkSpeakerSource;
+
+
+}
+

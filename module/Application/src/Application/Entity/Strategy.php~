@@ -1,0 +1,57 @@
+<?php
+
+namespace Application\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Strategy
+ *
+ * @ORM\Table(name="strategy", indexes={@ORM\Index(name="user_1", columns={"fk_user"})})
+ * @ORM\Entity
+ */
+class Strategy
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=250, nullable=false)
+     */
+    private $title = '';
+
+    /**
+     * @var \Application\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_user", referencedColumnName="id")
+     * })
+     */
+    private $fkUser;
+
+
+}
+

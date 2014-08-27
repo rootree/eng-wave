@@ -1,0 +1,49 @@
+<div class="page-container full-width">
+
+<!-- Page content -->
+<div class="page-content"><div class="page-content-inner">
+
+    <!-- Page header -->
+    <div class="page-header">
+        <div class="page-title">
+            <h3 >Стратегии повторения <small>Стратегии определят последовательность воспроизведения оригинальной фразы, её перевода и тишины. На время тишины вы можете проговаривать фразу для лучшего запоминания.</small></h3>
+        </div>
+        <div class="header-buttons">
+            <div class="collapse" id="header-buttons">
+                <div class="well">
+                    <div class="btn-group">
+                        <button type="button" ng-disabled="addingSourceStrategy" class=" btn btn-primary  " ng-click="cancelStrategyCommit(); isAddingStrategy = 1" >Добавить стратегию</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /page header -->
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <div ng-show="!userSettings.strategies.length">
+                <div class="alert alert-block alert-warning fade in">
+                    <h6><i class="icon-info2"></i> Пусто</h6>
+                    <hr>
+                    <p>Ни одной из стратегий для оригинальных слов не найдено. Добавьте хоте бы одну, иначе вы не сможете загразить для прослушивания ваши слова.</p>
+                </div>
+                <br/>
+            </div>
+
+            <div ng-include src="addStrategyTpl" onLoad="applyDrag();"></div>
+
+            <div  class="row">
+                <div ng-repeat="strategy in userSettings.strategies | orderBy:'sort'">
+                    <div ng-include src="strategy.tpl" onLoad="applyDrag();"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div></div>
+<!-- /page content -->
+
+</div>
+

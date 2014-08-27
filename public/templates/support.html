@@ -1,0 +1,67 @@
+<div class="page-container full-width">
+
+    <!-- Page content -->
+    <div class="page-content">
+        <div class="page-content-inner">
+
+            <!-- Page header -->
+            <div class="page-header">
+                <div class="page-title">
+                    <h3>
+                        <span translate="HEADER_FEEDBACK"></span>
+                        <small translate="TEXT_FEEDBACK"></small>
+                    </h3>
+                </div>
+            </div>
+
+            <!-- Simple contact form -->
+            <form role="form" name="feedbackForm"  ng-submit="sendFeedback(feedbackEntity)" ng-show="!isFeedBackSend">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h6 class="panel-title">
+                            <i class="icon-pencil3"></i> <span translate="HEADER_FEEDBACK_FORM"></span>
+                        </h6>
+                    </div>
+                    <div class="panel-body">
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label translate="LABEL_YOUR_NAME"></label>
+                                    <input type="text" placeholder="" class="form-control" required="required" ng-model="feedbackEntity.name">
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label translate="LABEL_YOUR_EMAIL"></label>
+                                    <input type="email" placeholder="your@email.com" class="form-control" required="required"  ng-model="feedbackEntity.email">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label translate="LABEL_YOUR_MESSAGE"></label>
+                            <textarea rows="5" cols="5" placeholder=""
+                                      class="elastic form-control" required="required"  ng-model="feedbackEntity.msg"></textarea>
+                        </div>
+
+                        <div class="form-actions text-right">
+                            <button translate="BUTTON_SEND_MESSAGE" class="btn btn-success" ng-disabled="feedbackForm.$invalid"></button>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+            <!-- /simple contact form -->
+
+            <div ng-show="isFeedBackSend" class="alert alert-block alert-warning fade in">
+                <h6><i class="icon-info2"></i> <span translate="HEADER_FEEDBACK_SENT"></span></h6>
+                <hr>
+                <p translate="TEXT_FEEDBACK_SENT"></p>
+                <div class="text-left">
+                    <a class="btn btn-primary" ng-click="isFeedBackSend = 0;"><i class="icon-remove3"></i> <span translate="BUTTON_SEND_AGAIN"></span></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

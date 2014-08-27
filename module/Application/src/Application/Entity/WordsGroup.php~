@@ -1,0 +1,57 @@
+<?php
+
+namespace Application\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * WordsGroup
+ *
+ * @ORM\Table(name="words_group", indexes={@ORM\Index(name="fk_user", columns={"fk_user"})})
+ * @ORM\Entity
+ */
+class WordsGroup
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=250, nullable=false)
+     */
+    private $title = '';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var \Application\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_user", referencedColumnName="id")
+     * })
+     */
+    private $fkUser;
+
+
+}
+

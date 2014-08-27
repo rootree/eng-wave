@@ -1,0 +1,94 @@
+<?php
+
+namespace Application\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * UserWord
+ *
+ * @ORM\Table(name="word", indexes={@ORM\Index(name="user", columns={"fk_user"}), @ORM\Index(name="group", columns={"fk_words_group"}), @ORM\Index(name="FK_language_souce", columns={"fk_language_source"}), @ORM\Index(name="FK_language_target", columns={"fk_language_target"})})
+ * @ORM\Entity
+ */
+class UserWord
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="source", type="string", length=1000, nullable=true)
+     */
+    private $source;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="target", type="string", length=1000, nullable=true)
+     */
+    private $target;
+
+    /**
+     * @var \Application\Entity\UserLanguage
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\UserLanguage")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_language_target", referencedColumnName="id")
+     * })
+     */
+    private $fkLanguageTarget;
+
+    /**
+     * @var \Application\Entity\UserLanguage
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\UserLanguage")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_language_source", referencedColumnName="id")
+     * })
+     */
+    private $fkLanguageSource;
+
+    /**
+     * @var \Application\Entity\UserWordsGroup
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\UserWordsGroup")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_words_group", referencedColumnName="id")
+     * })
+     */
+    private $fkWordsGroup;
+
+    /**
+     * @var \Application\Entity\UserUser
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\UserUser")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_user", referencedColumnName="id")
+     * })
+     */
+    private $fkUser;
+
+
+}
+

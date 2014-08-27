@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <title>Londinium - premium responsive admin template by Eugene Kopyov</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/londinium-theme.css" rel="stylesheet" type="text/css">
+    <link href="css/styles.css" rel="stylesheet" type="text/css">
+    <link href="css/icons.css" rel="stylesheet" type="text/css">
+    <link href="css/app.css" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&amp;subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+
+</head>
+
+<body class="page-condensed navbar-fixed">
+
+<div class="overlay" id="overlay" ng-show="preLoader || isLoading">
+    <div class="opacity"></div>
+    <i class="icon-spinner2 spin"></i> Загрузка приложения...
+</div>
+
+<div ng-show="!preLoader" id="mainApp">
+    <!-- Navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-right">
+                <span class="sr-only">Главное меню</span>
+                <i class="icon-grid3"></i>
+            </button>
+            <a class="navbar-brand" href="#"><img src="images/logo.png" alt="Londinium"></a>
+
+        </div>
+
+        <ul class="nav navbar-nav navbar-right collapse" ng-show="!userSettings.authenticated">
+            <li ng-class="currentController == 'RegController' ? 'active' : '' ">
+                <a href="#/reg"><i class="icon-user-plus3"></i> <span>Регистрация</span></a>
+            </li>
+            <li ng-class="currentController == 'LoginController' ? 'active' : '' ">
+                <a href="#/login"><i class="icon-lock2"></i> <span>Авторизация</span></a>
+            </li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right collapse" id="navbar-menu" ng-show="userSettings.authenticated">
+            <li ng-class="currentController == 'WordsController' ? 'active' : ''">
+                <a href="#/">
+                    <i class="icon-volume-medium"></i> <span>Слова</span>
+                </a>
+            </li>
+            <li ng-class="currentController == 'StrategiesController' ? 'active' : ''">
+                <a href="#/strategies">
+                    <i class="icon-wave2"></i> <span>Стратегии</span>
+                </a>
+            </li>
+            <li ng-class="currentController == 'DownloadsController' ? 'active' : ''">
+                <a href="#/downloads">
+                    <i class="icon-download"></i>
+                    <span class="label label-default">{{ userSettings.readyToDownload }}</span>
+                    <span >Загрузки</span>
+                </a>
+            </li>
+            <li class="user dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown">
+                    <img src="http://placehold.it/300" alt="">
+                    <span>{{ userSettings.email }}</span>
+                    <i class="caret"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-right icons-right">
+                    <li ng-class="currentController == 'SettingsController' ? 'active' : ''"><a href="#/settings"><i class="icon-user"></i> Профайл</a></li>
+                    <li><a href="#" ng-click="globalLogout()"><i class="icon-exit"></i> Выйти</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <!-- /navbar -->
+
+    <div id="view" ng-view>
+        <?php echo $this->content; ?>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer navbar-fixed-bottom">
+        <div class="pull-left">&copy; 2014. Eng app</div>
+        <div class="pull-right icons-group">
+            <a ng-class="currentController == 'SupportController' ? 'active' : ''" href="#/support">Предложения / Поддержка</a>
+            <a href="#/about">О проекте</a>
+        </div>
+    </div>
+    <!-- /footer -->
+</div>
+
+<script type="text/javascript">
+    document.globalSettings = <?= $this->globalSettings ?>;
+    document.userSettings = <?= $this->userSettings ?>;
+</script>
+<script src="lib/requirejs/require.js" data-main="js/main.js"></script>
+<?php echo $this->inlineScript() ?>
+
+</body>
+</html>

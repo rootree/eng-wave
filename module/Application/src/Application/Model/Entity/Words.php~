@@ -1,0 +1,25 @@
+<?php
+
+/**
+
+./vendor/bin/doctrine-module orm:convert-mapping --from-database --filter="Word" --namespace "Application\\Entity\\" --force annotation module/Application/src/
+
+./vendor/bin/doctrine-module orm:generate-entities --filter="Word" --generate-annotations=true module/Application/src/
+
+ */
+
+namespace Application\Model\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Words
+ *
+ * @ORM\Table(name="words")
+ * @ORM\Entity(repositoryClass="Application\Model\Repository\Words")
+ * @ORM\HasLifecycleCallbacks
+ */
+class Words  extends \Application\Entity\Words
+{
+
+}

@@ -1,0 +1,40 @@
+{
+    "name": "eng",
+    "description": "PHP script that extracts useful information from popular multimedia file formats",
+    "homepage": "http://www.getid3.org/",
+    "keywords": ["php","tags","codecs"],
+    "type": "library",
+    "license": "GPL",
+    "require":
+    {
+        "php": ">=5.4",
+        "zendframework/zendframework": "2.2.*",
+        "doctrine/doctrine-orm-module": "0.*",
+        "doctrine/migrations": "dev-master",
+        "JamesHeinrich/getID3": "dev-master",
+        "neilime/zf2-twb-bundle": "2.0",
+        "zendframework/zend-developer-tools": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.zendframework.com/"
+        },
+        {
+            "type": "package",
+            "package": {
+                "name": "JamesHeinrich/getID3",
+                "version": "dev-master",
+                "source": {
+                    "url": "https://github.com/JamesHeinrich/getID3.git",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        }
+    ],
+    "require-dev": {
+
+    },
+    "minimum-stability": "dev"
+}

@@ -1,0 +1,67 @@
+<?php
+
+namespace Application\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * StrategyItem
+ *
+ * @ORM\Table(name="strategy_item", indexes={@ORM\Index(name="strayegy_1", columns={"fk_strategy"}), @ORM\Index(name="user_2", columns={"fk_user"})})
+ * @ORM\Entity
+ */
+class StrategyItem
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="type", type="smallint", nullable=false, options={"unsigned"=true})
+     */
+    private $type;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="settings", type="string", length=1000, nullable=false)
+     */
+    private $settings = '';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="sort", type="smallint", nullable=false, options={"unsigned"=true})
+     */
+    private $sort;
+
+    /**
+     * @var \Application\Entity\Strategy
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Strategy")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_strategy", referencedColumnName="id")
+     * })
+     */
+    private $fkStrategy;
+
+    /**
+     * @var \Application\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_user", referencedColumnName="id")
+     * })
+     */
+    private $fkUser;
+
+
+}
+

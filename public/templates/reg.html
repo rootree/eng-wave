@@ -1,0 +1,62 @@
+<div class="page-container full-width">
+
+    <!-- Page content -->
+    <div class="page-content"><div class="page-content-inner">
+
+        <!-- Page header -->
+        <div class="page-header">
+            <div class="page-title">
+                <h3>
+                    <span translate="HEADER_REGISTRATION"></span>
+                    <small translate="TEXT_REGISTRATION_HEADER"></small>
+                </h3>
+            </div>
+        </div>
+
+        <!-- Simple registration form -->
+        <form name="registrationForm" class="" ng-submit="registration(userEntity)">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h6 class="panel-title">
+                        <i class="icon-pencil3"></i>
+                        <span translate="HEADER_REGISTRATION_FORM"></span>
+                    </h6>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label translate="LABEL_YOUR_NAME"></label>
+                                <input type="text" class="form-control"  ng-model="userEntity.name" required="required">
+                            </div>
+
+                            <div class="form-group">
+                                <label translate="LABEL_YOUR_EMAIL"></label>
+                                <input type="email" placeholder="your@email.com" class="form-control" ng-model="userEntity.email" required="required">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label translate="LABEL_PASSWORD"></label>
+                                <input type="PASSWORD" class="form-control" ng-model="userEntity.password" required="required">
+                            </div>
+
+                            <div class="form-group">
+                                <label translate="LABEL_PASSWORD_REPEAT"></label>
+                                <input type="PASSWORD" class="form-control"  ng-model="userEntity.passwordRepeat" required="required">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions text-right">
+                        <button translate="BUTTON_REGISTRATION" class="btn btn-success" ng-disabled="registrationForm.$invalid"></button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- /simple registration form -->
+
+        </div>
+    </div>
+</div>

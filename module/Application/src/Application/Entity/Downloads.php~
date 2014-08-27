@@ -1,0 +1,77 @@
+<?php
+
+namespace Application\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Downloads
+ *
+ * @ORM\Table(name="downloads", indexes={@ORM\Index(name="downloads_fk_user", columns={"fk_user"}), @ORM\Index(name="downloads_fk_strategy", columns={"fk_strategy"}), @ORM\Index(name="downloads_fk_words_group", columns={"fk_words_group"})})
+ * @ORM\Entity
+ */
+class Downloads
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="smallint", nullable=false, options={"unsigned"=true})
+     */
+    private $status;
+
+    /**
+     * @var \Application\Entity\WordsGroup
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\WordsGroup")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_words_group", referencedColumnName="id")
+     * })
+     */
+    private $fkWordsGroup;
+
+    /**
+     * @var \Application\Entity\Strategy
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\Strategy")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_strategy", referencedColumnName="id")
+     * })
+     */
+    private $fkStrategy;
+
+    /**
+     * @var \Application\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_user", referencedColumnName="id")
+     * })
+     */
+    private $fkUser;
+
+
+}
+

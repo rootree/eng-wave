@@ -1,0 +1,27 @@
+<div class="units-row">
+    <div class="unit-centered unit-30">
+        <div ng-show="isLoggedIn">
+            <p>
+                У вас уже есть личный кабинет, для регистрации надо выйте из текушего кабинета.
+            </p>
+            <p>
+                <button type="submit" class="btn-green width-100" ng-click="globalLogout()">Выйти</button>
+            </p>
+        </div>
+        <div ng-show="!isLoggedIn">
+            <form ng-submit="login()" class="forms">
+                <label>
+                    Email <span class="forms-desc">Будет выслана письмо восстановления.</span>
+                    <input type="email" name="email" placeholder="email" ng-model="credentials.email" required class="width-100" />
+                </label>
+                <p>
+                    <button type="submit" class="btn-green width-100">Восстановить пароль</button>
+                </p>
+
+                <span class="forms-desc">
+                    <a href="#/login">Отмена</a>
+                </span>
+            </form>
+        </div>
+    </div>
+</div>

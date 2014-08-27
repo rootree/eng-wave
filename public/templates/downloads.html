@@ -1,0 +1,183 @@
+<div class="page-container full-width">
+
+
+<!-- Page content -->
+<div class="page-content"><div class="page-content-inner">
+
+    <!-- Page header -->
+    <div class="page-header">
+        <div class="page-title">
+            <h3>Загрузки слов <small>Вы можете загрузить на ваш компьютер ваши слова, в виде отдельных файлов, которые будут собраны в такой последовательности как стратегии.</small></h3>
+        </div>
+    </div>
+    <!-- /page header -->
+
+    <div class="row">
+        <div class="col-md-9">
+
+            <div ng-show="!userSettings.downloads.length && userSettings.strategies.length">
+                <div class="alert alert-block alert-warning fade in">
+                    <h6><i class="icon-question2"></i> Пусто</h6>
+                    <hr>
+                    <p>Ни одной из стратегий для слов для перевода не найдено. Добавьте хоте бы одну, иначе вы не сможете загразить для прослушивания ваши слова.</p>
+                </div>
+                <br/>
+            </div>
+
+
+            <div ng-show="!userSettings.strategies.length">
+                <div class="alert alert-block alert-info fade in">
+                    <h6><i class="icon-warning"></i> Ни одной стратегии</h6>
+                    <hr>
+                    <p>У вас нет ни одной стратегии. Не понятно в какой последовательности воспроизводить фразы.</p>
+                    <div class="text-left">
+                        <a class="btn btn-danger" href="#/strategies"><i class="icon-wave2"></i> Добавить стратегию</a>
+                    </div>
+                </div>
+                <br/>
+            </div>
+
+            <div class="panel panel-default">
+
+            <div class="panel-heading"></div>
+            <div class="table-responsive"  ng-show="userSettings.downloads.length">
+                <table class="table   table-hover">
+                    <thead>
+                        <tr >
+                            <th class="col-md-2" ng-click="predicate = 'group'; reverse=!reverse" ng-class="predicate == 'group' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'" >
+                                <a>Группа слов</a>
+                            </th>
+                            <th class="col-md-2" ng-click="predicate = 'strategy'; reverse=!reverse" ng-class="predicate == 'strategy' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                                <a>Стратегия</a>
+                            </th>
+                            <th ng-click="predicate = 'createdAt'; reverse=!reverse" ng-class="predicate == 'createdAt' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                                <a>Дата создания</a>
+                            </th>
+                            <th class="col-md-2" ng-click="predicate = 'status'; reverse=!reverse" ng-class="predicate == 'status' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                                <a>Статус</a>
+                            </th>
+                            <th ng-click="predicate = 'wight'; reverse=!reverse" ng-class="predicate == 'wight' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                                <a>Размер</a>
+                            </th>
+                            <th>
+
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="download in userSettings.downloads | orderBy:predicate:reverse ">
+                            <td class="text-left">
+                                <span ng-show="download.group">
+                                    <a href="#/{{ download.groupID }}" ng-bind-html="download.group + ' (слов: ' + download.groupCount + ')' "></a>
+                                </span>
+                                <span ng-show="!download.group" class="help-block" ng-bind-html="download.legacy.group.title + ' (слов: ' + download.legacy.group.count + ')'">
+                                </span>
+                            </td>
+                            <td>
+                                <div ng-show="download.strategy">
+                                    {{ download.strategy }}
+                                </div>
+                                <div ng-show="!download.strategy" class="help-block">
+
+                                    {{ download.legacy.strategy.title }}
+                                </div>
+                            </td>
+                            <td>
+                                {{ download.createdAt | date:'medium' }}
+                            </td>
+                            <td>
+                                <settings ng-switch on="download.status">
+                                    <silent-type class="label label-info"  ng-switch-when="0">
+                                        В очереди
+                                    </silent-type>
+                                    <silent-type class="label label-warning" ng-switch-when="1">
+                                        Подготавливается
+                                    </silent-type>
+                                    <silent-type class="label label-success" ng-switch-when="2">
+                                        Готово
+                                    </silent-type>
+                                    <silent-type class="label label-default" ng-switch-when="3">
+                                        Отменен
+                                    </silent-type>
+                                </settings>
+                            </td>
+                            <td>
+                                {{ download.wight }}
+                            </td>
+                            <td class="text-right">
+                                <a class="btn btn-primary  btn-xs " ng-disabled="download.status != 2" target="_blank" ng-href="/download/{{download.id}}"><i class="icon-download2"></i> Скачать</a>
+                                <button class="btn btn-primary btn-icon btn-xs " ng-disabled="download.status == 1" ng-click="dropDownload(download)"><i class="icon-remove3"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-footer ">
+
+                <span class="text-muted">Всего: {{ userSettings.downloads.length }}</span>
+            </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+
+            <!-- Add new group -->
+
+            <form role="form" ng-submit="addNewDownload(newDownloadEntity)" name="addDownloadForm" >
+
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <h6 class="panel-title"><i class="icon-nbsp"></i> Подготовка файла</h6>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Группа:</label>
+                                    <select class="form-control select" tabindex="1" ng-model="newDownloadEntity.fkWordsGroup" name="group"   required="required">
+                                        <option ng-repeat="group in userSettings.groups | orderBy:'title'" ng-bind-html="group.title + ' (' + group.count + ')'" value="{{ group.id }}" ng-disabled="!group.count">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-0"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Стратегия:</label>
+                                    <select class="form-control select" tabindex="2" ng-model="newDownloadEntity.fkStrategy" name="strategy" required="required">
+                                        <option ng-repeat="strategy in userSettings.strategies | orderBy:'sort'" ng-bind-html="strategy.title" value="{{ strategy.id }}" >
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-0"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions text-right">
+                            <button type="submit" class="btn btn-success" ng-disabled="addDownloadForm.$invalid">Добавить</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+            <!-- /add new group -->
+
+
+        </div>
+    </div>
+
+
+</div></div>
+<!-- /page content -->
+
+</div>
+

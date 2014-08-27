@@ -1,0 +1,442 @@
+<!-- Page container -->
+<div class="page-container" ng-init="predicate = 'source'; reverse=0">
+
+    <!-- Sidebar -->
+    <div class="sidebar collapse" id="navbar-icons">
+        <div class="sidebar-content">
+
+            <div class="user-menu dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"  ng-click="isAddingNewGroup = true">
+                    <div class="user-info">
+                        Добавить группу <span>Всего групп: {{ userSettings.groups.length }}</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Main navigation -->
+            <ul class="navigation nav-stacked">
+                <li ng-repeat="group in userSettings.groups | orderBy:'title'" ng-class="group.id==userSettings.settings.currentGroup ? 'active ' : ''">
+                    <a ng-click="getGroup(group.id)">
+                        <div class="row">
+                            <div class="col-md-10" ng-bind-html="group.title"></div>
+                            <div class="col-md-2 pull-right">
+                                <span class="label label-info words-count-label">{{ group.count }}</span>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <!-- /main navigation -->
+
+        </div>
+    </div>
+    <!-- /sidebar -->
+
+    <!-- Page content -->
+    <div class="page-content">
+
+        <!-- Add new group -->
+
+        <form role="form" ng-submit="addNewGroup()" name="addGroupForm" ng-show="isAddingNewGroup">
+            <br/>
+            <div class="panel panel-default">
+
+                <div class="panel-heading">
+                    <h6 class="panel-title"><i class="icon-file-plus"></i> Добавление группы</h6>
+                </div>
+
+                <div class="panel-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Название:</label>
+                                <input type="text" class="form-control input-lg" ng-model="NewGroupForm.title" required>
+                                    <span class="forms-desc" ng-show="addGroupForm.name.$error.minlength">
+                                    Минимальная длинна три символа.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions text-right">
+                        <button type="button" class="btn btn-default" ng-click="isAddingNewGroup = false;">Отмена</button>
+                        <button type="submit" class="btn btn-success" ng-disabled="addGroupForm.$invalid">Добавить</button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+        <!-- /add new group -->
+
+        <div ng-show="!isAddingNewGroup">
+
+            <!-- Page header with buttons -->
+
+            <div class="page-header">
+
+                <div class="page-title">
+                    <h3 ng-dblclick="editingGroup = 1"><span ng-bind-html="currentGroupTitle"></span> <small>Всего слов в группе: {{words.length}}</small></h3>
+                </div>
+
+                <div class="header-buttons">
+                    <div class="collapse" id="header-buttons">
+                        <div class="well">
+                            <div class="btn-group">
+                                <button class="btn btn-primary" ng-click="showFromForNewWord();" type="button">Добавить новое слово</button>
+                                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret caret-split"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right icons-right">
+                                    <li><a ng-click="editingGroup = 1; isAddingNewWord = 0;"><i class="icon-pencil4"></i> Отредактировать</a></li>
+                                    <li ><a ng-click="deleteGroup(userSettings.settings.currentGroup)"><i class="icon-remove3"></i> Удалить</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- /page header with buttons -->
+
+            <!-- Group title editing -->
+
+            <form role="form" ng-submit="editGroup()" name="editingGroupForm" ng-show="editingGroup">
+                <br/>
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <h6 class="panel-title"><i class="icon-pencil4"></i> Редактирование группы</h6>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Название:</label>
+                                    <input type="text" class="form-control input-lg" ng-model="currentGroupTitle" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions text-right">
+                            <button type="button" class="btn btn-default" ng-click="cancelGroupChanging()">Отмена</button>
+                            <button type="submit" class="btn btn-success" ng-disabled="editingGroupForm.$invalid">Сохранить</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+
+            <!-- /group title editing -->
+
+            <!-- Empty group -->
+
+            <div ng-show="!(words|filter:q).length && !q && !editingGroup">
+                <div class="alert alert-block alert-warning fade in">
+                    <h6><i class="icon-info2"></i> Пустая группа</h6>
+                    <hr>
+                    <p>Текущая группа не содержит слов. Вы можете наполнить её.</p>
+                </div>
+                <br/>
+            </div>
+
+            <!-- /empty group -->
+
+            <!-- Adding new word -->
+
+            <form role="form" ng-submit="addNewWord(newWordEntity)" name="addWordForm" ng-show="isAddingNewWord && !editingGroup">
+                <div class="panel panel-default">
+
+                    <div class="panel-heading">
+                        <h6 class="panel-title"><i class="icon-file-plus"></i> Добавление слова</h6>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Группа:</label>
+                                    <select class="form-control select" tabindex="1" ng-model="newWordEntity.fkWordsGroup" name="group" ng-disabled="userSettings.groups.length<2">
+                                        <option ng-repeat="group in userSettings.groups | orderBy:'title'" ng-bind-html="group.title" value="{{ group.id }}" ng-selected="userSettings.settings.currentGroup==group.id">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div class="col-md-6"></div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Оригинал:</label>
+                                    <textarea rows="5" cols="5" ng-model="newWordEntity.source" tabindex="2" name="source" ng-minlength="3" ng-maxlength="250" required="required" class="elastic form-control"></textarea>
+                                    <span class="label label-block label-info text-right" ng-show="addWordForm.source.$error.minlength">
+                                        Минимальная длинна слова три символа.
+                                    </span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Перевод:</label>
+                                    <textarea rows="5" cols="5" ng-model="newWordEntity.target" tabindex="3" name="target" ng-minlength="3" ng-maxlength="250" required="required" class="elastic form-control"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Язык оригинала:</label>
+                                    <div>
+                                        <label class="btn " ng-repeat="language in globalSettings.languages" >
+                                            <input class="styled" ng-model="newWordEntity.fkLanguageSource" value="{{ language.id }}" type="radio" name="fkLanguageSource" ng-disabled="language.disabled" ng-checked="$first"/> {{ language.title }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Язык перевода:</label>
+                                    <div>
+                                        <label class="btn " ng-repeat="language in globalSettings.languages" >
+                                            <input class="styled" ng-model="newWordEntity.fkLanguageTarget" value="{{ language.id }}" type="radio" name="fkLanguageTarget" ng-disabled="language.disabled" ng-checked="$last"/> {{ language.title }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions text-right">
+
+                            <button type="reset" value="Отмена" class="btn btn-default" ng-click="isAddingNewWord = 0" ng-disabled="!words.length">Отмена</button>
+
+                            <!-- Split button -->
+                            <div class="btn-group dropup">
+                                <button type="submit" class="btn btn-success" ng-disabled="addWordForm.$invalid">Добавить слово</button>
+                                <button type="submit" class="btn btn-success" ng-disabled="addWordForm.$invalid" ng-click="isAddingNewWord = 0">И закрыть форму</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- /adding new word -->
+
+            <!-- Editing word -->
+
+            <form role="form" ng-submit="updateWord(editWordEntity)" name="editWordForm" ng-show="isEditingWord">
+                <input type="hidden" name="id" placeholder="Search" ng-model="editWordEntity.id" />
+                <div class="panel panel-default">
+                    <div class="panel-heading"><h6 class="panel-title"><i class="icon-pencil4"></i> Редактирование слова</h6></div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Группа:</label>
+                                    <select class="form-control" tabindex="1" ng-model="editWordEntity.fkWordsGroup" name="group" ng-disabled="userSettings.groups.length<2">
+                                        <option ng-repeat="group in userSettings.groups | orderBy:'title'" value="{{ group.id }}" ng-bind-html="group.title" ng-selected="userSettings.settings.currentGroup==group.id">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Оригинал:</label>
+                                    <textarea rows="5" cols="5" ng-model="editWordEntity.source" tabindex="2" name="source" ng-minlength="3" ng-maxlength="250" required="required" class="elastic form-control" ng-bind-html="editWordEntity.source"></textarea>
+                                    <span class="help-block" ng-show="editWordForm.source.$error.minlength">
+                                        Минимальная длинна слова три символа.
+                                    </span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label>Перевод:</label>
+                                    <textarea rows="5" cols="5" ng-model="editWordEntity.target" tabindex="3" name="target" ng-minlength="3" ng-maxlength="250" required="required" class="elastic form-control" ng-bind-html="editWordEntity.target"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-6 btn-group">
+                                    <label>Язык оригинала:</label>
+                                    <div>
+                                        <label class="btn " ng-repeat="language in globalSettings.languages" >
+                                            <input class="styled" ng-model="editWordEntity.fkLanguageSource" value="{{ language.id }}" type="radio" name="fkLanguageSource" ng-disabled="language.disabled" ng-checked="editWordEntity.fkLanguageSource == language.id" /> {{ language.title }}
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 btn-group">
+                                    <label>Язык перевода:</label>
+                                    <div>
+                                        <label class="btn " ng-repeat="language in globalSettings.languages" >
+                                            <input class="styled" ng-model="editWordEntity.fkLanguageTarget" value="{{ language.id }}" type="radio" name="fkLanguageTarget" ng-disabled="language.disabled" ng-checked="editWordEntity.fkLanguageTarget == language.id" /> {{ language.title }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions text-right">
+                            <input type="reset" value="Отмена" class="btn btn-default" ng-click="isEditingWord = 0">
+                            <input type="submit" value="Редактировать" class="btn btn-success" ng-disabled="editWordForm.$invalid || editWordForm.$pristine">
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+
+            <!-- /editing word -->
+
+            <!-- List of words -->
+
+            <div ng-show="words.length && !isEditingWord && !isAddingNewWord && !editingGroup">
+
+                <div class="panel panel-default">
+
+                    <div class="table-footer">
+                        <ui-pagination cur="pagination.cur" total="pagination.total" display="{{pagination.display}}" ng-show="(words|filter:q).length && pagination.total>1" ></ui-pagination>
+
+                        <div class="col-md-3 input-group" ng-show="words.length">
+                            <input type="text" class="form-control" placeholder="Поиск" ng-change="onSearch(obj)" ng-model="q" />
+                            <span class="input-group-btn">
+                                <button class="btn btn-default icon-remove3" type="button" ng-click="cleanSearch()" ng-disabled="!q"></button>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="panel-heading"></div>
+
+                    <div class="table-responsive" ng-show="(words|filter:q).length">
+                        <table class="table table-hover table-check words-table ">
+                            <thead>
+                                <tr>
+                                    <th class="text-centered">
+                                        &nbsp;<input type="checkbox" class="styled" value="all" ng-model="checkedAllWords" ng-checked="checkedAllWords"/>
+                                    </th>
+                                    <th class="col-md-5" ng-click="predicate = 'source'; reverse=!reverse" ng-class="predicate == 'source' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                                        <a>Оригинал</a>
+                                    </th>
+                                    <th class="col-md-5" ng-click="predicate = 'target'; reverse=!reverse" ng-class="predicate == 'target' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                                        <a>Перевод</a>
+                                    </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="word in words | orderBy:predicate:reverse | filter:q | offset:(pagination.cur-1)*pagination.elementsOnPage | limitTo:pagination.elementsOnPage ">
+                                    <td>
+                                        <input type="checkbox" class="styled" name="list_id[]" id="checkbox-{{ word.id }}"
+                                               value="{{ word.id }}" ng-checked="word.checked" ng-model="word.checked" />
+                                    </td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-1">
+                                                <button class="btn btn-primary btn-icon btn-xs tip" type="button" ng-click="play(word.id + '-source-btn', word, 1)">
+                                                    <i id="{{ word.id }}-source-btn" class="icon-play3"></i>
+                                                </button>
+
+                                            </div>
+                                            <div class="col-md-9 ">
+                                                <div class="word-entity" ng-bind-html="word.source"></div>
+                                            </div>
+                                            <div class="col-md-2 text-right">
+                                                <img ng-src="/img/flag/{{ word.sourceLang }}.png" title="{{ word.source_lang }}" class="words-flag"/>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                    <td >
+                                        <div class="row">
+                                            <div class="col-md-1" >
+                                                <button class="btn btn-primary btn-icon btn-xs tip" type="button" ng-click="play(word.id + '-target-btn', word, 2)">
+                                                    <i id="{{ word.id }}-target-btn" class="icon-play3"></i>
+                                                </button>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <div class="word-entity" ng-bind-html="word.target"></div>
+                                            </div>
+                                            <div class="col-md-2  text-right">
+                                                <img ng-src="/img/flag/{{ word.targetLang }}.png" title="{{ word.target_lang }}" class="words-flag"/>
+                                            </div>
+                                        </div>
+
+                                    </td>
+                                    <td class="text-center">
+                                        <button class="btn btn-primary btn-icon btn-xs tip" ng-click="editWord(word, $index)"><i class="icon-pencil4"></i></button>
+                                        <button class="btn btn-primary btn-icon btn-xs tip" ng-click="deleteWord(word.id, $index)"><i class="icon-remove3"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-footer" ng-show="(words|filter:q).length">
+                        <div class="table-actions">
+                            <div ng-show="selectedItems">
+
+                                <span class="input-group dropup" ng-show="actionTypeOnSelectedItems != 'Move'">
+                                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                        Действия над выбранными словами ({{selectedItems}} шт.)<span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                                        <li><a ng-click="actionTypeOnSelectedItems = 'Move'">Переместить</a></li>
+                                        <li><a ng-click="deleteGroupWords()">Удалить</a></li>
+                                    </ul>
+                                </span><!-- /btn-group -->
+
+                                <form ng-submit="submitChangingGroup()" ng-show="actionTypeOnSelectedItems == 'Move'" class="form-inline">
+                                    <div class="form-group" style="margin-top: -1px;">
+                                        <select class="form-control" ng-model="moveToGroup" name="moveToGroup" id="moveToGroup">
+                                            <option value="" disabled=disabled>Выберите группу для переноса</option>
+                                            <option ng-repeat="group in userSettings.groups | orderBy:'title'" value="{{ group.id }}" ng-bind-html="group.title" ng-disabled="userSettings.settings.currentGroup==group.id">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-success">Переместить в группу</button>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" ng-click="actionTypeOnSelectedItems = '';" class="btn btn-default">Отмена</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div ng-show="!selectedItems" class="text-muted">
+                                <div ng-show="!q">
+                                    Всего слов: {{words.length}}
+                                </div>
+
+                                <div ng-show="q">
+                                    Найдено слов: {{(words|filter:q).length}} из {{words.length}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <ui-pagination cur="pagination.cur" total="pagination.total" display="{{pagination.display}}"  ng-show="(words|filter:q).length && pagination.total>1" ></ui-pagination>
+                    </div>
+                </div>
+            </div>
+
+            <div ng-show="q && !(words|filter:q).length">
+                <div class="alert alert-block alert-warning fade in block-inner">
+                    <h6><i class="icon-info2"></i> Ничего не найдено</h6>
+                    <hr>
+                    <p>При текущем фильтре ни одно слово найдено не было.</p>
+                    <div class="text-left">
+                        <a class="btn btn-primary" ng-click="cleanSearch()"><i class="icon-remove3"></i> Сбросить фильтр</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /list of words -->
+
+        </div>
+    </div>
+    <!-- /page content -->
+</div>
+<!-- /page container -->

@@ -1,0 +1,71 @@
+<?php
+
+namespace Application\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Feedback
+ *
+ * @ORM\Table(name="feedback", indexes={@ORM\Index(name="feedback_fk_user", columns={"fk_user"})})
+ * @ORM\Entity
+ */
+class Feedback
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=250, nullable=false)
+     */
+    private $name = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=250, nullable=false)
+     */
+    private $email = '';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="msg", type="text", length=65535, nullable=false)
+     */
+    private $msg;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var \Application\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Entity\User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_user", referencedColumnName="id")
+     * })
+     */
+    private $fkUser;
+
+
+}
+

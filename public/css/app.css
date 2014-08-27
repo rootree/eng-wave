@@ -1,0 +1,66 @@
+/* app css stylesheet */
+#mainApp{
+    display: none;
+}
+.footer{
+    position: fixed !important;
+}
+.sidebar, .page-container {
+    padding-bottom: 30px;
+}
+.full-width {
+    padding-bottom: 60px;
+}
+#overlay{
+    display: block;
+}
+#overlay .opacity {
+    opacity: 0.25 !important;
+    filter: alpha(opacity=25);
+}
+.word-entity{
+    padding-top: 8px;
+    margin: 0px 10px;
+}
+.jGrowl.bottom-right {
+    bottom: 60px;
+}
+.strategy-label{
+    color: #515151;
+}
+.btn-add-strategy{
+    margin-top: -10px;
+}
+.task-target {
+    border-left-color: #65B688;
+}
+.task-source {
+    border-left-color: #50ABC2;
+}
+.task-add {
+    border-left-color: #9d9d9d;
+}
+.strategy-entity-back{
+    opacity: 0.25 !important;
+    filter: alpha(opacity=25);
+}
+hr.item-settings{
+    margin-top: 12px;
+}
+strategy-item{
+    margin: 1px;
+    display: inline-block;
+}
+.words-count-label{
+    padding: 2px 6px 3px 6px;
+}
+.words-flag{
+    margin-top: 4px;
+    height: 24px;
+}
+table.words-table td{
+    vertical-align: top !important;
+}
+table.words-table tr td:first-child{
+    padding-top: 18px;
+}

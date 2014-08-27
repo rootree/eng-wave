@@ -1,0 +1,221 @@
+<?php
+
+namespace Application\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Words
+ *
+ * @ORM\Table(name="words")
+ * @ORM\Entity
+ */
+class Words
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false, options={"unsigned"=true})
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="source", type="string", length=1000, nullable=true)
+     */
+    private $source;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="target", type="string", length=1000, nullable=true)
+     */
+    private $target;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="source_lang", type="string", length=2, nullable=true)
+     */
+    private $sourceLang;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="target_lang", type="string", length=2, nullable=true)
+     */
+    private $targetLang;
+
+
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     *
+     * @return Words
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     *
+     * @return Words
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set source
+     *
+     * @param string $source
+     *
+     * @return Words
+     */
+    public function setSource($source)
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
+    /**
+     * Get source
+     *
+     * @return string
+     */
+    public function getSource()
+    {
+        return $this->source;
+    }
+
+    /**
+     * Set target
+     *
+     * @param string $target
+     *
+     * @return Words
+     */
+    public function setTarget($target)
+    {
+        $this->target = $target;
+
+        return $this;
+    }
+
+    /**
+     * Get target
+     *
+     * @return string
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * Set sourceLang
+     *
+     * @param string $sourceLang
+     *
+     * @return Words
+     */
+    public function setSourceLang($sourceLang)
+    {
+        $this->sourceLang = $sourceLang;
+
+        return $this;
+    }
+
+    /**
+     * Get sourceLang
+     *
+     * @return string
+     */
+    public function getSourceLang()
+    {
+        return $this->sourceLang;
+    }
+
+    /**
+     * Set targetLang
+     *
+     * @param string $targetLang
+     *
+     * @return Words
+     */
+    public function setTargetLang($targetLang)
+    {
+        $this->targetLang = $targetLang;
+
+        return $this;
+    }
+
+    /**
+     * Get targetLang
+     *
+     * @return string
+     */
+    public function getTargetLang()
+    {
+        return $this->targetLang;
+    }
+}

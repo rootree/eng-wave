@@ -1,0 +1,22 @@
+<?php
+$_alertNamespaces = array('default' => 'info', 'error' => 'danger', 'success' => 'success', 'info' => 'info');
+
+$messages['simple'] = [];
+$messages['current'] = [];
+
+foreach ($_alertNamespaces as $ns => $style) {
+    $messages['simple'][$ns] = $this->flashMessenger()->getMessagesFromNamespace($ns);
+    $messages['current'][$ns] = $this->flashMessenger()->getCurrentMessagesFromNamespace($ns);
+
+    if ($messages['current'][$ns]){
+        $this->flashMessenger()->clearCurrentMessagesFromNamespace($ns);
+    }
+}
+
+$allMessages = array_merge_recursive($messages['simple'], $messages['current']);
+
+foreach ($allMessages as $ns => $messageBox) {
+    foreach ($messageBox as $message){
+        echo $this->alert($message, 'alert-' . $_alertNamespaces[$ns]);
+    }
+}

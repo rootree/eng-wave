@@ -1,0 +1,159 @@
+<?php
+
+/**
+./vendor/doctrine/doctrine-module/bin/doctrine-module orm:convert-mapping --namespace="Application\\Entity\\" --filter="StrategyItem" --force  --from-database annotation ./module/Application/src/
+
+
+./vendor/doctrine/doctrine-module/bin/doctrine-module orm:generate-entities ./module/Application/src/ --generate-annotations=true --filter="StrategyItem"
+ */
+namespace Application\Model\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Application\Entity as Entity;
+
+/**
+ * Word
+ *
+ * @ORM\Table(name="word")
+ * @ORM\Entity(repositoryClass="Application\Model\Repository\Word")
+ */
+class Word extends Entity\Word
+{
+
+    /**
+     * @var \Application\Model\Entity\Language
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Model\Entity\Language")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_language_source", referencedColumnName="id")
+     * })
+     */
+    private $fkLanguageSource;
+
+    /**
+     * @var \Application\Model\Entity\Language
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Model\Entity\Language")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_language_target", referencedColumnName="id")
+     * })
+     */
+    private $fkLanguageTarget;
+
+    /**
+     * @var \Application\Model\Entity\WordsGroup
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Model\Entity\WordsGroup")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_words_group", referencedColumnName="id")
+     * })
+     */
+    private $fkWordsGroup;
+
+    /**
+     * @var \Application\Model\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Model\Entity\User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_user", referencedColumnName="id")
+     * })
+     */
+    private $fkUser;
+
+
+    /**
+     * Set fkLanguageSource
+     *
+     * @param \Application\Model\Entity\Language $fkLanguageSource
+     *
+     * @return Word
+     */
+    public function setFkLanguageSource(\Application\Model\Entity\Language $fkLanguageSource = null)
+    {
+        $this->fkLanguageSource = $fkLanguageSource;
+
+        return $this;
+    }
+
+    /**
+     * Get fkLanguageSource
+     *
+     * @return \Application\Model\Entity\Language
+     */
+    public function getFkLanguageSource()
+    {
+        return $this->fkLanguageSource;
+    }
+
+    /**
+     * Set fkLanguageTarget
+     *
+     * @param \Application\Model\Entity\Language $fkLanguageTarget
+     *
+     * @return Word
+     */
+    public function setFkLanguageTarget(\Application\Model\Entity\Language $fkLanguageTarget = null)
+    {
+        $this->fkLanguageTarget = $fkLanguageTarget;
+
+        return $this;
+    }
+
+    /**
+     * Get fkLanguageTarget
+     *
+     * @return \Application\Model\Entity\Language
+     */
+    public function getFkLanguageTarget()
+    {
+        return $this->fkLanguageTarget;
+    }
+
+    /**
+     * Set fkWordsGroup
+     *
+     * @param \Application\Model\Entity\WordsGroup $fkWordsGroup
+     *
+     * @return Word
+     */
+    public function setFkWordsGroup(\Application\Model\Entity\WordsGroup $fkWordsGroup = null)
+    {
+        $this->fkWordsGroup = $fkWordsGroup;
+
+        return $this;
+    }
+
+    /**
+     * Get fkWordsGroup
+     *
+     * @return \Application\Model\Entity\WordsGroup
+     */
+    public function getFkWordsGroup()
+    {
+        return $this->fkWordsGroup;
+    }
+
+    /**
+     * Set fkUser
+     *
+     * @param \Application\Model\Entity\User $fkUser
+     *
+     * @return Word
+     */
+    public function setFkUser(\Application\Model\Entity\User $fkUser = null)
+    {
+        $this->fkUser = $fkUser;
+
+        return $this;
+    }
+
+    /**
+     * Get fkUser
+     *
+     * @return \Application\Model\Entity\User
+     */
+    public function getFkUser()
+    {
+        return $this->fkUser;
+    }
+}
