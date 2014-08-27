@@ -20,15 +20,6 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="AbstractApiController.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/Api/src/Api/Controller/AbstractApiController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="89.48572">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="AuthController.php" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/module/Api/src/Api/Controller/AuthController.php">
           <provider selected="true" editor-type-id="text-editor">
@@ -92,10 +83,19 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="composer.json" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="composer.json" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/composer.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.0849421">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="13" column="0" selection-start="140" selection-end="140" vertical-scroll-proportion="0.58573216">
               <folding />
             </state>
           </provider>
@@ -120,7 +120,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/module/Application/src/Application/Controller/AbstractActionController.php" />
         <option value="$PROJECT_DIR$/module/Application/src/Application/Controller/DownloadController.php" />
         <option value="$PROJECT_DIR$/public/js/services/authentication.js" />
         <option value="$PROJECT_DIR$/module/Api/src/Api/Form/SignUp.php" />
@@ -136,6 +135,7 @@
         <option value="$PROJECT_DIR$/module/Api/src/Api/Controller/AuthController.php" />
         <option value="$PROJECT_DIR$/module/Api/Module.php" />
         <option value="$PROJECT_DIR$/config/autoload/.gitignore" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -1165,11 +1165,11 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/config/autoload" />
       <recent name="$PROJECT_DIR$/module/Application/src/Application/Service" />
       <recent name="$PROJECT_DIR$/module/Api/src/Api/Form" />
       <recent name="$PROJECT_DIR$/module/Application/src/Application/Model/Entity" />
-      <recent name="$PROJECT_DIR$/module/Application/src/Application/Model/Repository" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/module/Application/src/Application/Model/Entity/StrategyItemSettings" />
@@ -1308,13 +1308,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/config/autoload/acl.global.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="82" selection-start="512" selection-end="512" vertical-scroll-proportion="-11.314285">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/autoload/global.php">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="29.6">
@@ -1415,7 +1408,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/composer.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.0849421">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="0" selection-start="140" selection-end="140" vertical-scroll-proportion="0.58573216">
           <folding />
         </state>
       </provider>
