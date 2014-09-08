@@ -7,12 +7,12 @@
     "license": "GPL",
     "require":
     {
-        "php": ">=5.4",
-        "zendframework/zendframework": "2.2.*",
-        "doctrine/doctrine-orm-module": "0.*",
-        "doctrine/migrations": "dev-master",
-        "phansys/getid3": "2.1.*@dev",
-        "neilime/zf2-twb-bundle": "2.0"
+        "php":">=5.4",
+        "zendframework/zendframework":"2.2.*",
+        "doctrine/doctrine-orm-module":"0.*",
+        "doctrine/common":"*",
+        "doctrine/migrations":"dev-master",
+        "phansys/getid3":"2.1.*@dev"
     },
     "repositories": [
         {
