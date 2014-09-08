@@ -28,23 +28,6 @@ define(['./module'], function (services) {
                 request.success(cacheSession);
                 return request;
             },
-            signUp: function(credentials) {
-                var request = $http({
-                    method: "post",
-                    url: "/api/auth/sign-up",
-                    data: {
-                        name: $sanitize(credentials.name),
-                        email: $sanitize(credentials.email),
-                        password: $sanitize(credentials.password),
-                        initial: {
-                            group : 'group',
-                            strategy : 'strategy'
-                        }
-                    }
-                });
-                request.success(cacheSession);
-                return request;
-            },
             logout: function() {
                 var logout = $http.get("/api/auth/logout");
                 logout.success(uncacheSession);

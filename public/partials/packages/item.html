@@ -1,0 +1,40 @@
+<div class="col-sm-6">
+    <div class=" block task strategy-entity">
+        <div class="row with-padding">
+            <div class="col-sm-9">
+                <div class="task-description">
+                    <h6 ng-bind-html="package.title"></h6>
+                    <div ng-bind-html="package.desc">
+                        Данная стратегия не содержит элементов. Вы не сможете использовать её для скачивания файлов.
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="task-info">
+                    <a ng-click="installPackage(package)" ng-disabled="package.isInstalled" class="btn btn-primary btn-lg">
+                        <i class="icon-puzzle"></i>
+                        <span ng-if="!package.isInstalled">Установить</span>
+                        <span ng-if="package.isInstalled">Установлен</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer package-footer">
+            <span><i class="icon-bars"></i>
+            Уровень:
+            <levels ng-switch on="package.level">
+                <silent-type ng-switch-when="1">
+                    Beginner
+                </silent-type>
+                <silent-type ng-switch-when="2">
+                    Advanced
+                </silent-type>
+            </levels></span>
+
+            <div class="pull-right">
+                Количество слов: {{ package.count }}
+            </div>
+
+        </div>
+    </div>
+</div>

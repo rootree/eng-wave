@@ -12,21 +12,17 @@ namespace Api\Controller;
 use Application\Controller\AbstractActionController,
         Zend\Authentication\Adapter\DbTable,
         Zend\Session\Container as SessionContainer,
-        Zend\View\Model\ViewModel,
         Zend\View\Model\JsonModel,
-        Auth\Model\User,
-    Api\Form\Login;
+        Api\Form\Login;
 use Zend\Json\Json as ZendJson;
 use Application\Model\Entity\User as UserEntity;
 use Application\Model\Entity\UserSettings as UserSettingsEntity;
-use Application\Model\Entity\Word as WordEntity;
 use Application\Model\Entity\WordsGroup as WordsGroupEntity;
 use Api\Model\Exception as ApiException;
 use Application\Model\Entity\Strategy as StrategyEntity;
-use Application\Model\Entity\Language as LanguageEntity;
 use Application\Model\Entity\StrategyItem as StrategyItemEntity;
 
-class AuthController extends AbstractApiController
+class AuthController extends AbstractAuthController
 {
     public function loginAction()
     {
@@ -47,14 +43,14 @@ class AuthController extends AbstractApiController
             $data = $this->getPostParams($request);
             $loginForm->setData($data);
             if (!$loginForm->isValid()) {
-                throw new ApiException('Authentication error');
+                throw new ApiException(null, ApiException::AUTH_FAILED);
             }
             $loginData  = $loginForm->getData();
 
             return $this->auth($loginData['email'], $loginData['password']);
 
         } else {
-            throw new ApiException('There is no any parameters');
+            throw new ApiException(null, ApiException::COMMON_EMPTY_REQUEST);
         }
     }
 
@@ -75,7 +71,7 @@ class AuthController extends AbstractApiController
 
             $data = $this->getPostParams($request);
             if (!$data) {
-                throw new ApiException('Параметры обратной связи не найдены');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -92,14 +88,14 @@ class AuthController extends AbstractApiController
                     empty($data['initial']['group']) ||
                     empty($data['initial']['strategy'])
                 ) {
-                    throw new ApiException('Заполните все обязательные поля2');
+                    throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
                 }
 
                 /** @var \Application\Service\User $userService  */
                 $userService = $this->getServiceLocator()->get('Application\Service\User');
                 $emailUserEntity = $userService->getUserByEmail($userEntity->getEmail());
                 if ($emailUserEntity) {
-                    throw new ApiException('Указаный вами майл зарегестрирован.');
+                    throw new ApiException(null, ApiException::AUTH_EMAIL_EXISTS);
                 }
 
                 $entityManager->beginTransaction();
@@ -148,48 +144,22 @@ class AuthController extends AbstractApiController
                             $strategyService->getItemTemplate(StrategyItemEntity::TYPE_TARGET)
                         ];
                         $strategyService->bindStrategyItems($strategyEntity, $newUserEntity, $items);
+                        $entityManager->refresh($strategyEntity);
                     }
 
                     $entityManager->commit();
-                    // $entityManager->refresh($newUserEntity);
 
                     return $this->auth($newUserEntity->getEmail(), $userForm->get('password')->getValue());
 
                 } else {
                     $entityManager->rollback();
-                    throw new ApiException('Произошла логическая ошибка');
+                    throw new ApiException(null, ApiException::COMMON_LOGICAL_ERROR);
                 }
             } else {
-                throw new ApiException('Заполните все обязательные поля');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
         } else {
-            throw new ApiException('Параметры для добавления нового запроса не найдены');
-        }
-    }
-
-    protected function auth($email, $password)
-    {
-
-        // If you used another name for the authentication service, change it here
-        $authService = $this->getServiceLocator()->get('Zend\Authentication\AuthenticationService');
-        $adapter = $authService->getAdapter();
-
-        $adapter->setIdentityValue($email);
-        $adapter->setCredentialValue($password);
-
-        /** @var \Zend\Authentication\Result $authResult  */
-        $authResult = $authService->authenticate();
-
-        if ($authResult->isValid()) {
-            $identity = $authResult->getIdentity();
-            $authService->getStorage()->write($identity);
-            return new JsonModel(array(
-                'userSettings' => $this->getUserJSON(),
-                'CSRF'         => $this->getCsrfHash(),
-            ));
-        } else {
-            // $authResult->getMessages()
-            throw new ApiException('Авторизация провалена');
+            throw new ApiException(null, ApiException::COMMON_EMPTY_REQUEST);
         }
     }
 }

@@ -125,24 +125,15 @@ class Strategy
         $qb->getQuery()->execute();
     }
 
-    public function getItemTemplate($itemType)
+    public function getItemTemplate($itemType, $settings = [])
     {
         switch ($itemType) {
             case StrategyItemEntity::TYPE_TARGET:
-                return [
-                    'type' => StrategyItemEntity::TYPE_TARGET
-                ];
             case StrategyItemEntity::TYPE_SOURCE:
-                return [
-                    'type' => StrategyItemEntity::TYPE_SOURCE
-                ];
             case StrategyItemEntity::TYPE_SILENCE:
                 return [
-                    'type'     => StrategyItemEntity::TYPE_SILENCE,
-                    'settings' => [
-                        'type'    => SilentSettings::TYPE_SOURCE,
-                        'seconds' => 0,
-                    ]
+                    'type'     => $itemType,
+                    'settings' => $settings
                 ];
         }
         return [];

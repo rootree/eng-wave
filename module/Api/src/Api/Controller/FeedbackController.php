@@ -6,7 +6,6 @@ use Zend\Http\Request;
 
 use Application\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel, Zend\Json\Json as ZendJson;
-use Application\Model\Entity\Word as WordEntity;
 use Application\Model\Entity\Feedback as FeedbackEntity;
 use Api\Model\Exception as ApiException;
 
@@ -20,7 +19,7 @@ class FeedbackController extends AbstractApiController
 
             $data = $this->getPostParams($request);
             if (!$data) {
-                throw new ApiException('Параметры обратной связи не найдены');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -47,14 +46,14 @@ class FeedbackController extends AbstractApiController
                         'success' => true,
                     ]);
                 } else {
-                    throw new ApiException('Произошла логическая ошибка');
+                    throw new ApiException(null, ApiException::COMMON_LOGICAL_ERROR);
                 }
             } else {
                 // 'error' => $feedbackForm->getMessages(),
-                throw new ApiException('Заполните все обязательные поля');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
         } else {
-            throw new ApiException('Параметры для добавления нового запроса не найдены');
+            throw new ApiException(null, ApiException::COMMON_EMPTY_REQUEST);
         }
     }
 }

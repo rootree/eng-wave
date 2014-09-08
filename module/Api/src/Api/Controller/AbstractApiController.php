@@ -10,15 +10,11 @@ use Zend\Mvc\Exception\DomainException;
 use Api\Model\Exception as ApiException;
 use Zend\View\Model\JsonModel, Zend\Json\Json as ZendJson;
 
-use Application\Model\Entity\Word as WordEntity;
-use Application\Model\Entity\WordsGroup as WordsGroupEntity;
-use Application\Model\Entity\Strategy as StrategyEntity;
-use Application\Model\Entity\Download as DownloadEntity;
-
 class AbstractApiController extends AbstractActionController
 {
     private $controllersWithoutAuth = [
         'Api\\Controller\\Auth',
+        'Api\\Controller\\User',
         'Api\\Controller\\Feedback',
     ];
 
@@ -45,7 +41,7 @@ class AbstractApiController extends AbstractActionController
             (empty($authToken) || $this->getCsrfHash() != $authToken) &&
             !in_array($currentController, $this->controllersWithoutAuth)
         ) {
-            // $method = 'authRequiredAction';
+            $method = 'authRequiredAction';
         }
 
         try {
@@ -54,7 +50,7 @@ class AbstractApiController extends AbstractActionController
             $this->getResponse()->setStatusCode(400);
             $actionResponse = new JsonModel([
                 'success' => false,
-                'flash' => $e->getMessage()
+                'code'    => $e->getCode()
             ]);
         } catch (\Exception $e) {
 
@@ -65,7 +61,7 @@ class AbstractApiController extends AbstractActionController
             $this->getResponse()->setStatusCode(500);
             $actionResponse = new JsonModel([
                 'success' => false,
-                'flash' => 'Internal error occurred, inspect log for details'
+                'code'    => ApiException::COMMON_INTERNAL_ERROR
             ]);
         }
 
@@ -79,7 +75,7 @@ class AbstractApiController extends AbstractActionController
         $this->getResponse()->setStatusCode(404);
         return new JsonModel([
             'success' => false,
-            'flash' => 'Resource not found'
+            'code'    => ApiException::COMMON_ROUTE_NOT_FOUND
         ]);
     }
 
@@ -88,7 +84,7 @@ class AbstractApiController extends AbstractActionController
         $this->getResponse()->setStatusCode(401);
         return new JsonModel([
             'success' => false,
-            'flash' => 'Сессия истекла'
+            'code'    => ApiException::COMMON_SESSION_EXPIRED
         ]);
     }
 

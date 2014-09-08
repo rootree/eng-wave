@@ -1,15 +1,12 @@
 define(['./module'], function (controllers) {
     'use strict';
-    controllers.controller('RegController',  function($scope, $rootScope, $location, AuthenticationService, SessionService, FlashService) {
+    controllers.controller('RegController',  function($scope, $rootScope, $location, $translate, AuthenticationService, SessionService, FlashService, UserService) {
 
         if (AuthenticationService.isLoggedIn()) {
             $location.path('/');
-            FlashService.show('Авторицация уже была пройдена');
+            FlashService.show($translate.instant('MESSAGE_AUTH_COMPLETED'));
             return;
         }
-
-
-
 
         //===== Работа с сервисами =====//
 
@@ -18,17 +15,17 @@ define(['./module'], function (controllers) {
 
         $scope.registration = function(userEntity) {
             if (userEntity.passwordRepeat != userEntity.password) {
-                FlashService.error('Проверте пароль или его повторение.');
+                FlashService.error($translate.instant('MESSAGE_REG_PASSWORD_MISMATCH'));
                 return;
             }
-            var user = AuthenticationService.signUp(userEntity).success(function(response) {
+            var user = UserService.signUp(userEntity).success(function(response) {
 
                 $rootScope.userSettings = response.userSettings;
                 $rootScope.userSettings.groupsContent = [];
                 document.globalSettings.CSRF = response.CSRF;
                 $location.path('/');
 
-                FlashService.success('Регистарция произведена.');
+                FlashService.success($translate.instant('MESSAGE_REG_COMPLETED'));
             });
         };
 

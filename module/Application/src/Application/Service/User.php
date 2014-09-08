@@ -60,4 +60,14 @@ class User
             'email' => $email,
         ]);
     }
+
+    /**
+     * @param $password
+     *
+     * @return UserEntity
+     */
+    public function generatePassword($password)
+    {
+        return md5($password);
+    }
 }

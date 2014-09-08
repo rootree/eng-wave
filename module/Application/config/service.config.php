@@ -4,13 +4,15 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 use DoctrineModule\Cache\ZendStorageCache;
 use \Application\Service\ErrorHandling as ErrorHandlingService;
 use \Zend\Log\Logger as ZendLogLogger;
+use \Application\Service\Speaker as SpeakerEngine;
 use \Zend\Log\Writer\Stream as LogWriterStream;
 
 return array(
     'factories' => array(
         'Application\Service\Word' => function (ServiceLocatorInterface $sl) {
             $em = $sl->get('Doctrine\ORM\EntityManager');
-            return new \Application\Service\Word($em);
+            $speakerService = $sl->get('Application\Service\Speaker');
+            return new \Application\Service\Word($em, $speakerService);
         },
         'Application\Service\Strategy' => function (ServiceLocatorInterface $sl) {
             $em = $sl->get('Doctrine\ORM\EntityManager');
@@ -28,6 +30,11 @@ return array(
             $em = $sl->get('Doctrine\ORM\EntityManager');
             return new \Application\Service\Feedback($em);
         },
+        'Application\Service\Package' => function (ServiceLocatorInterface $sl) {
+            $em = $sl->get('Doctrine\ORM\EntityManager');
+            $wordService = $sl->get('Application\Service\Word');
+            return new \Application\Service\Package($em, $wordService);
+        },
         'Application\Service\User' => function (ServiceLocatorInterface $sl) {
             $em = $sl->get('Doctrine\ORM\EntityManager');
             return new \Application\Service\User($em);
@@ -42,12 +49,14 @@ return array(
             $speakerService = $sl->get('Application\Service\Speaker');
             $storeService   = $sl->get('Application\Service\Store');
             $emailService   = $sl->get('Application\Service\Email');
+
             return new \Application\Service\Download($em, $speakerService, $storeService, $emailService);
         },
         'Application\Service\Speaker' => function (ServiceLocatorInterface $sl) {
             $em = $sl->get('Doctrine\ORM\EntityManager');
             $storeService = $sl->get('Application\Service\Store');
-            return new \Application\Service\Speaker($em, $storeService);
+            $zendLogService = $sl->get('ZendLog');
+            return new \Application\Service\Speaker($em, $storeService, $zendLogService);
         },
         'Application\Service\Email' => function (ServiceLocatorInterface $sl) {
             $appConfig = $sl->get('config');

@@ -6,9 +6,7 @@ use Zend\Http\Request;
 
 use Application\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel, Zend\Json\Json as ZendJson;
-use Application\Model\Entity\Word as WordEntity;
 use Application\Model\Entity\WordsGroup as WordsGroupEntity;
-use Application\Model\Entity\Language as LanguageEntity;
 use Api\Model\Exception as ApiException;
 
 class GroupsController extends AbstractApiController
@@ -18,12 +16,12 @@ class GroupsController extends AbstractApiController
     {
         $groupID = intval($this->params()->fromRoute('id'));
         if (!$groupID) {
-            throw new ApiException('Номер группы слов не был получен');
+            throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
         }
 
         $currentGroupEntity = $this->getGroupById($groupID);
         if (!$currentGroupEntity) {
-            throw new ApiException('Запрощенная группа слов не найдена.');
+            throw new ApiException(null, ApiException::GROUP_NOT_FOUND);
         }
 
         $userEntity = $this->getUser();
@@ -46,17 +44,17 @@ class GroupsController extends AbstractApiController
     {
         $groupID = intval($this->params()->fromRoute('id'));
         if (!$groupID) {
-            throw new ApiException('Группа не найдено');
+            throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
         }
 
         $groupEntity = $this->getGroupById($groupID);
         if (!$groupEntity) {
-            throw new ApiException('Группа не найдено #2');
+            throw new ApiException(null, ApiException::GROUP_NOT_FOUND);
         }
 
         $countOfWordsInGroup = $groupEntity->getWordList()->count();
         if ($countOfWordsInGroup) {
-            throw new ApiException(sprintf('Данная группа, содержит слова (%d), которые будут потеряны. Откройте удаляемую группу, выделите все слова, переместите их в другую группу или удалите, когда группа для удаления будет пуста, вы сможете удалить ее.', $countOfWordsInGroup));
+            throw new ApiException(null, ApiException::GROUP_WORDS_EXIST);
         }
 
         $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -75,7 +73,7 @@ class GroupsController extends AbstractApiController
 
             if (count($groupEntities) == 0) {
                 $entityManager->rollback();
-                throw new ApiException('Последняя группа удалена не может быть.');
+                throw new ApiException(null, ApiException::GROUP_LAST);
             }
 
             foreach ($groupEntities as $group2Entity) {
@@ -98,11 +96,11 @@ class GroupsController extends AbstractApiController
     {
         $groupID = intval($this->params()->fromRoute('id'));
         if (!$groupID) {
-            throw new ApiException('Группа не найдено');
+            throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
         }
         $wordsGroupEntity = $this->getGroupById($groupID);
         if (!$wordsGroupEntity) {
-            throw new ApiException('Группа не найдено #1');
+            throw new ApiException(null, ApiException::GROUP_NOT_FOUND);
         }
 
         /** @var \Zend\Http\Request $request */
@@ -111,11 +109,11 @@ class GroupsController extends AbstractApiController
 
             $data = $this->getPostParams($request);
             if (!$data) {
-                throw new ApiException('Параметры для добавления загрузки не найдены');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             if (empty($data['title'])) {
-                throw new ApiException('Параметры для добавления нового слова не найдены');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             $wordsGroupEntity->setTitle($data['title']);
@@ -129,7 +127,7 @@ class GroupsController extends AbstractApiController
             ]);
 
         } else {
-            throw new ApiException('Параметры для добавления нового слова не найдены');
+            throw new ApiException(null, ApiException::COMMON_EMPTY_REQUEST);
         }
     }
 
@@ -141,7 +139,7 @@ class GroupsController extends AbstractApiController
 
             $data = $this->getPostParams($request);
             if (!$data) {
-                throw new ApiException('Параметры для добавления загрузки не найдены');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -172,14 +170,14 @@ class GroupsController extends AbstractApiController
                     ]);
                 } else {
                     $entityManager->rollback();
-                    throw new ApiException('Произошла логическая ошибка');
+                    throw new ApiException(null, ApiException::COMMON_LOGICAL_ERROR);
                 }
             } else {
                 // 'error' => $wordsGroupForm->getMessages(),
-                throw new ApiException('Заполните все обязательные поля');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
         } else {
-            throw new ApiException('Параметры для добавления нового слова не найдены');
+            throw new ApiException(null, ApiException::COMMON_EMPTY_REQUEST);
         }
     }
 }

@@ -11,6 +11,8 @@ use Application\Model\Entity\Language as LanguageEntity;
 use Application\Model\Entity\Word as WordEntity;
 use Application\Model\Entity\Download as DownloadEntity;
 use Application\Model\Entity\Speaker as SpeakerEntity;
+use Application\Model\Entity\Package as PackageEntity;
+use Application\Model\Entity\PackageUser as PackageUserEntity;
 use Application\Model\Entity\Strategy as StrategyEntity;
 use Application\Model\Entity\StrategyItem as StrategyItemEntity;
 use Application\Service\Store as StoreService;
@@ -68,13 +70,22 @@ abstract class AbstractActionController extends ZendAbstractActionController
             $downloadService = $this->getServiceLocator()->get('Application\Service\Download');
             $downloadEntities = $downloadService->getDownloads($userEntity);
 
-            $user['authenticated'] = 1;
-            $user['readyToDownload'] = $this->countReadyToDownload($downloadEntities);
-            $user['strategies']    = $this->prepareStrategies($strategyEntities);
-            $user['downloads']     = $this->prepareDownloads($downloadEntities);
-            $user['settings']      = $userEntity->getSettings();
-            $user['groups']        = $this->prepareGroups($groupEntities);
-            $user['email']         = $userEntity->getEmail();
+            /** @var \Application\Service\Package $packageService  */
+            $packageService = $this->getServiceLocator()->get('Application\Service\Package');
+            $packageEntities = $packageService->getPackages();
+
+            $user['authenticated']     = 1;
+            $user['installedPackages'] = $this->prepareInstalledPackages($userEntity->getPackageRelationsList());
+            $user['readyToDownload']   = $this->countReadyToDownload($downloadEntities);
+            $user['strategies']        = $this->prepareStrategies($strategyEntities);
+            $user['downloads']         = $this->prepareDownloads($downloadEntities);
+            $user['packages']          = $this->preparePackages($packageEntities);
+            $user['settings']          = $userEntity->getSettings();
+            $user['groups']            = $this->prepareGroups($groupEntities);
+            $user['credential']        = [
+                'email' => $userEntity->getEmail(),
+                'name'  => $userEntity->getName(),
+            ];
         }
 
         return ($user);
@@ -165,6 +176,36 @@ abstract class AbstractActionController extends ZendAbstractActionController
     }
 
     /**
+     * @param $packagesEntities
+     *
+     * @return array
+     */
+    protected function preparePackages($packagesEntities)
+    {
+        $packagesResponse = [];
+        /** @var PackageEntity $packageEntity */
+        foreach ($packagesEntities as $packageEntity) {
+            $packagesResponse[] = $this->preparePackage($packageEntity);
+        }
+        return $packagesResponse;
+    }
+
+    /**
+     * @param $packageUserEntities
+     *
+     * @return array
+     */
+    protected function prepareInstalledPackages($packageUserEntities)
+    {
+        $packageUserResponse = [];
+        /** @var PackageUserEntity $packageEntity */
+        foreach ($packageUserEntities as $packageUserEntity) {
+            $packageUserResponse[] = $this->prepareInstalledPackage($packageUserEntity);
+        }
+        return $packageUserResponse;
+    }
+
+    /**
      * @param $downloadEntities
      *
      * @return array
@@ -231,6 +272,23 @@ abstract class AbstractActionController extends ZendAbstractActionController
     }
 
     /**
+     * @param PackageEntity $packageEntity
+     *
+     * @return array
+     */
+    protected function preparePackage($packageEntity)
+    {
+        return [
+            'id'    => $packageEntity->getId(),
+            'title' => $packageEntity->getTitle(),
+            'desc'  => $packageEntity->getDesc(),
+            'sort'  => $packageEntity->getSort(),
+            'level' => $packageEntity->getLevel(),
+            'count' => $packageEntity->getWordsList()->count(),
+        ];
+    }
+
+    /**
      * @param StrategyEntity $strategyEntity
      *
      * @return array
@@ -267,6 +325,18 @@ abstract class AbstractActionController extends ZendAbstractActionController
             'settings' => $strategyItemEntity->getSettings(),
             'type'     => $strategyItemEntity->getType(),
             'sort'     => $strategyItemEntity->getSort()
+        ];
+    }
+
+    /**
+     * @param PackageUserEntity $packageUserEntity
+     *
+     * @return array
+     */
+    protected function prepareInstalledPackage(PackageUserEntity $packageUserEntity)
+    {
+        return [
+            'id' => $packageUserEntity->getFkPackage()->getId(),
         ];
     }
 
@@ -343,6 +413,18 @@ abstract class AbstractActionController extends ZendAbstractActionController
         /** @var \Application\Service\Download $downloadService  */
         $downloadService = $this->getServiceLocator()->get('Application\Service\Download');
         return $downloadService->getDownloadById($downloadID, $this->getUser());
+    }
+
+    /**
+     * @param $packageID
+     *
+     * @return PackageEntity
+     */
+    protected function getPackageById($packageID)
+    {
+        /** @var \Application\Service\Package $packageService  */
+        $packageService = $this->getServiceLocator()->get('Application\Service\Package');
+        return $packageService->getPackageById($packageID);
     }
 
     /**

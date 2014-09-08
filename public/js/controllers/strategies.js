@@ -1,6 +1,6 @@
 define(['./module'], function (controllers) {
     'use strict';
-    controllers.controller('StrategiesController',  function($scope, $rootScope, $location, StrategiesService, SessionService, FlashService) {
+    controllers.controller('StrategiesController',  function($scope, $rootScope, $location, $translate, StrategiesService, SessionService, FlashService) {
 
         //===== Работа с сервисами =====//
 
@@ -20,7 +20,7 @@ define(['./module'], function (controllers) {
                 success(function(response) {
                     $rootScope.userSettings.strategies =
                         _.reject($rootScope.userSettings.strategies, function(strategy2){ return strategy2.id == strategy.id; });
-                    FlashService.success('Выбранная стратегия удалена');
+                    FlashService.success($translate.instant('MESSAGE_STRATEGY_DELETED'));
             });
         };
 
@@ -132,7 +132,7 @@ define(['./module'], function (controllers) {
         var _updateStrategyOnServer = function (strategyID, strategyTitle) {
             StrategiesService.updateStrategy(strategyID, strategyTitle, $scope.sortableSourceItems).
                 success(function(response) {
-                    FlashService.success('Стратегия обновлена');
+                    FlashService.success($translate.instant('MESSAGE_STRATEGY_SAVED'));
                     $scope.cancelStrategyCommit();
                     var strategy = _.findWhere($rootScope.userSettings.strategies, {id: strategyID});
                     strategy.title = strategyTitle;

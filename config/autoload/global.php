@@ -13,9 +13,6 @@
 
 return [
     'store' => [
-        'path' => '',
-        'url' => '',
-        'silence-file' => '',
         'subPath' => [
             'speaker' => 'speaker',
             'download' => 'download',
@@ -44,11 +41,15 @@ return [
     ],
 
     'view_manager' => [
-        'display_not_found_reason' => false,
-        'display_exceptions'       => false,
+        'display_not_found_reason' => true,
+        'display_exceptions'       => true,
         'doctype'                  => 'HTML5',
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/index',
+        'strategies' => array(
+            'ViewJsonStrategy', // register JSON renderer strategy
+            //'ViewFeedStrategy', // register Feed renderer strategy
+        ),
     ],
 
 ];

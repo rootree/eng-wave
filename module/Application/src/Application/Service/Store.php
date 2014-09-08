@@ -24,7 +24,7 @@ class Store
     public function getSpeakURL($fileID, $type)
     {
         $fullURL = sprintf('%s%s',
-            $this->storeConfig['url'],
+            $this->storeConfig['url-static'],
             $this->getSubPath($type)
         );
         return $this->get($fileID, $fullURL, true).$this->getExtension($type);

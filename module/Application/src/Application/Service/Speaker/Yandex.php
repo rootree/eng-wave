@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Model\Speaker;
+namespace Application\Service\Speaker;
 
 class Yandex extends Service
 {

@@ -6,9 +6,6 @@ use Zend\Http\Request;
 
 use Application\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel, Zend\Json\Json as ZendJson;
-use Application\Model\Entity\Word as WordEntity;
-use Application\Model\Entity\WordsGroup as WordsGroupEntity;
-use Application\Model\Entity\Language as LanguageEntity;
 use Application\Service\Store as StoreService;
 use Application\Model\Entity\Download as DownloadEntity;
 use Api\Model\Exception as ApiException;
@@ -32,12 +29,12 @@ class DownloadsController extends AbstractApiController
     {
         $downloadID = intval($this->params()->fromRoute('id'));
         if (!$downloadID) {
-            throw new ApiException('Загрузка не найдена');
+            throw new ApiException(null, ApiException::DOWNLOAD_NOT_FOUND);
         }
 
         $downloadEntity = $this->getDownloadById($downloadID);
         if (!$downloadEntity) {
-            throw new ApiException('Загрузка не найдена #2');
+            throw new ApiException(null, ApiException::DOWNLOAD_NOT_FOUND);
         }
 
         /** @var \Application\Service\Download $downloadService  */
@@ -57,7 +54,7 @@ class DownloadsController extends AbstractApiController
 
             $data = $this->getPostParams($request);
             if (!$data) {
-                throw new ApiException('Параметры для добавления загрузки не найдены');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             /** @var \Doctrine\ORM\EntityManager $entityManager  */
@@ -74,13 +71,13 @@ class DownloadsController extends AbstractApiController
                 $fkStrategy = intval($downloadForm->get('fkStrategy')->getValue());
                 $fkWordsGroup = intval($downloadForm->get('fkWordsGroup')->getValue());
                 if (!$fkStrategy || !$fkWordsGroup) {
-                    throw new ApiException('Параметры для добавления загрузки не найдены');
+                    throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
                 }
 
                 $strategyEntity = $this->getStrategyById($fkStrategy);
                 $wordsGroupEntity = $this->getGroupById($fkWordsGroup);
                 if (!$strategyEntity || !$wordsGroupEntity) {
-                    throw new ApiException('Параметры для добавления загрузки не найдены');
+                    throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
                 }
 
                 $entityManager->beginTransaction();
@@ -108,14 +105,14 @@ class DownloadsController extends AbstractApiController
                     ]);
                 } else {
                     $entityManager->rollback();
-                    throw new ApiException('Произошла логическая ошибка');
+                    throw new ApiException(null, ApiException::COMMON_LOGICAL_ERROR);
                 }
             } else {
                 // 'error' => $wordsGroupForm->getMessages(),
-                throw new ApiException('Заполните все обязательные поля');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
         } else {
-            throw new ApiException('Параметры для добавления загрузки не найдены');
+            throw new ApiException(null, ApiException::COMMON_EMPTY_REQUEST);
         }
     }
 }

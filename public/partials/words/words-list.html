@@ -1,0 +1,138 @@
+<div ng-show="words.length && !isEditingWord && !isAddingNewWord && !editingGroup">
+
+    <div class="panel panel-default">
+
+        <div class="table-footer">
+            <ui-pagination cur="$parent.pagination.cur" total="$parent.pagination.total" display="{{$parent.pagination.display}}" ng-show="($parent.words|filter:$parent.q).length && $parent.pagination.total>1" ></ui-pagination>
+
+            <div class="col-md-3 input-group" ng-show="words.length">
+                <input type="text" class="form-control" placeholder="Поиск" ng-change="onSearch(obj)" ng-model="$parent.q" />
+                <span class="input-group-btn">
+                    <button class="btn btn-default icon-remove3" type="button" ng-click="cleanSearch()" ng-disabled="!$parent.q"></button>
+                </span>
+            </div>
+        </div>
+
+        <div class="panel-heading"></div>
+
+        <div class="table-responsive" ng-show="(words|filter:q).length">
+            <table class="table table-hover table-check words-table ">
+                <thead>
+                    <tr>
+                        <th class="text-centered">
+                            &nbsp;<input type="checkbox" class="styled" value="all" ng-model="$parent.checkedAllWords" ng-checked="$parent.checkedAllWords"/>
+                        </th>
+                        <th class="col-md-5" ng-click="predicate = 'source'; reverse=!reverse" ng-class="predicate == 'source' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                            <a>Оригинал</a>
+                        </th>
+                        <th class="col-md-5" ng-click="predicate = 'target'; reverse=!reverse" ng-class="predicate == 'target' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                            <a>Перевод</a>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="word in $parent.words | orderBy:predicate:reverse | filter:q | offset:(pagination.cur-1)*pagination.elementsOnPage | limitTo:pagination.elementsOnPage ">
+                        <td>
+                            <input type="checkbox" class="styled" name="list_id[]" id="checkbox-{{ word.id }}"
+                                   value="{{ word.id }}" ng-checked="word.checked" ng-model="word.checked" />
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-md-1">
+                                    <button class="btn btn-primary btn-icon btn-xs tip" type="button" ng-click="play(word.id + '-source-btn', word, 1)">
+                                        <i id="{{ word.id }}-source-btn" class="icon-play3"></i>
+                                    </button>
+
+                                </div>
+                                <div class="col-md-9 ">
+                                    <div class="word-entity" ng-bind-html="word.source"></div>
+                                </div>
+                                <div class="col-md-2 text-right">
+                                    <img ng-src="/img/flag/{{ word.sourceLang }}.png" title="{{ word.source_lang }}" class="words-flag"/>
+                                </div>
+                            </div>
+
+                        </td>
+                        <td >
+                            <div class="row">
+                                <div class="col-md-1" >
+                                    <button class="btn btn-primary btn-icon btn-xs tip" type="button" ng-click="play(word.id + '-target-btn', word, 2)">
+                                        <i id="{{ word.id }}-target-btn" class="icon-play3"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="word-entity" ng-bind-html="word.target"></div>
+                                </div>
+                                <div class="col-md-2  text-right">
+                                    <img ng-src="/img/flag/{{ word.targetLang }}.png" title="{{ word.target_lang }}" class="words-flag"/>
+                                </div>
+                            </div>
+
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-primary btn-icon btn-xs tip" ng-click="editWord(word, $index)"><i class="icon-pencil4"></i></button>
+                            <button class="btn btn-primary btn-icon btn-xs tip" ng-click="deleteWord(word.id, $index)"><i class="icon-remove3"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-footer" ng-show="(words|filter:q).length">
+            <div class="table-actions">
+                <div ng-show="selectedItems">
+
+                    <span class="input-group dropup" ng-show="actionTypeOnSelectedItems != 'Move'">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            Действия над выбранными словами ({{selectedItems}} шт.)<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+                            <li><a ng-click="actionTypeOnSelectedItems = 'Move'">Переместить</a></li>
+                            <li><a ng-click="deleteGroupWords()">Удалить</a></li>
+                        </ul>
+                    </span><!-- /btn-group -->
+
+                    <form ng-submit="submitChangingGroup()" ng-show="actionTypeOnSelectedItems == 'Move'" class="form-inline">
+                        <div class="form-group" style="margin-top: -1px;">
+                            <select class="form-control" ng-model="moveToGroup" name="moveToGroup" id="moveToGroup">
+                                <option value="" disabled=disabled>Выберите группу для переноса</option>
+                                <option ng-repeat="group in userSettings.groups | orderBy:'title'" value="{{ group.id }}" ng-bind-html="group.title" ng-disabled="userSettings.settings.currentGroup==group.id">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success">Переместить в группу</button>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" ng-click="actionTypeOnSelectedItems = '';" class="btn btn-default">Отмена</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div ng-show="!selectedItems" class="text-muted">
+                    <div ng-show="!q">
+                        Всего слов: {{words.length}}
+                    </div>
+
+                    <div ng-show="q">
+                        Найдено слов: {{(words|filter:q).length}} из {{words.length}}
+                    </div>
+                </div>
+            </div>
+
+            <ui-pagination cur="pagination.cur" total="pagination.total" display="{{pagination.display}}"  ng-show="(words|filter:q).length && pagination.total>1" ></ui-pagination>
+        </div>
+    </div>
+</div>
+
+<div ng-show="q && !(words|filter:q).length">
+    <div class="alert alert-block alert-warning fade in block-inner">
+        <h6><i class="icon-info2"></i> Ничего не найдено</h6>
+        <hr>
+        <p>При текущем фильтре ни одно слово найдено не было.</p>
+        <div class="text-left">
+            <a class="btn btn-primary" ng-click="cleanSearch()"><i class="icon-remove3"></i> Сбросить фильтр</a>
+        </div>
+    </div>
+</div>

@@ -54,6 +54,11 @@ define(['./app'], function (app) {
             templateUrl: 'templates/settings.html',
             controller: 'SettingsController'
         });
+        $routeProvider.when('/packages', {
+            title: 'Пакеты',
+            templateUrl: 'templates/packages.html',
+            controller: 'PackagesController'
+        });
         $routeProvider.when('/:groupID?', {
             title: 'Слова',
             templateUrl: 'templates/words.html',

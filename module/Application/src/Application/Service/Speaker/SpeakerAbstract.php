@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Model\Speaker;
+namespace Application\Service\Speaker;
 
 abstract class SpeakerAbstract
 {
@@ -9,6 +9,8 @@ abstract class SpeakerAbstract
     const SPEAK_IN_GERMANY = 'ge';
 
     protected $speakInLanguage = null;
+
+    protected $loggerService = null;
 
     public function __construct($languageType)
     {
@@ -31,4 +33,22 @@ abstract class SpeakerAbstract
      * @return string
      */
     abstract public function getWordsFileContent($wordsForSpeaking);
+
+    /**
+     * @param $loggerService
+     * @param $loggerService
+     */
+    abstract public function setLogger($loggerService);
+
+    /**
+     * @param $string
+     *
+     * @return mixed
+     */
+    protected function dropUnreadableSymbols($string)
+    {
+        $string = str_replace('#$%&\'*+-/=^_`{|}~@[]', '', $string); // .?!
+        //$string = preg_replace('/[^\x00-\x7F]+/', '', $string);
+        return $string;
+    }
 }

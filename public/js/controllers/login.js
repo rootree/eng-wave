@@ -1,10 +1,12 @@
 define(['./module'], function (controllers) {
     'use strict';
-    controllers.controller('LoginController',  function($scope, $rootScope, $location, AuthenticationService, SessionService, FlashService) {
+    controllers.controller('LoginController',  function($scope, $rootScope, $location, $translate,
+                                                        AuthenticationService, SessionService, FlashService
+        ) {
 
         if (AuthenticationService.isLoggedIn()) {
             $location.path('/');
-            FlashService.success('Авторизация уже была пройдёна');
+            FlashService.success($translate.instant('MESSAGE_AUTH_COMPLETED'));
         } else {
             $rootScope.userSettings.authenticated = 0;
         }
@@ -21,5 +23,6 @@ define(['./module'], function (controllers) {
                 $location.path('/');
             });
         };
+
     });
 });

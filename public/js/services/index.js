@@ -13,6 +13,7 @@ define([
     './groups',
     './words',
     './strategies',
+    './packages',
     './downloads',
     './pagination',
     './authentication',

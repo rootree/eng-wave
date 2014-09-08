@@ -5,9 +5,10 @@ return array(
         'connection' => array(
             'orm_default' => array(
                 'params' => array(
-                    'host' => 'localhost',
-                    'user' => 'root',
-                    'password' => '111111',
+                    'dbname'   => 'eng',
+                    'host'     => 'localhost',
+                    'user'     => '******',
+                    'password' => '******',
                 ),
             ),
         ),

@@ -1,0 +1,29 @@
+<form role="form" ng-submit="addNewGroup()" name="addGroupForm" ng-show="isAddingNewGroup">
+    <br/>
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h6 class="panel-title"><i class="icon-file-plus"></i> Добавление группы</h6>
+        </div>
+
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Название:</label>
+                        <input type="text" class="form-control input-lg" ng-model="NewGroupForm.title" required>
+                            <span class="forms-desc" ng-show="addGroupForm.name.$error.minlength">
+                            Минимальная длинна три символа.
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions text-right">
+                <button type="button" class="btn btn-default" ng-click="$parent.isAddingNewGroup = false;">Отмена</button>
+                <button type="submit" class="btn btn-success" ng-disabled="addGroupForm.$invalid">Добавить</button>
+            </div>
+        </div>
+
+    </div>
+</form>

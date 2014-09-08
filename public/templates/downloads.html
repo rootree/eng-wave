@@ -19,7 +19,7 @@
                 <div class="alert alert-block alert-warning fade in">
                     <h6><i class="icon-question2"></i> Пусто</h6>
                     <hr>
-                    <p>Ни одной из стратегий для слов для перевода не найдено. Добавьте хоте бы одну, иначе вы не сможете загразить для прослушивания ваши слова.</p>
+                    <p>Ни одной из стратегий для слов для перевода не найдено. Добавьте хотя бы одну, иначе вы не сможете загрузить для прослушивания ваши слова.</p>
                 </div>
                 <br/>
             </div>
@@ -37,85 +37,88 @@
                 <br/>
             </div>
 
-            <div class="panel panel-default">
 
-            <div class="panel-heading"></div>
-            <div class="table-responsive"  ng-show="userSettings.downloads.length">
-                <table class="table   table-hover">
-                    <thead>
-                        <tr >
-                            <th class="col-md-2" ng-click="predicate = 'group'; reverse=!reverse" ng-class="predicate == 'group' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'" >
-                                <a>Группа слов</a>
-                            </th>
-                            <th class="col-md-2" ng-click="predicate = 'strategy'; reverse=!reverse" ng-class="predicate == 'strategy' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
-                                <a>Стратегия</a>
-                            </th>
-                            <th ng-click="predicate = 'createdAt'; reverse=!reverse" ng-class="predicate == 'createdAt' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
-                                <a>Дата создания</a>
-                            </th>
-                            <th class="col-md-2" ng-click="predicate = 'status'; reverse=!reverse" ng-class="predicate == 'status' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
-                                <a>Статус</a>
-                            </th>
-                            <th ng-click="predicate = 'wight'; reverse=!reverse" ng-class="predicate == 'wight' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
-                                <a>Размер</a>
-                            </th>
-                            <th>
+            <div ng-show="userSettings.downloads.length">
+                <div class="panel panel-default">
 
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="download in userSettings.downloads | orderBy:predicate:reverse ">
-                            <td class="text-left">
-                                <span ng-show="download.group">
-                                    <a href="#/{{ download.groupID }}" ng-bind-html="download.group + ' (слов: ' + download.groupCount + ')' "></a>
-                                </span>
-                                <span ng-show="!download.group" class="help-block" ng-bind-html="download.legacy.group.title + ' (слов: ' + download.legacy.group.count + ')'">
-                                </span>
-                            </td>
-                            <td>
-                                <div ng-show="download.strategy">
-                                    {{ download.strategy }}
-                                </div>
-                                <div ng-show="!download.strategy" class="help-block">
+                <div class="panel-heading"></div>
+                <div class="table-responsive">
+                    <table class="table   table-hover">
+                        <thead>
+                            <tr >
+                                <th class="col-md-2" ng-click="predicate = 'group'; reverse=!reverse" ng-class="predicate == 'group' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'" >
+                                    <a>Группа слов</a>
+                                </th>
+                                <th class="col-md-2" ng-click="predicate = 'strategy'; reverse=!reverse" ng-class="predicate == 'strategy' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                                    <a>Стратегия</a>
+                                </th>
+                                <th ng-click="predicate = 'createdAt'; reverse=!reverse" ng-class="predicate == 'createdAt' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                                    <a>Дата создания</a>
+                                </th>
+                                <th class="col-md-2" ng-click="predicate = 'status'; reverse=!reverse" ng-class="predicate == 'status' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                                    <a>Статус</a>
+                                </th>
+                                <th ng-click="predicate = 'wight'; reverse=!reverse" ng-class="predicate == 'wight' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                                    <a>Размер</a>
+                                </th>
+                                <th>
 
-                                    {{ download.legacy.strategy.title }}
-                                </div>
-                            </td>
-                            <td>
-                                {{ download.createdAt | date:'medium' }}
-                            </td>
-                            <td>
-                                <settings ng-switch on="download.status">
-                                    <silent-type class="label label-info"  ng-switch-when="0">
-                                        В очереди
-                                    </silent-type>
-                                    <silent-type class="label label-warning" ng-switch-when="1">
-                                        Подготавливается
-                                    </silent-type>
-                                    <silent-type class="label label-success" ng-switch-when="2">
-                                        Готово
-                                    </silent-type>
-                                    <silent-type class="label label-default" ng-switch-when="3">
-                                        Отменен
-                                    </silent-type>
-                                </settings>
-                            </td>
-                            <td>
-                                {{ download.wight }}
-                            </td>
-                            <td class="text-right">
-                                <a class="btn btn-primary  btn-xs " ng-disabled="download.status != 2" target="_blank" ng-href="/download/{{download.id}}"><i class="icon-download2"></i> Скачать</a>
-                                <button class="btn btn-primary btn-icon btn-xs " ng-disabled="download.status == 1" ng-click="dropDownload(download)"><i class="icon-remove3"></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="table-footer ">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="download in userSettings.downloads | orderBy:predicate:reverse ">
+                                <td class="text-left">
+                                    <span ng-show="download.group">
+                                        <a href="#/{{ download.groupID }}" ng-bind-html="download.group + ' (слов: ' + download.groupCount + ')' "></a>
+                                    </span>
+                                    <span ng-show="!download.group" class="help-block" ng-bind-html="download.legacy.group.title + ' (слов: ' + download.legacy.group.count + ')'">
+                                    </span>
+                                </td>
+                                <td>
+                                    <div ng-show="download.strategy">
+                                        {{ download.strategy }}
+                                    </div>
+                                    <div ng-show="!download.strategy" class="help-block">
 
-                <span class="text-muted">Всего: {{ userSettings.downloads.length }}</span>
-            </div>
+                                        {{ download.legacy.strategy.title }}
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ download.createdAt | date:'medium' }}
+                                </td>
+                                <td>
+                                    <settings ng-switch on="download.status">
+                                        <silent-type class="label label-info"  ng-switch-when="0">
+                                            В очереди
+                                        </silent-type>
+                                        <silent-type class="label label-warning" ng-switch-when="1">
+                                            Подготавливается
+                                        </silent-type>
+                                        <silent-type class="label label-success" ng-switch-when="2">
+                                            Готово
+                                        </silent-type>
+                                        <silent-type class="label label-default" ng-switch-when="3">
+                                            Отменен
+                                        </silent-type>
+                                    </settings>
+                                </td>
+                                <td>
+                                    {{ download.wight }}
+                                </td>
+                                <td class="text-right">
+                                    <a class="btn btn-primary  btn-xs " ng-disabled="download.status != 2" target="_blank" ng-href="/download/{{download.id}}"><i class="icon-download2"></i> Скачать</a>
+                                    <button class="btn btn-primary btn-icon btn-xs " ng-disabled="download.status == 1" ng-click="dropDownload(download)"><i class="icon-remove3"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer ">
+
+                    <span class="text-muted">Всего: {{ userSettings.downloads.length }}</span>
+                </div>
+                </div>
             </div>
         </div>
 

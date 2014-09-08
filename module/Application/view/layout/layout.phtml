@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
-    <title>Londinium - premium responsive admin template by Eugene Kopyov</title>
+    <title>EngWave App</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="css/londinium-theme.css" rel="stylesheet" type="text/css">
@@ -61,15 +61,20 @@
                     <span >Загрузки</span>
                 </a>
             </li>
+            <li ng-class="currentController == 'PackagesController' ? 'active' : ''">
+                <a href="#/packages">
+                    <i class="icon-folder2"></i> <span>Пакеты</span>
+                </a>
+            </li>
             <li class="user dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown">
                     <img src="http://placehold.it/300" alt="">
-                    <span>{{ userSettings.email }}</span>
+                    <span ng-bind-html="userSettings.credential.name"></span>
                     <i class="caret"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right icons-right">
                     <li ng-class="currentController == 'SettingsController' ? 'active' : ''"><a href="#/settings"><i class="icon-user"></i> Профайл</a></li>
-                    <li><a href="#" ng-click="globalLogout()"><i class="icon-exit"></i> Выйти</a></li>
+                    <li><a ng-click="globalLogout()"><i class="icon-exit"></i> Выйти</a></li>
                 </ul>
             </li>
         </ul>
@@ -82,7 +87,7 @@
 
     <!-- Footer -->
     <div class="footer navbar-fixed-bottom">
-        <div class="pull-left">&copy; 2014. Eng app</div>
+        <div class="pull-left">&copy; 2014. EngWave app</div>
         <div class="pull-right icons-group">
             <a ng-class="currentController == 'SupportController' ? 'active' : ''" href="#/support">Предложения / Поддержка</a>
             <a href="#/about">О проекте</a>

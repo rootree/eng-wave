@@ -1,6 +1,6 @@
 define(['./module'], function (controllers) {
     'use strict';
-    controllers.controller('WordsController', function($scope, $rootScope, $filter, $location, $timeout, $routeParams,
+    controllers.controller('WordsController', function($scope, $rootScope, $filter, $location, $translate, $timeout, $routeParams,
                                                        UserService,
                                                        WordsService,
                                                        GroupsService,
@@ -12,15 +12,15 @@ define(['./module'], function (controllers) {
 
         if (!AuthenticationService.isLoggedIn()) {
             $location.path('/login');
-            FlashService.show('Пройдите авторизацию');
+            FlashService.show($translate.instant('MESSAGE_WORD_AUTH'));
             return;
         }
-
 
         //===== Работа с сервисами =====//
 
         $scope.getGroup = function(idGroup, force){
             if ($rootScope.userSettings.settings.currentGroup == idGroup && force !== true) {
+                _resetPageParameters();
                 return;
             }
             $rootScope.userSettings.settings.currentGroup = idGroup;
@@ -45,7 +45,7 @@ define(['./module'], function (controllers) {
                 _dropItemByID($scope.words, wordID);
                 _decreaseGroupCount($rootScope.userSettings.settings.currentGroup, 1);
                 $scope.pagination.cur = 1;//Устанавиливать есть на текущей странице нет элементов
-                FlashService.success('Слово удалено');
+                FlashService.success($translate.instant('MESSAGE_WORD_DELETED'));
             });
         };
         $scope.deleteGroup = function(groupID){
@@ -55,8 +55,9 @@ define(['./module'], function (controllers) {
                 if (response.currentGroup != $rootScope.userSettings.settings.currentGroup) {
                     $scope.getGroup(response.currentGroup);
                 }
-                FlashService.success('Группа успешно удалена');
+                FlashService.success($translate.instant('MESSAGE_GROUP_DELETED'));
             }).error(function(response){
+                    // 'Данная группа, содержит слова (%d шт.), которые будут потеряны. Откройте удаляемую группу, выделите все слова, переместите их в другую группу или удалите, когда группа для удаления будет пуста, вы сможете удалить ее.'
                     if (response.existWords) {
 
                     }
@@ -69,7 +70,7 @@ define(['./module'], function (controllers) {
                     _dropSelectedItems(selectedItems);
                     _decreaseGroupCount(UserService.currentGroup().id, selectedItems.length);
                     $scope.pagination.cur = 1;//Устанавиливать есть на текущей странице нет элементов
-                    FlashService.success('Выделенные словавы были удалены');
+                    FlashService.success($translate.instant('MESSAGE_WORDS_DELETED'));
                 });
             }
         };
@@ -84,21 +85,20 @@ define(['./module'], function (controllers) {
                         _decreaseGroupCount(UserService.currentGroup().id, selectedItems.length);
                         _increaseGroupCount(moveToGroup, selectedItems.length);
                         $scope.pagination.cur = 1;
-                        FlashService.success('Выбранные слова успешно перемещены в новую группу');
+                        FlashService.success($translate.instant('MESSAGE_WORDS_MOVED'));
                     });
                 }
             }
         };
-        $scope.editGroup = function(){
-            if ($scope.currentGroupTitle != UserService.currentGroup().title){
+        $scope.editGroup = function(newGroupTitle){
+            if (newGroupTitle != UserService.currentGroup().title){
                 GroupsService.update($scope.currentGroupTitle, UserService.currentGroup().id).
                     success(function(response) {
-                        UserService.currentGroup().title = $scope.currentGroupTitle;
+                        UserService.currentGroup().title = $scope.currentGroupTitle = newGroupTitle;
                         $scope.editingGroup = 0;
-                        FlashService.success('Группа успешно отредактирована');
+                        FlashService.success($translate.instant('MESSAGE_GROUP_UPDATED'));
                     }).
                     error(function(response) {
-                        $scope.currentGroupTitle = UserService.currentGroup().title;
                         $scope.editingGroup = 0;
                     });
             }
@@ -110,7 +110,7 @@ define(['./module'], function (controllers) {
                 $scope.isAddingNewGroup = 0;
                 $scope.NewGroupForm.title = '';
                 $scope.getGroup(response.group.id).success(function(){
-                    FlashService.success('Группа успешно добавлена');
+                    FlashService.success($translate.instant('MESSAGE_GROUP_ADDED'));
                 });
             });
         };
@@ -126,12 +126,12 @@ define(['./module'], function (controllers) {
                     $scope.words.push(response.word);
                 }
                 _increaseGroupCount(UserService.currentGroup().id, 1);
-                FlashService.success('Новое слово успешно добавлено');
+                FlashService.success($translate.instant('MESSAGE_WORD_ADDED'));
             });
         };
         $scope.updateWord = function(wordEntity){
             WordsService.update(wordEntity).success(function(response) {
-                FlashService.success('Слово успешно отредактированно');
+                FlashService.success($translate.instant('MESSAGE_WORD_UPDATED'));
                 _dropItemByID($scope.words, wordEntity.id);
                 if (wordEntity.fkWordsGroup == UserService.currentGroup().id) {
                     $scope.words.push(response.word);
@@ -149,10 +149,8 @@ define(['./module'], function (controllers) {
         //===== Работа с интерфейсом =====//
 
         $scope.showFromForNewWord = function(){
-            $scope.isAddingNewWord = !$scope.isAddingNewWord;
-            $scope.editingGroup = 0;
-            $scope.isEditingWord = 1;
-            $scope.isAddingNewGroup = 0;
+            _resetPageParameters();
+            $scope.isAddingNewWord = 1;
         };
         $scope.onSearch = function(){
             $scope.checkedAllWords = false;
@@ -160,9 +158,9 @@ define(['./module'], function (controllers) {
                 word.checked = false;
             });
             _updatePagination();
-            $scope.pagination.cur = 1;
+            this.pagination.cur = 1;
         };
-        $scope.cleanSearch = function(){
+        $scope.cleanSearch = function(q){
             $scope.checkedAllWords = false;
             angular.forEach($scope.words, function(word){
                 word.checked = false;
@@ -186,24 +184,26 @@ define(['./module'], function (controllers) {
                 word.checked = false;
             });
 
-            $scope.editWordForm.$setPristine(true);
+            // $scope.editWordForm.$setPristine(true);
             $scope.editWordEntity = {};
             $scope.editWordEntity = _.clone(word);
             $scope.editWordEntity.index = index;
 
         };
         $scope.play = function(elementID, wordEntity, sourceType){
-            console.log(wordEntity);
-            console.log(sourceType);
             var URLField = sourceType == 1 ? 'sourceURL' : 'targetURL';
             if (!_.isEmpty(wordEntity[URLField])) {
                 SoundService.play($('#' + elementID), wordEntity[URLField]);
                 return;
             }
-
             WordsService.getSpeakURL(wordEntity.id, sourceType).success(function(response) {
+                if (!response.success) {
+                    FlashService.error($translate.instant('MESSAGE_WORD_SPEAK_ERROR'));
+                    return;
+                }
                 wordEntity[URLField] = response.speakURL;
                 SoundService.play($('#' + elementID), response.speakURL);
+                // Неловкий момент. Фаил подготавливается для воспроизведения. Попробуйте через пару секунд.
             });
         };
         $scope.cancelGroupChanging = function(){
@@ -295,13 +295,19 @@ define(['./module'], function (controllers) {
         };
         var _switchGroup = function(words) {
 
+            _resetPageParameters();
+
             $scope.words = words;
             $scope.currentGroupTitle = UserService.currentGroup().title;
+
+            $scope.isAddingNewWord = !words.length;
+        };
+        var _resetPageParameters = function() {
 
             $scope.selectedItems = 0;
             $scope.checkedAllWords = false;
 
-            $scope.isAddingNewWord = !words.length;
+            $scope.isAddingNewWord = 0;
             $scope.editingGroup = 0;
             $scope.isEditingWord = 0;
             $scope.isAddingNewGroup = 0;
@@ -313,6 +319,7 @@ define(['./module'], function (controllers) {
 
         $scope.words = [];
         $scope.selectedItems = 0;
+        $scope.q = '';
         $scope.newWordEntity = {};
         $scope.checkedAllWords = false;
         $scope.currentGroupTitle = UserService.currentGroup().title;

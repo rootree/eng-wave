@@ -10,19 +10,19 @@ return array(
         ),
         'configuration' => array(
             'orm_default' => array(
-//                'metadata_cache' => 'filesystem',
-//                'query_cache'    => 'filesystem',
-//                'result_cache'   => 'filesystem'
+                'metadata_cache' => 'filesystem',
+                'query_cache'    => 'filesystem',
+                'result_cache'   => 'filesystem'
             )
         ),
         'connection' => array(
             'orm_default' => array(
                 'driverClass' => 'Doctrine\DBAL\Driver\PDOMySql\Driver',
                 'params' => array(
-                    'host' => 'localhost',
-                    'port' => '3306',
-                    'dbname' => 'eng',
-                    'charset' => 'utf8',
+                    'host'     => 'localhost',
+                    'port'     => '3306',
+                    'dbname'   => 'eng',
+                    'charset'  => 'utf8',
                     'collate'  => 'utf8_general_ci',
                 ),
             ),

@@ -3,7 +3,7 @@
 namespace Application\Service;
 
 use \Application\Model\Entity\Word as WordsEntity;
-use \Application\Model\Speaker as SpeakerEngine;
+use \Application\Service\Speaker as SpeakerEngine;
 use \Application\Model\Mp3Tag\Mp3Tag;
 use \Application\Model\Mp3Editor\Mp3Editor;
 use Application\Model\Repository\Speaker as SpeakerRepository;
@@ -31,13 +31,16 @@ class Speaker
      */
     private $storeService;
 
+    private $zendLogService;
+
     /**
      * @param \Doctrine\ORM\EntityManager $entityManager
      * @param \Application\Service\Store $storeService
      */
-    public function __construct(EntityManager $entityManager, $storeService)
+    public function __construct(EntityManager $entityManager, $storeService, $zendLogService)
     {
         $this->storeService      = $storeService;
+        $this->zendLogService    = $zendLogService;
         $this->entityManager     = $entityManager;
         $this->speakerRepository = $entityManager->getRepository('Application\Model\Entity\Speaker');
     }
@@ -85,6 +88,8 @@ class Speaker
     {
         /** @var SpeakerEngine\SpeakerAbstract $sourceSpeaker */
         $sourceSpeaker = SpeakerEngine\Factory::getSpeaker(SpeakerEngine\Factory::TYPE_YANDEX, $speakerEntity->getFkLanguage()->getIso2());
+        $sourceSpeaker->setLogger($this->zendLogService);
+
         $sourceFileContent = $sourceSpeaker->getWordsFileContent($speakerEntity->getWord());
         if (!$sourceFileContent) {
             throw new CliException(sprintf('Can not get speaker file for "%s" word', $speakerEntity->getWord()));
@@ -125,7 +130,7 @@ class Speaker
         $newSpeakerEntity->setWord($word);
 
         $this->entityManager->persist($newSpeakerEntity);
-        $this->entityManager->flush();
+        //$this->entityManager->flush();
 
         return $newSpeakerEntity;
     }

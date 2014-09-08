@@ -1,12 +1,12 @@
 define(['./module'], function (controllers) {
     'use strict';
-    controllers.controller('DownloadsController',  function($scope, $rootScope, $location, DownloadsService, SessionService, FlashService) {
+    controllers.controller('DownloadsController',  function($scope, $rootScope, $location, $translate, DownloadsService, SessionService, FlashService) {
 
         //===== Работа с сервисами =====//
 
         $scope.addNewDownload = function (downloadEntity) {
             DownloadsService.add(downloadEntity).success(function(response) {
-                FlashService.success('Новая загрузка поставлена в очередь для наполнения');
+                FlashService.success($translate.instant('MESSAGE_DOWNLOAD_QUEUE'));
                 $rootScope.userSettings.downloads.unshift(response.download);
                 $scope.newDownloadEntity = {};
             });
@@ -14,7 +14,7 @@ define(['./module'], function (controllers) {
         $scope.dropDownload = function (downloadEntity) {
             console.log(downloadEntity);
             DownloadsService.drop(downloadEntity.id).success(function(response) {
-                FlashService.success('Загрузка удалена');
+                FlashService.success($translate.instant('MESSAGE_DOWNLOAD_DELETED'));
                 _dropDownloadByID($rootScope.userSettings.downloads, downloadEntity.id);
             });
         };

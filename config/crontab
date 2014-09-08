@@ -1,8 +1,7 @@
 PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 # Make strategy files
-* * * * * cd /data/eng && php public/index.php generate-strategies
+* * * * * cd /var/eng/app && php public/index.php generate-strategies
 
 # Speak words
-* * * * * cd /data/eng && php public/index.php words-speaker
-
+* * * * * cd /var/eng/app && php public/index.php words-speaker

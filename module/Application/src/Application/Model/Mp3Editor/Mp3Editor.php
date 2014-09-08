@@ -17,7 +17,8 @@ class Mp3Editor implements Mp3Interface
     // Put an mp3 behind the first mp3
     function mergeBehind($mp3)
     {
-        $this->str .= $mp3->str;
+        $file = $this->striptags($mp3->str);
+        $this->str .= $file ? $file : $mp3->str;
     }
 
     // Calculate where's the end of the sound file

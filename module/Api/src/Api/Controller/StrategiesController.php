@@ -6,11 +6,7 @@ use Zend\Http\Request;
 
 use Application\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel, Zend\Json\Json as ZendJson;
-use Application\Model\Entity\Word as WordEntity;
 use Application\Model\Entity\Strategy as StrategyEntity;
-use Application\Model\Entity\WordsGroup as WordsGroupEntity;
-use Application\Model\Entity\Language as LanguageEntity;
-use Application\Model\Entity\StrategyItem as StrategyItemEntity;
 use Api\Model\Exception as ApiException;
 
 class StrategiesController extends AbstractApiController
@@ -43,7 +39,7 @@ class StrategiesController extends AbstractApiController
     {
         $strategyID = intval($this->params()->fromRoute('id'));
         if (!$strategyID) {
-            throw new ApiException('Номер стратегии не был получен');
+            throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
         }
 
         /** @var \Application\Service\Strategy $strategyService  */
@@ -51,7 +47,7 @@ class StrategiesController extends AbstractApiController
 
         $currentStrategyEntity = $this->getStrategyById($strategyID);
         if (!$currentStrategyEntity) {
-            throw new ApiException('Запрощенная стратегия не найдена.');
+            throw new ApiException(null, ApiException::STRATEGY_NOT_FOUND);
         }
 
         $strategyService->dropStrategy($currentStrategyEntity);
@@ -69,7 +65,7 @@ class StrategiesController extends AbstractApiController
 
             $data = $this->getPostParams($request);
             if (!$data) {
-                throw new ApiException('Параметры для добавления загрузки не найдены');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -81,7 +77,7 @@ class StrategiesController extends AbstractApiController
             $strategyForm->setData($data);
 
             if (empty($data['items'])) {
-                throw new ApiException('Заполните элементы стратегии');
+                throw new ApiException(null, ApiException::STRATEGY_EMPTY_ITEMS);
             }
 
             if ($strategyForm->isValid()) {
@@ -110,13 +106,13 @@ class StrategiesController extends AbstractApiController
                     ]);
                 } else {
                     $entityManager->rollback();
-                    throw new ApiException('Произошла логическая ошибка');
+                    throw new ApiException(null, ApiException::COMMON_LOGICAL_ERROR);
                 }
             } else {
-                throw new ApiException('Заполните все обязательные поля');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
         } else {
-            throw new ApiException('Параметры для добавления нового слова не найдены');
+            throw new ApiException(null, ApiException::COMMON_EMPTY_REQUEST);
         }
     }
 
@@ -128,17 +124,17 @@ class StrategiesController extends AbstractApiController
 
             $data = $this->getPostParams($request);
             if (!$data) {
-                throw new ApiException('Параметры для добавления загрузки не найдены');
+                throw new ApiException(null, ApiException::COMMON_EMPTY_REQUEST);
             }
 
             $strategyID = intval($data['id']);
             if (!$strategyID) {
-                throw new ApiException('Номер стратегии не был получен');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             $strategyEntity = $this->getStrategyById($strategyID);
             if (!$strategyEntity) {
-                throw new ApiException('Запрощенная стратегия не найдена.');
+                throw new ApiException(null, ApiException::STRATEGY_NOT_FOUND);
             }
 
             $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -168,14 +164,14 @@ class StrategiesController extends AbstractApiController
                     ]);
                 } else {
                     $entityManager->rollback();
-                    throw new ApiException('Произошла логическая ошибка');
+                    throw new ApiException(null, ApiException::COMMON_LOGICAL_ERROR);
                 }
 
             } else {
-                throw new ApiException('Заполните все обязательные поля');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
         } else {
-            throw new ApiException('Параметры для обновления стратегии не найдены');
+            throw new ApiException(null, ApiException::COMMON_EMPTY_REQUEST);
         }
     }
 }

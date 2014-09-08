@@ -1,11 +1,11 @@
 <?php
 
-namespace Application\Model\Speaker;
+namespace Application\Service\Speaker;
 
 class Factory
 {
     const TYPE_YANDEX = 1;
-    const TYPE_GOOGLE = 1;
+    const TYPE_GOOGLE = 2;
 
     /**
      * @param $speakerType

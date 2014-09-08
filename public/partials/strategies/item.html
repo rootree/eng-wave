@@ -1,10 +1,11 @@
 <div class="col-sm-6">
     <div class=" block task strategy-entity">
         <div class="row with-padding">
-            <div class="col-sm-9">
+            <div class="col-sm-12">
                 <div class="task-description">
                     <h6>
-                        <a ng-click="editStrategy(strategy)">{{ strategy.title }}</a>
+                        <i class="icon-wave"></i>
+                        <a ng-click="editStrategy(strategy)" ng-bind-html="strategy.title"></a>
                     </h6>
 
                     <strategy-item ng-repeat="item in strategy.items | orderBy:'sort'" ng-switch on="item.type">
@@ -35,11 +36,6 @@
                     <div ng-show="!strategy.items.length" class="help-block">
                         Данная стратегия не содержит элементов. Вы не сможете использовать её для скачивания файлов.
                     </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="task-info">
-
                 </div>
             </div>
         </div>

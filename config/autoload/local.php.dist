@@ -1,0 +1,10 @@
+<?php
+
+return [
+    'store' => [
+        'path' => '/data/eng/static/',
+        'url' => 'http://eng.local/',
+        'url-static' => 'http://static.eng.local/',
+        'silence-file' => '/data/eng/data/MP3/1secV3.mp3',
+    ],
+];

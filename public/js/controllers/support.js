@@ -1,6 +1,6 @@
 define(['./module'], function (controllers) {
     'use strict';
-    controllers.controller('SupportController',  function($scope, $rootScope, $location, AuthenticationService, FeedbackService, FlashService) {
+    controllers.controller('SupportController',  function($scope, $rootScope, $location, $translate, AuthenticationService, FeedbackService, FlashService) {
 
         //===== Работа с сервисами =====//
 
@@ -11,7 +11,7 @@ define(['./module'], function (controllers) {
             FeedbackService.send(feedbackEntity).success(function(response) {
                 $rootScope.isFeedBackSend = 1;
                 $scope.isFeedBackSend = 1;
-                FlashService.success('Ваше сообщение отправлено.');
+                FlashService.success($translate.instant('MESSAGE_SUPPORT_SENT'));
             });
         };
         //===== Наблюдаетли =====//
@@ -24,7 +24,12 @@ define(['./module'], function (controllers) {
         $scope.userEmail = '';
         $scope.isFeedBackSend = $rootScope.isFeedBackSend;
         if (AuthenticationService.isLoggedIn()) {
-            $scope.userEmail = $rootScope.userSettings.email;
+            $scope.userEmail = $rootScope.userSettings.credential.email;
+            $scope.userName = $rootScope.userSettings.credential.name;
         }
+
+        $.jGrowl('test', {  theme: 'growl-info'}); // sticky: true,
+
+
     });
 });

@@ -1,6 +1,6 @@
 <?php
 
-namespace Application\Model\Speaker;
+namespace Application\Service\Speaker;
 
 abstract class Service extends SpeakerAbstract
 {
@@ -21,6 +21,11 @@ abstract class Service extends SpeakerAbstract
         return $this->linksByVoices[$this->speakInLanguage];
     }
 
+    public function setLogger($loggerService)
+    {
+        $this->loggerService = $loggerService;
+    }
+
     /**
      * @param $wordsForSpeaking
      *
@@ -28,6 +33,16 @@ abstract class Service extends SpeakerAbstract
      */
     public function getWordsFileContent($wordsForSpeaking)
     {
-        return @file_get_contents(sprintf($this->getLinkForSpeak(), urlencode($wordsForSpeaking.'.')));
+        $ctx = stream_context_create(array('http'=>
+           array(
+               'timeout' => 3, // 1 200 Seconds = 20 Minutes
+           )
+        ));
+        $url = sprintf($this->getLinkForSpeak(), urlencode($this->dropUnreadableSymbols($wordsForSpeaking).'.'));
+        $result = @file_get_contents($url, false, $ctx);
+        if (!$result) {
+            $this->loggerService->err(sprintf('Speaker URL can not be reached: %s', $url));
+        }
+        return $result;
     }
 }

@@ -30,8 +30,8 @@ define([
                 '/settings',
                 '/downloads',
                 '/strategies',
+                '/packages',
                 '/'
-                // TODO
             ];
             $rootScope.$on('$routeChangeStart', function(event, next, current) {
                 if(_(routesThatRequireAuth).contains($location.path()) && !AuthenticationService.isLoggedIn()) {

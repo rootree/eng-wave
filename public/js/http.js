@@ -7,36 +7,31 @@ define(['./app'], function (app) {
     'use strict';
     return app.config(['$httpProvider', function ($httpProvider) {
 
-        var logsOutUserOn401 = function($location, $q, $rootScope, SessionService, FlashService) {
+        var logsOutUserOn401 = function($location, $q, $rootScope, $translate, SessionService, FlashService) {
 
             var success = function(response) {
-                $rootScope.isLoading = false;
-                // $('#overlay').fadeOut(150);
-
+                $rootScope.isLoading --;
                 return response;
             };
 
             var error = function(response) {
+
                 if(response.status === 401) {
                     SessionService.unset('authenticated');
                     $location.path('/login');
-                    FlashService.error(response.data.flash);
+                    FlashService.error($translate.instant('RESPONSE_CODE_1005'));
                 }
                 if(response.status === 400) {
-                    if (_.isString(response.data.flash)) {
-                        FlashService.error(response.data.flash);
-                    } else {
-                        FlashService.error('Произошла неизвестная ошибка');
-                    }
+                    FlashService.error($translate.instant('RESPONSE_CODE_' + response.data.code));
                 }
                 if(response.status === 404) {
-                    FlashService.error('Запрошенная страница не найдена');
+                    FlashService.error($translate.instant('RESPONSE_CODE_1004'));
                 }
                 if(response.status === 500) {
-                    FlashService.error('Сервис временно недоступен');
+                    FlashService.error($translate.instant('RESPONSE_CODE_1003'));
                 }
                 $rootScope.isLoading = false;
-                // $('#overlay').fadeOut(150);
+
                 return $q.reject(response);
             };
 
@@ -49,8 +44,7 @@ define(['./app'], function (app) {
         var sessionInjector = function($location, $q, $rootScope) {
             return {
                  request : function(config) {
-                      $rootScope.isLoading = true;
-                     // $('#overlay').fadeIn(100);
+                     $rootScope.isLoading ++;
                      var sep = config.url.indexOf('?') === -1 ? '?' : '&';
                      config.url = config.url + sep + '_auth_token=' + document.globalSettings.CSRF;
                      return config;

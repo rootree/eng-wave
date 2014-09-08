@@ -15,6 +15,16 @@ return array(
                     ]
                 ]
             ],
+            'user' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route'    => '/api/user/:action',
+                    'defaults' => [
+                        'controller' => 'Api\Controller\User',
+                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ]
+                ]
+            ],
             'words' => [
                 'type' => 'Segment',
                 'options' => [
@@ -47,6 +57,17 @@ return array(
                     'defaults' => [
                         'controller' => 'Api\Controller\Groups',
                         //'action'     => 'index',
+                        'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id'         => '[0-9]*',
+                    ]
+                ],
+            ],
+            'packages' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route'    => '/api/packages/:action[/:id]',
+                    'defaults' => [
+                        'controller' => 'Api\Controller\Packages',
                         'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                         'id'         => '[0-9]*',
                     ]
@@ -90,12 +111,14 @@ return array(
     'service_manager' => array(),
     'controllers'     => array(
         'invokables' => array(
-            'Api\Controller\Auth' => 'Api\Controller\AuthController',
-            'Api\Controller\Words' => 'Api\Controller\WordsController',
-            'Api\Controller\Groups' => 'Api\Controller\GroupsController',
+            'Api\Controller\Auth'       => 'Api\Controller\AuthController',
+            'Api\Controller\Words'      => 'Api\Controller\WordsController',
+            'Api\Controller\Groups'     => 'Api\Controller\GroupsController',
             'Api\Controller\Strategies' => 'Api\Controller\StrategiesController',
-            'Api\Controller\Downloads' => 'Api\Controller\DownloadsController',
-            'Api\Controller\Feedback' => 'Api\Controller\FeedbackController',
+            'Api\Controller\Downloads'  => 'Api\Controller\DownloadsController',
+            'Api\Controller\Feedback'   => 'Api\Controller\FeedbackController',
+            'Api\Controller\User'       => 'Api\Controller\UserController',
+            'Api\Controller\Packages'       => 'Api\Controller\PackagesController',
         ),
     ),
     'view_manager'    => array(

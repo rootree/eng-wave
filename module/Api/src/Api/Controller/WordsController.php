@@ -7,8 +7,6 @@ use Zend\Http\Request;
 use Application\Controller\AbstractActionController;
 use Zend\View\Model\JsonModel, Zend\Json\Json as ZendJson;
 use Application\Model\Entity\Word as WordEntity;
-use Application\Model\Entity\WordsGroup as WordsGroupEntity;
-use Application\Model\Entity\Language as LanguageEntity;
 use Application\Model\Entity\Speaker as SpeakerEntity;
 use Api\Model\Exception as ApiException;
 
@@ -25,15 +23,15 @@ class WordsController extends AbstractApiController
 
             $data = $this->getPostParams($request);
             if (!$data) {
-                throw new ApiException('Параметры для добавления загрузки не найдены');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             if (empty($data['wordsForDelete'])) {
-                throw new ApiException('Параметры для добавления удаления не найдены');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
             $wordIDs = (array) $data['wordsForDelete'];
             if (empty($wordIDs)) {
-                throw new ApiException('Параметры для добавления удаления не найдены #1');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             /** @var \Application\Service\Word $wordService  */
@@ -45,7 +43,7 @@ class WordsController extends AbstractApiController
             ]);
 
         } else {
-            throw new ApiException('Параметры для добавления нового слова не найдены');
+            throw new ApiException(null, ApiException::COMMON_EMPTY_REQUEST);
         }
     }
 
@@ -57,21 +55,21 @@ class WordsController extends AbstractApiController
 
             $data = $this->getPostParams($request);
             if (!$data) {
-                throw new ApiException('Параметры для добавления загрузки не найдены');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             if (empty($data['wordsForMove'])) {
-                throw new ApiException('Параметры для перемещения не найдены');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
             $wordIDs = (array) $data['wordsForMove'];
             $moveToGroup = intval($data['moveToGroup']);
             if (empty($wordIDs) || empty($moveToGroup)) {
-                throw new ApiException('Параметры для перемещения не найдены #1');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             $wordsGroupEntity = $this->getGroupById($moveToGroup);
             if (!$wordsGroupEntity) {
-                throw new ApiException('Группа не найдено #1');
+                throw new ApiException(null, ApiException::GROUP_NOT_FOUND);
             }
 
             /** @var \Application\Service\Word $wordService  */
@@ -83,7 +81,7 @@ class WordsController extends AbstractApiController
             ]);
 
         } else {
-            throw new ApiException('Параметры для перемещения не найдены #2');
+            throw new ApiException(null, ApiException::COMMON_EMPTY_REQUEST);
         }
     }
 
@@ -95,7 +93,7 @@ class WordsController extends AbstractApiController
 
             $data = $this->getPostParams($request);
             if (!$data) {
-                throw new ApiException('Параметры для добавления загрузки не найдены');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -120,18 +118,15 @@ class WordsController extends AbstractApiController
 
                 if ($newWordEntity) {
 
-                    /** @var \Application\Service\Speaker $speakerService  */
-                    $speakerService = $this->getServiceLocator()->get('Application\Service\Speaker');
-
                     $word          = $wordEntity->getSource();
                     $language      = $wordEntity->getFkLanguageSource();
-                    $speakerEntity = $this->getSpeaker($word, $language);
+                    $speakerEntity = $wordService->getSpeaker($word, $language);
 
                     $wordEntity->setFkSpeakerSource($speakerEntity);
 
                     $word          = $wordEntity->getTarget();
                     $language      = $wordEntity->getFkLanguageTarget();
-                    $speakerEntity = $this->getSpeaker($word, $language);
+                    $speakerEntity = $wordService->getSpeaker($word, $language);
 
                     $wordEntity->setFkSpeakerTarget($speakerEntity);
                     $wordService->save($newWordEntity);
@@ -142,24 +137,16 @@ class WordsController extends AbstractApiController
                         'success' => true,
                     ]);
                 } else {
-                    throw new ApiException('Произошла логическая ошибка');
+                    $entityManager->rollback();
+                    throw new ApiException(null, ApiException::COMMON_LOGICAL_ERROR);
                 }
             } else {
                 // 'error' => $wordForm->getMessages(),
-                throw new ApiException('Заполните все обязательные поля');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
         } else {
-            throw new ApiException('Параметры для добавления нового слова не найдены');
+            throw new ApiException(null, ApiException::COMMON_EMPTY_REQUEST);
         }
-    }
-
-    private function getSpeaker($word, $language)
-    {
-        /** @var \Application\Service\Speaker $speakerService  */
-        $speakerService = $this->getServiceLocator()->get('Application\Service\Speaker');
-
-        $speakerEntity = $speakerService->createSpeaker($word, $language);
-        return $speakerEntity;
     }
 
     public function updateAction()
@@ -170,16 +157,16 @@ class WordsController extends AbstractApiController
 
             $data = $this->getPostParams($request);
             if (!$data) {
-                throw new ApiException('Параметры для добавления загрузки не найдены');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
 
             $wordID = intval($data['id']);
             if (!$wordID) {
-                throw new ApiException('Слово не найдено');
+                throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }
             $wordEntity = $this->getWordById($wordID);
             if (!$wordEntity) {
-                throw new ApiException('Слово не найдено #2');
+                throw new ApiException(null, ApiException::WORD_NOT_FOUND);
             }
 
             $entityManager = $this->getServiceLocator()->get('Doctrine\ORM\EntityManager');
@@ -200,7 +187,7 @@ class WordsController extends AbstractApiController
                 ) {
                     $word          = $wordEntity->getSource();
                     $language      = $wordEntity->getFkLanguageSource();
-                    $speakerEntity = $this->getSpeaker($word, $language);
+                    $speakerEntity = $wordService->getSpeaker($word, $language);
 
                     $wordEntity->setFkSpeakerSource($speakerEntity);
                 }
@@ -210,7 +197,7 @@ class WordsController extends AbstractApiController
                 ) {
                     $word          = $wordEntity->getTarget();
                     $language      = $wordEntity->getFkLanguageTarget();
-                    $speakerEntity = $this->getSpeaker($word, $language);
+                    $speakerEntity = $wordService->getSpeaker($word, $language);
 
                     $wordEntity->setFkSpeakerTarget($speakerEntity);
                 }
@@ -225,14 +212,14 @@ class WordsController extends AbstractApiController
                     ]);
                 } else {
                     $entityManager->rollback();
-                    throw new ApiException('Произошла логическая ошибка');
+                    throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
                 }
 
             } else {
-                throw new ApiException('Заполните все обязательные поля');
+                throw new ApiException(null, ApiException::COMMON_LOGICAL_ERROR);
             }
         } else {
-            throw new ApiException('Параметры для обновления слова не найдены');
+            throw new ApiException(null, ApiException::COMMON_EMPTY_REQUEST);
         }
     }
 
@@ -242,12 +229,12 @@ class WordsController extends AbstractApiController
         $speakType = intval($this->params()->fromQuery('type'));
 
         if (!$wordID || !$speakType) {
-            throw new ApiException('Не получены пораметры');
+            throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
         }
 
         $wordEntity = $this->getWordById($wordID);
         if (!$wordEntity) {
-            throw new ApiException('Слово не найдено #2');
+            throw new ApiException(null, ApiException::WORD_NOT_FOUND);
         }
 
         /** @var \Application\Service\Speaker $speakerService  */
@@ -281,11 +268,12 @@ class WordsController extends AbstractApiController
         }
 
         if ($speakerEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS) {
-            throw new ApiException('Неловкий момент. Фаил подготавливается для воспроизведения. Попробуйте через пару секунд.');
+            throw new ApiException(null, ApiException::WORD_SPEAKER_IN_PROGRESS);
         }
 
+        $result = false;
         if ($speakerEntity->getStatus() == SpeakerEntity::STATUS_FRESH) {
-            $speakerService->createSound($speakerEntity);
+            $result = $speakerService->createSound($speakerEntity);
         }
 
         /** @var \Application\Service\Store $storeService  */
@@ -293,7 +281,7 @@ class WordsController extends AbstractApiController
         $speakURL = $storeService->getSpeakURL($speakerEntity->getId(), \Application\Service\Store::TYPE_SPEAKER);
 
         return new JsonModel([
-            'success'  => true,
+            'success'  => $result,
             'speakURL' => $speakURL,
         ]);
     }

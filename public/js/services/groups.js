@@ -24,7 +24,7 @@ define(['./module'], function (services) {
                     method: 'POST',
                     url: '/api/groups/update/' + groupID,
                     data: {
-                        title : $sanitize(newTitle)
+                        title : (newTitle)
                     }
                 }).success(function(response) {
                     console.log(response);
@@ -35,7 +35,7 @@ define(['./module'], function (services) {
                     method: 'POST',
                     url: '/api/groups/add',
                     data: {
-                        title: $sanitize(title)
+                        title: (title)
                     }
                 }).success(function(response) {
                     console.log(response);

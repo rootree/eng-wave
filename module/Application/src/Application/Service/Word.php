@@ -4,6 +4,7 @@ namespace Application\Service;
 
 use Application\Model\Repository\Word as WordRepository;
 use Application\Model\Entity\Word as WordEntity;
+use Application\Model\Entity\Language as LanguageEntity;
 use Application\Model\Entity\WordsGroup as WordsGroupEntity;
 use Doctrine\ORM\EntityManager;
 
@@ -19,10 +20,16 @@ class Word
      */
     private $wordRepository;
 
-    public function __construct(EntityManager $entityManager)
+    /**
+     * @var \Application\Service\Speaker
+     */
+    private $speakerService;
+
+    public function __construct(EntityManager $entityManager, $speakerService)
     {
         $this->entityManager = $entityManager;
         $this->wordRepository = $entityManager->getRepository('Application\Model\Entity\Word');
+        $this->speakerService = $speakerService;
     }
 
     /**
@@ -116,5 +123,18 @@ class Word
         $this->entityManager->persist($wordEntity);
         $this->entityManager->flush();
         return $wordEntity;
+    }
+
+
+    /**
+     * @param string $word
+     * @param LanguageEntity $language
+     *
+     * @return \Application\Model\Entity\Speaker
+     */
+    public function getSpeaker($word, LanguageEntity $language)
+    {
+        $speakerEntity = $this->speakerService->createSpeaker($word, $language);
+        return $speakerEntity;
     }
 }

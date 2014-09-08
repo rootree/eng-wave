@@ -64,3 +64,16 @@ table.words-table td{
 table.words-table tr td:first-child{
     padding-top: 18px;
 }
+.package-footer{
+    padding: 10px 16px;
+}
+.navbar-fixed-top{
+    -webkit-box-shadow: 0 8px 6px -6px black;
+    -moz-box-shadow: 0 8px 6px -6px black;
+    box-shadow: 0 8px 6px -6px black;
+}
+.growl-info {
+    color: #725A32 !important;
+    background-color: #FFFDF0 !important;
+    border: 1px solid #E9DDC4 !important;
+}

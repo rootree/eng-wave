@@ -5,13 +5,14 @@
  * which avails each controller of, for example, the `config` constants object.
  **/
 define([
-    './home',
+    //'./home',
     './words',
     './reg',
-    //'./suggestion',
+    './settings',
     './support',
     './strategies',
     './downloads',
     './forgot',
+    './packages',
     './login'
 ], function () {});

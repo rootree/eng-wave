@@ -72,56 +72,55 @@ class Download
 
         /** @var DownloadEntity $downloadEntity */
         foreach ($downloadEntities as $downloadEntity) {
-            /*
-                        $downloadItemPaths = [];
-                        $downloadEntity->setStatus(DownloadEntity::STATUS_IN_PROGRESS);
-                        $this->save($downloadEntity);
 
-                        $wordsEntities = $downloadEntity->getFkWordsGroup()->getWordList();
-                        if (!$wordsEntities->count()) {
-                            $downloadEntity->setStatus(DownloadEntity::STATUS_CANCELED);
-                            $this->save($downloadEntity);
-                            continue;
-                        }
+            $downloadItemPaths = [];
+            $downloadEntity->setStatus(DownloadEntity::STATUS_IN_PROGRESS);
+            $this->save($downloadEntity);
 
-                        $deferWordsEntities = [];
-                        foreach ($wordsEntities as $wordsEntity) {
+            $wordsEntities = $downloadEntity->getFkWordsGroup()->getWordList();
+            if (!$wordsEntities->count()) {
+                $downloadEntity->setStatus(DownloadEntity::STATUS_CANCELED);
+                $this->save($downloadEntity);
+                continue;
+            }
 
-                            $speakerSourceEntity = $wordsEntity->getFkSpeakerSource();
-                            $speakerTargetEntity = $wordsEntity->getFkSpeakerTarget();
+            $deferWordsEntities = [];
+            foreach ($wordsEntities as $wordsEntity) {
 
-                            if ($speakerTargetEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS || $speakerTargetEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS) {
-                                $deferWordsEntities[] = $wordsEntity;
-                                continue;
-                            }
+                $speakerSourceEntity = $wordsEntity->getFkSpeakerSource();
+                $speakerTargetEntity = $wordsEntity->getFkSpeakerTarget();
 
-                            if ($speakerSourceEntity->getStatus() == SpeakerEntity::STATUS_FRESH) {
-                                $bites = $this->speakerService->createSound($speakerSourceEntity);
-                                if (!$bites) {
-                                    continue;
-                                }
-                            }
-                            if ($speakerTargetEntity->getStatus() == SpeakerEntity::STATUS_FRESH) {
-                                $bites = $this->speakerService->createSound($speakerTargetEntity);
-                                if (!$bites) {
-                                    continue;
-                                }
-                            }
+                if ($speakerTargetEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS || $speakerTargetEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS) {
+                    $deferWordsEntities[] = $wordsEntity;
+                    continue;
+                }
 
-                            $downloadItemPath = $this->createDownloadItem($downloadEntity, $wordsEntity);
+                if ($speakerSourceEntity->getStatus() == SpeakerEntity::STATUS_FRESH) {
+                    $bites = $this->speakerService->createSound($speakerSourceEntity);
+                    if (!$bites) {
+                        continue;
+                    }
+                }
+                if ($speakerTargetEntity->getStatus() == SpeakerEntity::STATUS_FRESH) {
+                    $bites = $this->speakerService->createSound($speakerTargetEntity);
+                    if (!$bites) {
+                        continue;
+                    }
+                }
 
-                            $downloadItemPaths[] = $downloadItemPath;
-                        }
+                $downloadItemPath = $this->createDownloadItem($downloadEntity, $wordsEntity);
 
-                        $downloadSize = $this->createArchive($downloadEntity, $downloadItemPaths);
+                $downloadItemPaths[] = $downloadItemPath;
+            }
 
-                        $downloadEntity->setWight($downloadSize);
-                        $downloadEntity->setStatus(DownloadEntity::STATUS_READY);
-            */
+            $downloadSize = $this->createArchive($downloadEntity, $downloadItemPaths);
+
+            $downloadEntity->setWight($downloadSize);
+            $downloadEntity->setStatus(DownloadEntity::STATUS_READY);
+
             $this->saveDownloadEntity($downloadEntity);
 
             $this->emailService->sendDownloadMessage($downloadEntity);
-
         }
     }
 
@@ -139,10 +138,11 @@ class Download
         $sourceFile = $this->storeService->getSpeakPath($speakerSourceEntity->getId(), StoreService::TYPE_SPEAKER);
         $targetFile = $this->storeService->getSpeakPath($speakerTargetEntity->getId(), StoreService::TYPE_SPEAKER);
 
-        $sourceMp3Editor  = new Mp3Editor($sourceFile);
-        $targetMp3Editor  = new Mp3Editor($targetFile);
+        $sourceMp3Editor = new Mp3Editor($sourceFile);
+        $targetMp3Editor = new Mp3Editor($targetFile);
 
-        $silenceMp3Editor = new Mp3Editor($this->storeService->getSilenceFile());
+        $silenceFile = $this->storeService->getSilenceFile();
+        $silenceMp3Editor = new Mp3Editor($silenceFile);
 
         $sourceMp3TagEditor = new Mp3Tag($sourceFile);
         $targetMp3TagEditor = new Mp3Tag($targetFile);
@@ -155,14 +155,16 @@ class Download
 
             switch ($strategyItemEntity->getType()) {
                 case StrategyItemEntity::TYPE_SOURCE:
-                    $pieceCollection[] = $sourceMp3Editor;
+                    // $pieceCollection[] = $sourceFile;
+                    $pieceCollection[] = clone $sourceMp3Editor;
                     break;
                 case StrategyItemEntity::TYPE_TARGET:
-                    $pieceCollection[] = $targetMp3Editor;
+                    // $pieceCollection[] = $targetFile;
+                    $pieceCollection[] = clone $targetMp3Editor;
                     break;
                 case StrategyItemEntity::TYPE_SILENCE:
-                    /** @var SilentSettings $settings  */
-                    $settings = $strategyItemEntity->getSettings();
+                    /** @var SilentSettings $settings */
+                    $settings     = $strategyItemEntity->getSettings();
                     $silentSecond = 0;
                     switch ($settings->getType()) {
                         case SilentSettings::TYPE_SOURCE:
@@ -177,14 +179,16 @@ class Download
                     }
                     if ($silentSecond) {
                         for ($i = 0; $i < $silentSecond; $i++) {
-                            $pieceCollection[] = $silenceMp3Editor;
+                            // $pieceCollection[] = $silenceFile;
+                            $pieceCollection[] = clone $silenceMp3Editor;
                         }
                     }
                     break;
             }
         }
-
-        return $this->glueItems($pieceCollection, $wordEntity);
+//var_export(count($pieceCollection)); exit();
+        $this->glueItems($pieceCollection, $wordEntity);
+        return $this->creteTag($wordEntity);
     }
 
     /**
@@ -196,7 +200,10 @@ class Download
     protected function glueItems($pieceCollection, WordEntity $wordEntity)
     {
         $downloadItemPath = $this->storeService->getSpeakPath($wordEntity->getId(), StoreService::TYPE_DOWNLOAD_ITEM);
-
+/*
+        $command = sprintf('ffmpeg -y -i "concat:%s" -acodec copy %s', implode('|', $pieceCollection), $downloadItemPath);
+        system($command);
+*/
         file_put_contents($downloadItemPath, null);
 
         $resultMp3Editor = new Mp3Editor($downloadItemPath);
@@ -204,6 +211,16 @@ class Download
             $resultMp3Editor->mergeBehind($mp3Editor);
         }
         $resultMp3Editor->savefile($downloadItemPath);
+    }
+
+    /**
+     * @param \Application\Model\Entity\Word $wordEntity
+     *
+     * @return array
+     */
+    protected function creteTag(WordEntity $wordEntity)
+    {
+        $downloadItemPath = $this->storeService->getSpeakPath($wordEntity->getId(), StoreService::TYPE_DOWNLOAD_ITEM);
 
         $tag = sprintf('%s - %s', $wordEntity->getSource(), $wordEntity->getTarget());
 
@@ -257,7 +274,8 @@ class Download
         $downloadFile = $this->storeService->getSpeakPath($downloadEntity->getId(), StoreService::TYPE_DOWNLOAD);
         if ($downloadEntity->getStatus() == DownloadEntity::STATUS_READY && !@unlink($downloadFile)) {
             throw new \Exception('Фаил загрузки не может быть удален');
-        };
+        }
+        ;
 
         $this->entityManager->remove($downloadEntity);
         $this->entityManager->flush();
@@ -290,11 +308,13 @@ class Download
 
         foreach ($downloadItemPaths as $downloadItemPath) {
             list($itemPath, $fileName) = $downloadItemPath;
-            $fileName = $fileName.$this->storeService->getExtension(StoreService::TYPE_DOWNLOAD_ITEM);
-            $fileNameToAdd = @iconv("utf-8", 'CP866//TRANSLIT//IGNORE', $fileName);
+            $fileName      = $fileName . $this->storeService->getExtension(StoreService::TYPE_DOWNLOAD_ITEM);
+            $fileNameToAdd = preg_replace('#[^\pL\pN.-\s]+#ui', '', $fileName);
+            $fileNameToAdd = @iconv("utf-8", 'CP866//TRANSLIT//IGNORE', $fileNameToAdd);
             if (!$zip->addFile($itemPath, $fileNameToAdd)) {
                 throw new \Application\Model\CliException("Could not add file: $fileName ($itemPath)");
-            };
+            }
+            ;
         }
 
         $zip->close();

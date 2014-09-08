@@ -4,6 +4,8 @@ namespace Application\Model\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Application\Entity as Entity;
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  * User
@@ -13,8 +15,37 @@ use Application\Entity as Entity;
  */
 class User extends Entity\User
 {
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Application\Model\Entity\PackageUser", mappedBy="fkUser")
+     * @ORM\JoinColumn(name="fk_user", referencedColumnName="id")
+     */
+    private $packageRelationsList;
+
+
+    /**
+     * @param \Doctrine\Common\Collections\ArrayCollection $packageRelationsList
+     */
+    public function setPackageRelationsList($packageRelationsList)
+    {
+        $this->packageRelationsList = $packageRelationsList;
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getPackageRelationsList()
+    {
+        return $this->packageRelationsList;
+    }
 
     private $settingsObject;
+
+    public function __construct()
+    {
+        $this->packageRelationsList = new ArrayCollection();
+    }
 
     /**
      * Set settings
@@ -38,7 +69,7 @@ class User extends Entity\User
      */
     public function getSettings()
     {
-        if (empty($this->settingsObject)) {
+        if (empty($this->settingsObject) && !empty($this->settings)) {
             $this->settingsObject = new \Application\Model\Entity\UserSettings($this->settings);
         }
         return $this->settingsObject;

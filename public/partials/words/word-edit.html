@@ -1,0 +1,64 @@
+<form role="form" ng-submit="updateWord(editWordEntity)" name="editWordForm" ng-show="isEditingWord">
+    <input type="hidden" name="id" placeholder="Search" ng-model="editWordEntity.id" />
+    <div class="panel panel-default">
+        <div class="panel-heading"><h6 class="panel-title"><i class="icon-pencil4"></i> Редактирование слова</h6></div>
+        <div class="panel-body">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Группа:</label>
+                        <select class="form-control" tabindex="1" ng-model="editWordEntity.fkWordsGroup" name="group" ng-disabled="userSettings.groups.length<2">
+                            <option ng-repeat="group in userSettings.groups | orderBy:'title'" value="{{ group.id }}" ng-bind-html="group.title" ng-selected="userSettings.settings.currentGroup==group.id">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Оригинал:</label>
+                        <textarea rows="5" cols="5" ng-model="editWordEntity.source" tabindex="2" name="source" ng-minlength="3" ng-maxlength="250" required="required" class="elastic form-control" ng-bind-html="editWordEntity.source"></textarea>
+                        <span class="help-block" ng-show="editWordForm.source.$error.minlength">
+                            Минимальная длинна слова три символа.
+                        </span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Перевод:</label>
+                        <textarea rows="5" cols="5" ng-model="editWordEntity.target" tabindex="3" name="target" ng-minlength="3" ng-maxlength="250" required="required" class="elastic form-control" ng-bind-html="editWordEntity.target"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6 btn-group">
+                        <label>Язык оригинала:</label>
+                        <div>
+                            <label class="btn " ng-repeat="language in globalSettings.languages" >
+                                <input class="styled" ng-model="editWordEntity.fkLanguageSource" value="{{ language.id }}" type="radio" name="fkLanguageSource" ng-disabled="language.disabled" ng-checked="editWordEntity.fkLanguageSource == language.id" /> {{ language.title }}
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 btn-group">
+                        <label>Язык перевода:</label>
+                        <div>
+                            <label class="btn " ng-repeat="language in globalSettings.languages" >
+                                <input class="styled" ng-model="editWordEntity.fkLanguageTarget" value="{{ language.id }}" type="radio" name="fkLanguageTarget" ng-disabled="language.disabled" ng-checked="editWordEntity.fkLanguageTarget == language.id" /> {{ language.title }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions text-right">
+                <input type="reset" value="Отмена" class="btn btn-default" ng-click="$parent.isEditingWord = 0">
+                <input type="submit" value="Редактировать" class="btn btn-success" ng-disabled="editWordForm.$invalid || editWordForm.$pristine">
+            </div>
+
+        </div>
+    </div>
+</form>

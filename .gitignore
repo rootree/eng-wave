@@ -11,3 +11,4 @@ data/DoctrineORMModule/Proxy/*
 data/logs/*
 composer.lock
 vendor
+static
