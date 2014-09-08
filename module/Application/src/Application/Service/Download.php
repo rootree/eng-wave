@@ -2,7 +2,7 @@
 
 namespace Application\Service;
 
-use \Application\Model\Speaker as SpeakerEngine;
+use Application\Service\Speaker\Service as SpeakerEngine;
 use Application\Model\Repository\Download as DownloadRepository;
 use Doctrine\ORM\EntityManager;
 use Application\Model\Entity\Download as DownloadEntity;

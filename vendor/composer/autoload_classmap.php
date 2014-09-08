@@ -7,5 +7,4 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'TwbBundle\\Module' => $vendorDir . '/neilime/zf2-twb-bundle/Module.php',
-    'ZendDeveloperTools\\Module' => $vendorDir . '/zendframework/zend-developer-tools/Module.php',
 );

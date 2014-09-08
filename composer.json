@@ -11,9 +11,8 @@
         "zendframework/zendframework": "2.2.*",
         "doctrine/doctrine-orm-module": "0.*",
         "doctrine/migrations": "dev-master",
-        "JamesHeinrich/getID3": "dev-master",
-        "neilime/zf2-twb-bundle": "2.0",
-        "zendframework/zend-developer-tools": "dev-master"
+        "phansys/getid3": "2.1.*@dev",
+        "neilime/zf2-twb-bundle": "2.0"
     },
     "repositories": [
         {

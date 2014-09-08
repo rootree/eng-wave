@@ -30,7 +30,7 @@ class Mp3Tag implements Mp3TagInterface
     )
     {
         // Initialize getID3 tag-writing module
-        $tagwriter = new \getid3_writetags();
+        $tagwriter = new \GetId3\Write\Tags();
 
         $tagwriter->filename = $this->mp3File;
         $tagwriter->tagformats = array('id3v1', 'id3v2.3');
@@ -70,7 +70,7 @@ class Mp3Tag implements Mp3TagInterface
     public function getPlaytimeInSeconds()
     {
         // Initialize getID3 engine
-        $getID3 = new \getID3;
+        $getID3 = new \GetId3\GetId3Core();
         $getID3->setOption(array('encoding' => $this->textEncoding));
 
         $thisFileInfo = $getID3->analyze($this->mp3File);

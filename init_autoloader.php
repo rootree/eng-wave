@@ -48,5 +48,5 @@ if (!class_exists('Zend\Loader\AutoloaderFactory')) {
     throw new RuntimeException('Unable to load ZF2. Run `php composer.phar install` or define a ZF2_PATH environment variable.');
 }
 
-include_once __DIR__ . '/vendor/JamesHeinrich/getID3/getid3/getid3.php';
-include_once __DIR__ . '/vendor/JamesHeinrich/getID3/getid3/write.php';
+//include_once __DIR__ . '/vendor/JamesHeinrich/getID3/getid3/getid3.php';
+//include_once __DIR__ . '/vendor/JamesHeinrich/getID3/getid3/write.php';
