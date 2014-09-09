@@ -1,6 +1,6 @@
-# eng-wave
+# EngWave
 
-http://app.eng-wave.com/
+http://app.engwave.com/
 
 Web-service which can help people to learn new foreign words. You can fill your own words which you may be had faced on your english courses or you can install prepared packages collected by topics.
 
