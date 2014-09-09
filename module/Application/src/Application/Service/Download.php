@@ -289,7 +289,7 @@ class Download
     public function saveDownloadEntity($downloadEntity)
     {
         $downloadEntity->setUpdatedAt(new \DateTime());
-        $downloadEntity->setHash(md5($downloadEntity->getFkUser()->getEmail() . 'TRY'));
+        $downloadEntity->setHash(md5($downloadEntity->getFkUser()->getEmail() . rand(1, 10000)));
         $this->entityManager->persist($downloadEntity);
         $this->entityManager->flush();
 
