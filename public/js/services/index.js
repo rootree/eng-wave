@@ -19,5 +19,6 @@ define([
     './authentication',
     //'./storage-key',
     './feedback',
+    './tutorial',
     './user'
 ], function () {});

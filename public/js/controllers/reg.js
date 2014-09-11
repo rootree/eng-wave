@@ -21,6 +21,7 @@ define(['./module'], function (controllers) {
             var user = UserService.signUp(userEntity).success(function(response) {
 
                 $rootScope.userSettings = response.userSettings;
+                $rootScope.userSettings.justInstalled = 1;
                 $rootScope.userSettings.groupsContent = [];
                 document.globalSettings.CSRF = response.CSRF;
                 $location.path('/');

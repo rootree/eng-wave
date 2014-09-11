@@ -92,7 +92,7 @@ define(['./module'], function (controllers) {
         };
         $scope.editGroup = function(newGroupTitle){
             if (newGroupTitle != UserService.currentGroup().title){
-                GroupsService.update($scope.currentGroupTitle, UserService.currentGroup().id).
+                GroupsService.update(newGroupTitle, UserService.currentGroup().id).
                     success(function(response) {
                         UserService.currentGroup().title = $scope.currentGroupTitle = newGroupTitle;
                         $scope.editingGroup = 0;
@@ -103,15 +103,14 @@ define(['./module'], function (controllers) {
                     });
             }
         };
-        $scope.addNewGroup = function(){
-            GroupsService.add($scope.NewGroupForm.title).success(function(response) {
+        $scope.addNewGroup = function(newGroupTitle){
+            GroupsService.add(newGroupTitle).success(function(response) {
                 $rootScope.userSettings.groups.push(response.group);
                 $scope.pagination.cur = 1;
                 $scope.isAddingNewGroup = 0;
-                $scope.NewGroupForm.title = '';
-                $scope.getGroup(response.group.id).success(function(){
-                    FlashService.success($translate.instant('MESSAGE_GROUP_ADDED'));
-                });
+                $scope.newGroupTitle = '';
+                $scope.getGroup(response.group.id);
+                FlashService.success($translate.instant('MESSAGE_GROUP_ADDED'));
             });
         };
         $scope.addNewWord = function(newWord){
@@ -338,6 +337,5 @@ define(['./module'], function (controllers) {
         } else {
             $scope.getGroup($rootScope.userSettings.settings.currentGroup, true);
         }
-
     } )
 });

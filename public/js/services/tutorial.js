@@ -1,11 +1,16 @@
 define(['./module'], function (services) {
     'use strict';
     return services.factory('TutorialService', ['$translate','$rootScope', function($translate, $rootScope) {
+        var alreadyShown = [];
         return {
-            page: function(text) {
-                $.jGrowl($translate.instant(text), { sticky: true, header: $translate.instant('HEADER_TUTORIAL') , beforeClose: function(e,m) {
-                    alert('About to close this notification!');
-                },theme: 'growl-info'}); //
+            page: function(hasTutorial, controller) {
+                if (hasTutorial && $rootScope.userSettings.justInstalled
+                    && _.indexOf(alreadyShown, controller) == -1
+                ) {
+                    $rootScope.tutorialTemplate = '/partials/tutorial/' + controller + '.html';
+                    $('#tutorialModal').modal();
+                    alreadyShown.push(controller);
+                }
             }
         };
     }]);

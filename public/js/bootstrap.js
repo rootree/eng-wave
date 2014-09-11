@@ -21,7 +21,7 @@ define([
 
         console.log('domReady');
 
-        ng.module("app").run(function($rootScope, $location, $timeout, $translate, AuthenticationService, FlashService, SessionService) {
+        ng.module("app").run(function($rootScope, $location, $timeout, $translate, AuthenticationService, FlashService, SessionService, TutorialService) {
 
             // $translate,
             // $translate.use('en_US');
@@ -43,15 +43,18 @@ define([
                 //Change page title, based on Route information
                 $rootScope.pageTitle = current.$$route.title;
                 $rootScope.currentController = current.$$route.controller;
+                TutorialService.page(current.$$route.hasTutorial, current.$$route.controller);
             });
             SessionService.set('authenticated', 0);
             $rootScope.isLoading = false;
             $rootScope.globalSettings = document.globalSettings;
             $rootScope.userSettings = {
-                authenticated : 0
+                authenticated : 0,
+                justInstalled : 0
             };
             if (document.userSettings.authenticated) {
                 $rootScope.userSettings = document.userSettings;
+                $rootScope.userSettings.justInstalled = 1; // TODO
                 $rootScope.userSettings.groupsContent = {};
                 SessionService.set('authenticated', 1);
             }
