@@ -8,13 +8,17 @@ class Silent extends AbstractSettings
 {
 
     const TYPE_SOURCE  = 1;
+    const TYPE_SOURCE_SIMPLE  = 4;
     const TYPE_TARGET  = 2;
+    const TYPE_TARGET_SIMPLE  = 5;
     const TYPE_DEFINED = 3;
 
     static public $allowTypes = [
         Silent::TYPE_SOURCE,
+        Silent::TYPE_SOURCE_SIMPLE,
         Silent::TYPE_DEFINED,
         Silent::TYPE_TARGET,
+        Silent::TYPE_TARGET_SIMPLE,
     ];
 
     /**

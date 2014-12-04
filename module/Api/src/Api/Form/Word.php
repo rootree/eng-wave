@@ -45,6 +45,12 @@ class Word extends AbstractForm
         ;
         $this->add($targetLang);
 
+        $source = new Element\Text('sourceSimple');
+        $this->add($source);
+
+        $target = new Element\Text('targetSimple');
+        $this->add($target);
+
         $fkGroup = new Element\Select('fkWordsGroup');
         $fkGroup
             ->setOptions([

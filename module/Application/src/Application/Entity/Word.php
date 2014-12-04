@@ -49,6 +49,20 @@ abstract class Word
      */
     private $target;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="source_simple", type="string", length=5000, nullable=true)
+     */
+    private $sourceSimple;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="target_simple", type="string", length=5000, nullable=true)
+     */
+    private $targetSimple;
+
 
 
     /**
@@ -157,4 +171,35 @@ abstract class Word
         return $this->target;
     }
 
+    /**
+     * @return string
+     */
+    public function getSourceSimple()
+    {
+        return $this->sourceSimple;
+    }
+
+    /**
+     * @param string $sourceSimple
+     */
+    public function setSourceSimple($sourceSimple)
+    {
+        $this->sourceSimple = $sourceSimple;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTargetSimple()
+    {
+        return $this->targetSimple;
+    }
+
+    /**
+     * @param string $targetSimple
+     */
+    public function setTargetSimple($targetSimple)
+    {
+        $this->targetSimple = $targetSimple;
+    }
 }

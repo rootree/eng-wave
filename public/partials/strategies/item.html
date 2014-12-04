@@ -13,6 +13,9 @@
                         <div class="label label-info" ng-switch-when="1">
                             Оригинал
                         </div>
+                        <div class="label label-info" ng-switch-when="1">
+                            Пример оригинала
+                        </div>
                         <div class="label label-warning" ng-switch-when="2">
                             Тишина
                             <settings ng-switch on="item.settings.type">
@@ -22,6 +25,12 @@
                                 <silent-type ng-switch-when="2">
                                     на время перевода
                                 </silent-type>
+                                <silent-type ng-switch-when="4">
+                                    на время примера оригинала
+                                </silent-type>
+                                <silent-type ng-switch-when="5">
+                                    на время примера перевода
+                                </silent-type>
                                 <silent-type ng-switch-when="3">
                                     на {{ item.settings.seconds }} сек.
                                 </silent-type>
@@ -29,6 +38,9 @@
                         </div>
                         <div class="label label-success" ng-switch-when="3">
                             Перевод
+                        </div>
+                        <div class="label label-success" ng-switch-when="5">
+                            Пример перевода
                         </div>
 
                     </strategy-item>

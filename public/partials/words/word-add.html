@@ -41,6 +41,20 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-6">
+                        <label>Пример:</label>
+                        <textarea rows="5" cols="5" ng-model="newWordEntity.sourceSimple" tabindex="2" name="sourceSimple" ng-minlength="3" ng-maxlength="1250" class="elastic form-control"></textarea>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Пример:</label>
+                        <textarea rows="5" cols="5" ng-model="newWordEntity.targetSimple" tabindex="3" name="targetSimple" ng-minlength="3" ng-maxlength="1250" class="elastic form-control"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
                         <label>Язык оригинала:</label>
                         <div>
                             <label class="btn " ng-repeat="language in globalSettings.languages" >

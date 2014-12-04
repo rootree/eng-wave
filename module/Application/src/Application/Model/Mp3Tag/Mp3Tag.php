@@ -29,12 +29,13 @@ class Mp3Tag implements Mp3TagInterface
         $title, $artist = null, $album = null, $year = null, $genre = null, $comment = null, $track = null
     )
     {
-        // Initialize getID3 tag-writing module
+
+
         $tagwriter = new \GetId3\Write\Tags();
 
         $tagwriter->filename = $this->mp3File;
-        $tagwriter->tagformats = array('id3v1', 'id3v2.3');
-        //$tagwriter->tagformats = array('id3v2.3');
+        $tagwriter->tagformats = array('id3v1', 'id3v2.3'); // , 'lyrics3'
+        // $tagwriter->tagformats = array('lyrics3');
         //$tagwriter->overwrite_tags = true;
         $tagwriter->tag_encoding      = $this->textEncoding;
         $tagwriter->remove_other_tags = true;
@@ -48,7 +49,9 @@ class Mp3Tag implements Mp3TagInterface
             'genre'   => array($genre),
             'comment' => array($comment),
             'track'   => array($track),
-            //'popularimeter' => array('email'=>'user@example.net', 'rating'=>48, 'data'=>0),
+            'lyricist' => [
+                'data' => "[00:02]Let's talk about time\r\n[00:02]tickin' away every day\r\n[00:05]so wake on up before it's gone away\r\n",
+            ]
         );
         $tagwriter->tag_data = $TagData;
 
@@ -60,6 +63,9 @@ class Mp3Tag implements Mp3TagInterface
         if (!empty($tagwriter->warnings)) {
             // echo 'There were some warnings:<br>' . implode('<br><br>', $tagwriter->warnings);
         }
+        // Initialize getID3 tag-writing module
+      //  $GetId3 = new \GetId3\Handler\GetId3();
+      //  $lyrics3 = new \GetId3\Module\Tag\Lyrics3($tagwriter);
 
         return true;
     }

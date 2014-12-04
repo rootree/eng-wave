@@ -88,9 +88,15 @@ class Download
             foreach ($wordsEntities as $wordsEntity) {
 
                 $speakerSourceEntity = $wordsEntity->getFkSpeakerSource();
+                $speakerSourceSimpleEntity = $wordsEntity->getFkSpeakerSourceSimple();
                 $speakerTargetEntity = $wordsEntity->getFkSpeakerTarget();
+                $speakerTargetSimpleEntity = $wordsEntity->getFkSpeakerTargetSimple();
 
-                if ($speakerTargetEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS || $speakerTargetEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS) {
+                if (
+                    $speakerTargetEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS ||
+                    $speakerTargetEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS ||
+                    $speakerTargetSimpleEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS ||
+                    $speakerTargetSimpleEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS) {
                     $deferWordsEntities[] = $wordsEntity;
                     continue;
                 }
@@ -101,8 +107,20 @@ class Download
                         continue;
                     }
                 }
+                if ($speakerSourceSimpleEntity->getStatus() == SpeakerEntity::STATUS_FRESH) {
+                    $bites = $this->speakerService->createSound($speakerSourceSimpleEntity);
+                    if (!$bites) {
+                        continue;
+                    }
+                }
                 if ($speakerTargetEntity->getStatus() == SpeakerEntity::STATUS_FRESH) {
                     $bites = $this->speakerService->createSound($speakerTargetEntity);
+                    if (!$bites) {
+                        continue;
+                    }
+                }
+                if ($speakerTargetSimpleEntity->getStatus() == SpeakerEntity::STATUS_FRESH) {
+                    $bites = $this->speakerService->createSound($speakerTargetSimpleEntity);
                     if (!$bites) {
                         continue;
                     }
@@ -133,19 +151,32 @@ class Download
     private function createDownloadItem(DownloadEntity $downloadEntity, WordEntity $wordEntity)
     {
         $speakerSourceEntity = $wordEntity->getFkSpeakerSource();
+        $speakerSourceSimpleEntity = $wordEntity->getFkSpeakerSourceSimple();
         $speakerTargetEntity = $wordEntity->getFkSpeakerTarget();
+        $speakerTargetSimpleEntity = $wordEntity->getFkSpeakerTargetSimple();
 
         $sourceFile = $this->storeService->getSpeakPath($speakerSourceEntity->getId(), StoreService::TYPE_SPEAKER);
+        $sourceSimpleFile =
+            $this->storeService->getSpeakPath($speakerSourceSimpleEntity->getId(), StoreService::TYPE_SPEAKER);
+
         $targetFile = $this->storeService->getSpeakPath($speakerTargetEntity->getId(), StoreService::TYPE_SPEAKER);
+        $targetSimpleFile =
+            $this->storeService->getSpeakPath($speakerTargetSimpleEntity->getId(), StoreService::TYPE_SPEAKER);
 
         $sourceMp3Editor = new Mp3Editor($sourceFile);
+        $sourceSimpleMp3Editor = new Mp3Editor($sourceSimpleFile);
+
         $targetMp3Editor = new Mp3Editor($targetFile);
+        $targetSimpleMp3Editor = new Mp3Editor($targetSimpleFile);
 
         $silenceFile = $this->storeService->getSilenceFile();
         $silenceMp3Editor = new Mp3Editor($silenceFile);
 
         $sourceMp3TagEditor = new Mp3Tag($sourceFile);
+        $sourceSimpleMp3TagEditor = new Mp3Tag($sourceSimpleFile);
+
         $targetMp3TagEditor = new Mp3Tag($targetFile);
+        $targetSimpleMp3TagEditor = new Mp3Tag($targetSimpleFile);
 
         $pieceCollection = [];
 
@@ -158,9 +189,17 @@ class Download
                     // $pieceCollection[] = $sourceFile;
                     $pieceCollection[] = clone $sourceMp3Editor;
                     break;
+                case StrategyItemEntity::TYPE_SOURCE_SIMPLE:
+                    // $pieceCollection[] = $sourceFile;
+                    $pieceCollection[] = clone $sourceSimpleMp3Editor;
+                    break;
                 case StrategyItemEntity::TYPE_TARGET:
                     // $pieceCollection[] = $targetFile;
                     $pieceCollection[] = clone $targetMp3Editor;
+                    break;
+                case StrategyItemEntity::TYPE_TARGET_SIMPLE:
+                    // $pieceCollection[] = $targetFile;
+                    $pieceCollection[] = clone $targetSimpleMp3Editor;
                     break;
                 case StrategyItemEntity::TYPE_SILENCE:
                     /** @var SilentSettings $settings */
@@ -170,8 +209,14 @@ class Download
                         case SilentSettings::TYPE_SOURCE:
                             $silentSecond = $sourceMp3TagEditor->getPlaytimeInSeconds();
                             break;
+                        case SilentSettings::TYPE_SOURCE_SIMPLE:
+                            $silentSecond = $sourceSimpleMp3TagEditor->getPlaytimeInSeconds();
+                            break;
                         case SilentSettings::TYPE_TARGET:
                             $silentSecond = $targetMp3TagEditor->getPlaytimeInSeconds();
+                            break;
+                        case SilentSettings::TYPE_TARGET_SIMPLE:
+                            $silentSecond = $targetSimpleMp3TagEditor->getPlaytimeInSeconds();
                             break;
                         case SilentSettings::TYPE_DEFINED:
                             $silentSecond = $settings->getSeconds();
@@ -179,14 +224,13 @@ class Download
                     }
                     if ($silentSecond) {
                         for ($i = 0; $i < $silentSecond; $i++) {
-                            // $pieceCollection[] = $silenceFile;
                             $pieceCollection[] = clone $silenceMp3Editor;
                         }
                     }
                     break;
             }
         }
-//var_export(count($pieceCollection)); exit();
+
         $this->glueItems($pieceCollection, $wordEntity);
         return $this->creteTag($wordEntity);
     }

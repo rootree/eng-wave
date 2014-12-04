@@ -81,6 +81,27 @@ class Word extends Entity\Word
      */
     private $fkSpeakerSource;
 
+
+    /**
+     * @var \Application\Model\Entity\Speaker
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Model\Entity\Speaker")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_speaker_target_simple", referencedColumnName="id")
+     * })
+     */
+    private $fkSpeakerTargetSimple;
+
+    /**
+     * @var \Application\Model\Entity\Speaker
+     *
+     * @ORM\ManyToOne(targetEntity="Application\Model\Entity\Speaker")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="fk_speaker_source_simple", referencedColumnName="id")
+     * })
+     */
+    private $fkSpeakerSourceSimple;
+
     /**
      * Set fkLanguageSource
      *
@@ -225,5 +246,55 @@ class Word extends Entity\Word
     public function getFkSpeakerSource()
     {
         return $this->fkSpeakerSource;
+    }
+
+
+    /**
+     * Set fkSpeakerTarget
+     *
+     * @param \Application\Model\Entity\Speaker $fkSpeakerTargetSimple
+     *
+     * @return Word
+     */
+    public function setFkSpeakerTargetSimple(\Application\Model\Entity\Speaker $fkSpeakerTargetSimple = null)
+    {
+        $this->fkSpeakerTargetSimple = $fkSpeakerTargetSimple;
+
+        return $this;
+    }
+
+    /**
+     * Get fkSpeakerTarget
+     *
+     * @return \Application\Model\Entity\Speaker
+     */
+    public function getFkSpeakerTargetSimple()
+    {
+        return $this->fkSpeakerTargetSimple;
+    }
+
+
+    /**
+     * Set fkSpeakerSource
+     *
+     * @param \Application\Model\Entity\Speaker $fkSpeakerSourceSimple
+     *
+     * @return Word
+     */
+    public function setFkSpeakerSourceSimple(\Application\Model\Entity\Speaker $fkSpeakerSourceSimple = null)
+    {
+        $this->fkSpeakerSourceSimple = $fkSpeakerSourceSimple;
+
+        return $this;
+    }
+
+    /**
+     * Get fkSpeakerSource
+     *
+     * @return \Application\Model\Entity\Speaker
+     */
+    public function getFkSpeakerSourceSimple()
+    {
+        return $this->fkSpeakerSourceSimple;
     }
 }

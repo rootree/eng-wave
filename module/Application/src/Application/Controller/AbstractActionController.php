@@ -235,9 +235,11 @@ abstract class AbstractActionController extends ZendAbstractActionController
             'id'               => $wordsEntity->getId(),
             'fkWordsGroup'     => $wordsEntity->getFkWordsGroup()->getId(),
             'source'           => $wordsEntity->getSource(),
+            'sourceSimple'     => $wordsEntity->getSourceSimple(),
             'sourceLang'       => $wordsEntity->getFkLanguageSource()->getIso2(),
             'fkLanguageSource' => $wordsEntity->getFkLanguageSource()->getId(),
             'target'           => $wordsEntity->getTarget(),
+            'targetSimple'     => $wordsEntity->getTargetSimple(),
             'targetLang'       => $wordsEntity->getFkLanguageTarget()->getIso2(),
             'fkLanguageTarget' => $wordsEntity->getFkLanguageTarget()->getId(),
             'sourceURL'        => $wordsEntity->getFkSpeakerSource()->getStatus() == SpeakerEntity::STATUS_READY

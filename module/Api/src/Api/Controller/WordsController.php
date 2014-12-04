@@ -124,11 +124,25 @@ class WordsController extends AbstractApiController
 
                     $wordEntity->setFkSpeakerSource($speakerEntity);
 
+                    $word          = $wordEntity->getSourceSimple();
+                    $language      = $wordEntity->getFkLanguageSource();
+                    $speakerEntity = $wordService->getSpeaker($word, $language);
+
+                    $wordEntity->setFkSpeakerSourceSimple($speakerEntity);
+
+                    // ----
                     $word          = $wordEntity->getTarget();
                     $language      = $wordEntity->getFkLanguageTarget();
                     $speakerEntity = $wordService->getSpeaker($word, $language);
 
                     $wordEntity->setFkSpeakerTarget($speakerEntity);
+
+                    $word          = $wordEntity->getTargetSimple();
+                    $language      = $wordEntity->getFkLanguageTarget();
+                    $speakerEntity = $wordService->getSpeaker($word, $language);
+
+                    $wordEntity->setFkSpeakerTargetSimple($speakerEntity);
+
                     $wordService->save($newWordEntity);
 
                     $entityManager->commit();
@@ -192,6 +206,23 @@ class WordsController extends AbstractApiController
                     $wordEntity->setFkSpeakerSource($speakerEntity);
                 }
 
+                $sourceSimpleWord = $wordEntity->getFkSpeakerSourceSimple()
+                    ? $wordEntity->getFkSpeakerSourceSimple()->getWord()
+                    : '';
+                $sourceSimpleWordLang = $wordEntity->getFkSpeakerSourceSimple()
+                    ? $wordEntity->getFkSpeakerSourceSimple()->getFkLanguage()
+                    : $wordEntity->getFkLanguageSource();
+
+                if ($wordEntity->getSourceSimple() != $sourceSimpleWord
+                    || $wordEntity->getFkLanguageSource() != $sourceSimpleWordLang
+                ) {
+                    $word          = $wordEntity->getSourceSimple();
+                    $language      = $wordEntity->getFkLanguageSource();
+                    $speakerEntity = $wordService->getSpeaker($word, $language);
+
+                    $wordEntity->setFkSpeakerSourceSimple($speakerEntity);
+                }
+
                 if ($wordEntity->getTarget() != $wordEntity->getFkSpeakerTarget()->getWord()
                     || $wordEntity->getFkLanguageTarget() != $wordEntity->getFkSpeakerTarget()->getFkLanguage()
                 ) {
@@ -200,6 +231,23 @@ class WordsController extends AbstractApiController
                     $speakerEntity = $wordService->getSpeaker($word, $language);
 
                     $wordEntity->setFkSpeakerTarget($speakerEntity);
+                }
+
+                $targetSimpleWord = $wordEntity->getFkSpeakerTargetSimple()
+                    ? $wordEntity->getFkSpeakerTargetSimple()->getWord()
+                    : '';
+                $targetSimpleWordLang = $wordEntity->getFkSpeakerTargetSimple()
+                    ? $wordEntity->getFkSpeakerTargetSimple()->getFkLanguage()
+                    : $wordEntity->getFkLanguageTarget();
+
+                if ($wordEntity->getTargetSimple() != $targetSimpleWord
+                    || $wordEntity->getFkLanguageTarget() != $targetSimpleWordLang
+                ) {
+                    $word          = $wordEntity->getTargetSimple();
+                    $language      = $wordEntity->getFkLanguageTarget();
+                    $speakerEntity = $wordService->getSpeaker($word, $language);
+
+                    $wordEntity->setFkSpeakerTargetSimple($speakerEntity);
                 }
 
                 $result = $wordService->save($wordEntity);

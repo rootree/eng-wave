@@ -54,7 +54,7 @@ define([
             };
             if (document.userSettings.authenticated) {
                 $rootScope.userSettings = document.userSettings;
-                $rootScope.userSettings.justInstalled = 1; // TODO
+                $rootScope.userSettings.justInstalled = 0;
                 $rootScope.userSettings.groupsContent = {};
                 SessionService.set('authenticated', 1);
             }

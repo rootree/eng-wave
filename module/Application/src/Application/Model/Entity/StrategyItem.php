@@ -18,13 +18,17 @@ class StrategyItem extends Entity\StrategyItem
 {
 
     const TYPE_SOURCE  = 1;
+    const TYPE_SOURCE_SIMPLE  = 4;
     const TYPE_SILENCE = 2;
     const TYPE_TARGET  = 3;
+    const TYPE_TARGET_SIMPLE  = 5;
 
     static public $allowTypes = [
+        StrategyItem::TYPE_SOURCE_SIMPLE,
         StrategyItem::TYPE_SOURCE,
         StrategyItem::TYPE_SILENCE,
         StrategyItem::TYPE_TARGET,
+        StrategyItem::TYPE_TARGET_SIMPLE,
     ];
 
     private $settingsObject;

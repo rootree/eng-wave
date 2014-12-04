@@ -120,7 +120,9 @@ define(['./module'], function (controllers) {
             }
             WordsService.add(newWord).success(function(response) {
                 newWord.source = '';
+                newWord.sourceSimple = '';
                 newWord.target = '';
+                newWord.targetSimple = '';
                 if (newWord.fkWordsGroup == UserService.currentGroup().id) {
                     $scope.words.push(response.word);
                 }

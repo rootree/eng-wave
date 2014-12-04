@@ -104,7 +104,7 @@ define(['./module'], function (controllers) {
         };
         var _addStrategy = function () {
             $scope.sortableSourceItems = [
-                $scope.ITEM_SOURCE, $scope.ITEM_SILENCE, $scope.ITEM_TARGET
+                $scope.ITEM_SOURCE, $scope.ITEM_SOURCE_SIMPLE, $scope.ITEM_SILENCE, $scope.ITEM_TARGET, $scope.ITEM_TARGET_SIMPLE
             ];
             $scope.addStrategyTpl = TMP_ADD_STRATEGY;
             $scope.isEditingStrategy = 0;
@@ -146,13 +146,20 @@ define(['./module'], function (controllers) {
         var TMP_ITEM_STRATEGY = '/partials/strategies/item.html';
 
         $scope.ITEM_TYPE_SOURCE = 1;
+        $scope.ITEM_TYPE_SOURCE_SIMPLE = 4;
         $scope.ITEM_TYPE_SILENT = 2;
         $scope.ITEM_TYPE_TARGET = 3;
+        $scope.ITEM_TYPE_TARGET_SIMPLE = 5;
 
         //===== Примеры элементов стратегии =====//
 
         $scope.ITEM_SOURCE = {
             type: $scope.ITEM_TYPE_SOURCE,
+            settings : {}
+        };
+
+        $scope.ITEM_SOURCE_SIMPLE = {
+            type: $scope.ITEM_TYPE_SOURCE_SIMPLE,
             settings : {}
         };
         $scope.ITEM_SILENCE = {
@@ -164,6 +171,10 @@ define(['./module'], function (controllers) {
         };
         $scope.ITEM_TARGET = {
             type: $scope.ITEM_TYPE_TARGET,
+            settings : {}
+        };
+        $scope.ITEM_TARGET_SIMPLE = {
+            type: $scope.ITEM_TYPE_TARGET_SIMPLE,
             settings : {}
         };
 
