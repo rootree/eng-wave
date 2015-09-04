@@ -1,11 +1,11 @@
 <div class="col-sm-6">
     <div class=" block task strategy-entity">
         <div class="row with-padding">
-            <div class="col-sm-9">
+            <div class="col-sm-9 ">
                 <div class="task-description">
                     <h6 ng-bind-html="package.title"></h6>
                     <div ng-bind-html="package.desc">
-                        Данная стратегия не содержит элементов. Вы не сможете использовать её для скачивания файлов.
+
                     </div>
                 </div>
             </div>
@@ -13,26 +13,26 @@
                 <div class="task-info">
                     <a ng-click="installPackage(package)" ng-disabled="package.isInstalled" class="btn btn-primary btn-lg">
                         <i class="icon-puzzle"></i>
-                        <span ng-if="!package.isInstalled">Установить</span>
-                        <span ng-if="package.isInstalled">Установлен</span>
+                        <span ng-if="!package.isInstalled" translate="TEXT_INSTALL"></span>
+                        <span ng-if="package.isInstalled" translate="TEXT_INSTALLED"></span>
                     </a>
                 </div>
             </div>
         </div>
+        <div class="text-center with-padding">
+            <img ng-src="/img/flag/{{ package.languageSource }}.png" title="{{ package.languageSource }}" class="words-flag"/>&nbsp;&nbsp;
+            <img ng-src="/img/flag/{{ package.languageTarget }}.png" title="{{ package.languageTarget }}" class="words-flag"/>
+        </div>
         <div class="panel-footer package-footer">
             <span><i class="icon-bars"></i>
-            Уровень:
+            <span translate="TEXT_LEVEL"></span>:
             <levels ng-switch on="package.level">
-                <silent-type ng-switch-when="1">
-                    Beginner
-                </silent-type>
-                <silent-type ng-switch-when="2">
-                    Advanced
-                </silent-type>
+                <silent-type ng-switch-when="1" translate="TEXT_LEVEL_BEGINNER"></silent-type>
+                <silent-type ng-switch-when="2" translate="TEXT_LEVEL_ADVANCED"></silent-type>
             </levels></span>
 
             <div class="pull-right">
-                Количество слов: {{ package.count }}
+                <span  translate="TEXT_WORD_COUNT"></span>: {{ package.count }}
             </div>
 
         </div>

@@ -1,6 +1,6 @@
 define(['./module'], function (services) {
     'use strict';
-    return services.factory('UserService', ['$http', '$rootScope', '$sanitize', 'SessionService', function($http, $rootScope, $sanitize, SessionService) {
+    return services.factory('UserService', ['$http', '$rootScope', '$sanitize', 'SessionService', '$translate', function($http, $rootScope, $sanitize, SessionService, $translate) {
 
         var cacheSession   = function() {
             SessionService.set('authenticated', 1);
@@ -26,9 +26,9 @@ define(['./module'], function (services) {
                         email: $sanitize(credentials.email),
                         password: $sanitize(credentials.password),
                         initial: {
-                            group : 'Начальная группа',
-                            strategy : 'Стратегия для заучивания оригинала',
-                            strategy2 : 'Стратегия для заучивания перевода оригинала'
+                            group : $translate.instant('TEXT_INITIAL_GROUP'),
+                            strategy : $translate.instant('TEXT_STRATEGY_FOR_ORIGINAL'),
+                            strategy2 : $translate.instant('TEXT_STRATEGY_FOR_TRANSLATION')
                         }
                     }
                 });

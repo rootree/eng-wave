@@ -86,11 +86,11 @@ class Strategy
         foreach ($items as $item) {
 
             if (!in_array($item['type'], StrategyItemEntity::$allowTypes)) {
-                throw new \Api\Model\Exception('Тип вставленного обьекта неизвестен');
+                throw new \Api\Model\Exception(null, \Api\Model\Exception::STRATEGY_RESTRICTED_ELEMENT);
             }
             $setting = FactorySettings::get($item['type'], $item['settings'], true);
             if (!$setting->isValidate()) {
-                throw new \Api\Model\Exception('Настройки воспроизведения некоректны');
+                throw new \Api\Model\Exception(null, \Api\Model\Exception::STRATEGY_WRONG_SETTINGS);
             }
             ;
 

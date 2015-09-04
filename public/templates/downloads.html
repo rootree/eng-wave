@@ -7,7 +7,7 @@
     <!-- Page header -->
     <div class="page-header">
         <div class="page-title">
-            <h3>Загрузки слов <small>Вы можете загрузить на ваш компьютер ваши слова, в виде отдельных файлов, которые будут собраны в такой последовательности как стратегии.</small></h3>
+            <h3><span translate="TITLE_DOWNLOADS"></span> <small translate="TEXT_DOWNLOAD_PAGE_DESC"></small></h3>
         </div>
     </div>
     <!-- /page header -->
@@ -17,9 +17,9 @@
 
             <div ng-show="!userSettings.downloads.length && userSettings.strategies.length">
                 <div class="alert alert-block alert-warning fade in">
-                    <h6><i class="icon-question2"></i> Пусто</h6>
+                    <h6><i class="icon-question2"></i> <span translate="TEXT_DOWNLOAD_EMPTY"></span></h6>
                     <hr>
-                    <p>Ни одной из стратегий для слов для перевода не найдено. Добавьте хотя бы одну, иначе вы не сможете загрузить для прослушивания ваши слова.</p>
+                    <p translate="TEXT_DOWNLOAD_EMPTY_DESC"></p>
                 </div>
                 <br/>
             </div>
@@ -27,11 +27,11 @@
 
             <div ng-show="!userSettings.strategies.length">
                 <div class="alert alert-block alert-info fade in">
-                    <h6><i class="icon-warning"></i> Ни одной стратегии</h6>
+                    <h6><i class="icon-warning"></i> <span translate="TEXT_DOWNLOAD_EMPTY_STRATEGY"></span></h6>
                     <hr>
-                    <p>У вас нет ни одной стратегии. Не понятно в какой последовательности воспроизводить фразы.</p>
+                    <p translate="TEXT_DOWNLOAD_EMPTY_STRATEGY_DESC"></p>
                     <div class="text-left">
-                        <a class="btn btn-danger" href="#/strategies"><i class="icon-wave2"></i> Добавить стратегию</a>
+                        <a class="btn btn-danger" href="#/strategies"><i class="icon-wave2"></i> <span translate="BUTTON_ADD_STRATEGY"></span></a>
                     </div>
                 </div>
                 <br/>
@@ -47,19 +47,19 @@
                         <thead>
                             <tr >
                                 <th class="col-md-2" ng-click="predicate = 'group'; reverse=!reverse" ng-class="predicate == 'group' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'" >
-                                    <a>Группа слов</a>
+                                    <a translate="TEXT_DOWNLOAD_WORDS_GROUP"></a>
                                 </th>
                                 <th class="col-md-2" ng-click="predicate = 'strategy'; reverse=!reverse" ng-class="predicate == 'strategy' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
-                                    <a>Стратегия</a>
+                                    <a translate="TEXT_DOWNLOAD_STRATEGY"></a>
                                 </th>
                                 <th ng-click="predicate = 'createdAt'; reverse=!reverse" ng-class="predicate == 'createdAt' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
-                                    <a>Дата создания</a>
+                                    <a translate="TEXT_DOWNLOAD_CREATED_DATE"></a>
                                 </th>
                                 <th class="col-md-2" ng-click="predicate = 'status'; reverse=!reverse" ng-class="predicate == 'status' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
-                                    <a>Статус</a>
+                                    <a translate="TEXT_DOWNLOAD_STATUS"></a>
                                 </th>
                                 <th ng-click="predicate = 'wight'; reverse=!reverse" ng-class="predicate == 'wight' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
-                                    <a>Размер</a>
+                                    <a translate="TEXT_DOWNLOAD_SIZE"></a>
                                 </th>
                                 <th>
 
@@ -70,9 +70,9 @@
                             <tr ng-repeat="download in userSettings.downloads | orderBy:predicate:reverse ">
                                 <td class="text-left">
                                     <span ng-show="download.group">
-                                        <a href="#/{{ download.groupID }}" ng-bind-html="download.group + ' (слов: ' + download.groupCount + ')' "></a>
+                                        <a href="#/{{ download.groupID }}" ng-bind-html="download.group + ' (' + download.groupCount + ')' "></a>
                                     </span>
-                                    <span ng-show="!download.group" class="help-block" ng-bind-html="download.legacy.group.title + ' (слов: ' + download.legacy.group.count + ')'">
+                                    <span ng-show="!download.group" class="help-block" ng-bind-html="download.legacy.group.title + ' (' + download.legacy.group.count + ')'">
                                     </span>
                                 </td>
                                 <td>
@@ -89,17 +89,17 @@
                                 </td>
                                 <td>
                                     <settings ng-switch on="download.status">
-                                        <silent-type class="label label-info"  ng-switch-when="0">
-                                            В очереди
+                                        <silent-type class="label label-info"  ng-switch-when="0" translate="TEXT_DOWNLOAD_STATUS_QUEUE">
+
                                         </silent-type>
-                                        <silent-type class="label label-warning" ng-switch-when="1">
-                                            Подготавливается
+                                        <silent-type class="label label-warning" ng-switch-when="1" translate="TEXT_DOWNLOAD_STATUS_PREPARING">
+
                                         </silent-type>
-                                        <silent-type class="label label-success" ng-switch-when="2">
-                                            Готово
+                                        <silent-type class="label label-success" ng-switch-when="2" translate="TEXT_DOWNLOAD_STATUS_READY">
+
                                         </silent-type>
-                                        <silent-type class="label label-default" ng-switch-when="3">
-                                            Отменен
+                                        <silent-type class="label label-default" ng-switch-when="3" translate="TEXT_DOWNLOAD_STATUS_CANCELED">
+
                                         </silent-type>
                                     </settings>
                                 </td>
@@ -107,7 +107,7 @@
                                     {{ download.wight }}
                                 </td>
                                 <td class="text-right">
-                                    <a class="btn btn-primary  btn-xs " ng-disabled="download.status != 2" target="_blank" ng-href="/download/{{download.id}}"><i class="icon-download2"></i> Скачать</a>
+                                    <a class="btn btn-primary  btn-xs " ng-disabled="download.status != 2" target="_blank" ng-href="/download/{{download.id}}"><i class="icon-download2"></i> <span translate="BUTTON_DOWNLOAD"></span></a>
                                     <button class="btn btn-primary btn-icon btn-xs " ng-disabled="download.status == 1" ng-click="dropDownload(download)"><i class="icon-remove3"></i></button>
                                 </td>
                             </tr>
@@ -116,7 +116,7 @@
                 </div>
                 <div class="table-footer ">
 
-                    <span class="text-muted">Всего: {{ userSettings.downloads.length }}</span>
+                    <span class="text-muted"><span translate="TEXT_DOWNLOAD_TOTAL"></span>: {{ userSettings.downloads.length }}</span>
                 </div>
                 </div>
             </div>
@@ -131,7 +131,7 @@
                 <div class="panel panel-default">
 
                     <div class="panel-heading">
-                        <h6 class="panel-title"><i class="icon-nbsp"></i> Подготовка файла</h6>
+                        <h6 class="panel-title"><i class="icon-nbsp"></i> <span translate="TEXT_DOWNLOAD_FILE_PRE"></span></h6>
                     </div>
 
                     <div class="panel-body">
@@ -139,7 +139,7 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label>Группа:</label>
+                                    <label translate="LABEL_GROUP"></label>
                                     <select class="form-control select" tabindex="1" ng-model="newDownloadEntity.fkWordsGroup" name="group"   required="required">
                                         <option ng-repeat="group in userSettings.groups | orderBy:'title'" ng-bind-html="group.title + ' (' + group.count + ')'" value="{{ group.id }}" ng-disabled="!group.count">
                                         </option>
@@ -153,7 +153,7 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label>Стратегия:</label>
+                                    <label translate="LABEL_STRATEGY"></label>
                                     <select class="form-control select" tabindex="2" ng-model="newDownloadEntity.fkStrategy" name="strategy" required="required">
                                         <option ng-repeat="strategy in userSettings.strategies | orderBy:'sort'" ng-bind-html="strategy.title" value="{{ strategy.id }}" >
                                         </option>
@@ -165,7 +165,7 @@
                         </div>
 
                         <div class="form-actions text-right">
-                            <button type="submit" class="btn btn-success" ng-disabled="addDownloadForm.$invalid">Добавить</button>
+                            <button type="submit" class="btn btn-success" ng-disabled="addDownloadForm.$invalid" translate="BUTTON_ADD"></button>
                         </div>
                     </div>
 

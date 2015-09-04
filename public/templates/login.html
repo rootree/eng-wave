@@ -3,31 +3,34 @@
     <form role="form" ng-submit="login()" name="loginForm">
         <div class="popup-header">
             <a href="#/login" class="pull-left"><i class="icon-lock2"></i></a>
-            <span class="text-semibold">Авторизация</span>
+            <span class="text-semibold" translate="TEXT_LOGIN_AUTH"></span>
             <div class="btn-group pull-right">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-cogs"></i></a>
                 <ul class="dropdown-menu icons-right dropdown-menu-right">
-                    <li><a href="#"><i class="icon-info"></i> Забыли пароль?</a></li>
-                    <li><a href="#/support"><i class="icon-support"></i> Написать нам</a></li>
+                    <li><a ng-click="development()"><i class="icon-info"></i> <span translate="TEXT_LOGIN_FORGOT_PASSWORD"></span></a></li>
+                    <li><a href="#/support"><i class="icon-support"></i> <span translate="TEXT_LOGIN_FEEDBACK"></span></a></li>
                 </ul>
             </div>
         </div>
         <div class="well">
             <div class="form-group has-feedback">
-                <label>E-mail</label>
-                <input type="email" class="form-control" placeholder="E-mail" ng-model="credentials.email" required tabindex="1">
+                <label translate="LABEL_YOUR_EMAIL"></label>
+                <input type="email" class="form-control" placeholder="your@mail.com" ng-model="credentials.email" required tabindex="1">
                 <i class="icon-users form-control-feedback"></i>
             </div>
 
             <div class="form-group has-feedback">
-                <label>Пароль</label>
-                <input type="password" class="form-control" placeholder="Пароль" ng-model="credentials.password" required tabindex="2">
+                <label translate="LABEL_PASSWORD"></label>
+                <input type="password" class="form-control"  ng-model="credentials.password" required tabindex="2">
                 <i class="icon-lock form-control-feedback"></i>
             </div>
 
             <div class="row form-actions">
-                <div class="col-xs-12">
-                    <button type="submit" class="btn btn-warning pull-right" ng-disabled="loginForm.$invalid"><i class="icon-unlocked"></i> Войти</button>
+                <div class="col-xs-6">
+                    <button type="button" class="btn btn-success pull-left" ng-click="demo()"><span translate="BUTTON_DEMO"></span></button>
+                </div>
+                <div class="col-xs-6">
+                    <button type="submit" class="btn btn-warning pull-right" ng-disabled="loginForm.$invalid"><i class="icon-unlocked"></i> <span translate="BUTTON_LOGIN"></span></button>
                 </div>
             </div>
         </div>

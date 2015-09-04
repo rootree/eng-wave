@@ -1,16 +1,16 @@
 define(['./module'], function (directives) {
     'use strict';
-    directives.directive('uiPagination', function() {
+    directives.directive('uiPagination', function($translate) {
         return {
             restrict: 'EA',
             replace: true,
             template:
                 '<ul class="pagination">' +
                         '<li ng-class="{disabled: firstPage()}" ng-click="goToFirstPage()">' +
-                            '<a>В начало</a>' +
+                            '<a>&#x25C0;</a>' +
                         '</li>' +
                         '<li ng-class="{disabled: !hasPrev()}" ng-click="prev()">' +
-                            '<a>&#x25C0;</a>' +
+                            '<a>&#x25C1;</a>' +
                         '</li>' +
                         '<li ng-repeat="page in pages"' +
                             'ng-class="{active: isCurrent(page)}"' +
@@ -19,10 +19,10 @@ define(['./module'], function (directives) {
                             '<a>{{page}}</a>' +
                         '</li>' +
                         '<li ng-class="{disabled: !hasNext()}" ng-click="next()">' +
-                            '<a>&#x25B6;</i></a>' +
+                            '<a>&#x25B7;</a>' +
                         '</li>' +
                         '<li ng-class="{disabled: lastPage()}" ng-click="goToLastPage()">' +
-                            '<a>В конец</i></a>' +
+                            '<a>&#x25B6;</a>' +
                         '</li>' +
                 '</ul>',
             scope: {

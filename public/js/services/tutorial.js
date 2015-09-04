@@ -4,7 +4,7 @@ define(['./module'], function (services) {
         var alreadyShown = [];
         return {
             page: function(hasTutorial, controller) {
-                if (hasTutorial && $rootScope.userSettings.justInstalled
+                if (hasTutorial && ($rootScope.userSettings.justInstalled || $rootScope.isDemo)
                     && _.indexOf(alreadyShown, controller) == -1
                 ) {
                     $rootScope.tutorialTemplate = '/partials/tutorial/' + controller + '.html';

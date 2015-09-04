@@ -15,8 +15,6 @@
 
 $(function() {
 
-
-
 /* # Data tables
 ================================================== */
 
@@ -135,11 +133,15 @@ $(function() {
 	$(document).on('click', '.offcanvas', function () {
 		$('body').toggleClass('offcanvas-active');
 	});
+    console.log('submenu');
+    $('#submenu').click(function (e){
+        //e.preventDefault();
+        $('body').toggleClass('offcanvas-active');
+        console.log('submenu');
+    });
 
 
-
-
-	//===== Toggling active class in accordion groups =====//
+    //===== Toggling active class in accordion groups =====//
 
 	$('.panel-trigger').click(function(e){
 		e.preventDefault();

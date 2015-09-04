@@ -18,6 +18,9 @@ define(['./module'], function (controllers) {
 
         //===== Работа с сервисами =====//
 
+        $scope.closeSubMenu = function() {
+            $('body').toggleClass('offcanvas-active');
+        };
         $scope.getGroup = function(idGroup, force){
             if ($rootScope.userSettings.settings.currentGroup == idGroup && force !== true) {
                 _resetPageParameters();
@@ -115,7 +118,7 @@ define(['./module'], function (controllers) {
         };
         $scope.addNewWord = function(newWord){
             if (typeof newWord.fkWordsGroup == 'undefined') {
-                console.log('Allert');
+                console.log('Alert');
                 newWord.fkWordsGroup = $rootScope.userSettings.settings.currentGroup;
             }
             WordsService.add(newWord).success(function(response) {
@@ -145,6 +148,9 @@ define(['./module'], function (controllers) {
                     $scope.pagination.cur = 1;//Устанавиливать есть на текущей странице нет элементов
                 }
             });
+        };
+        $scope.moveToOtherGroup = function(){
+            $scope.actionTypeOnSelectedItems = 'Move';
         };
 
         //===== Работа с интерфейсом =====//
@@ -208,8 +214,12 @@ define(['./module'], function (controllers) {
             });
         };
         $scope.cancelGroupChanging = function(){
-            $scope.editingGroup = 0;
+            //$scope.editingGroup = 0;
+            _resetPageParameters();
             $scope.currentGroupTitle = UserService.currentGroup().title;
+        };
+        $scope.resetPageParameters = function(){
+            _resetPageParameters();
         };
 
         //===== Наблюдаетли =====//
@@ -330,7 +340,7 @@ define(['./module'], function (controllers) {
             total: 1,
             display: 0,
             elementsOnPage : 10,
-            paginationElements : 5
+            paginationElements : 3
         };
 
         var groupID = parseInt($routeParams.groupID);

@@ -7,7 +7,7 @@
 <!-- Page header -->
 <div class="page-header">
     <div class="page-title">
-        <h3>Ваш профайл <small></small></h3>
+        <h3><span translate="TITLE_SETTINGS"></span> <small></small></h3>
     </div>
 </div>
 <!-- /page header -->
@@ -42,18 +42,18 @@
 
 
     <!-- Profile information -->
-    <form class="block" role="form" ng-submit="applyChanges(credential)" name="credentialForm">
-        <h6 class="heading-hr"><i class="icon-user"></i> Персональная информация</h6>
+    <form class="block" role="form"  name="credentialForm">
+        <h6 class="heading-hr"><i class="icon-user"></i> <span translate="TEXT_SETTINGS_PERSONAL_INFO"></span></h6>
 
         <div class="block-inner">
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-6">
-                        <label>Имя пользователя:</label>
+                        <label translate="LABEL_YOUR_NAME"></label>
                         <input type="text" class="form-control" ng-model="credential.name" />
                     </div>
                     <div class="col-md-6">
-                        <label>Email:</label>
+                        <label translate="LABEL_YOUR_EMAIL"></label>
                         <input type="text" readonly="readonly" class="form-control" ng-model="credential.email">
                     </div>
                 </div>
@@ -61,16 +61,16 @@
 
         </div>
 
-        <h6 class="heading-hr"><i class="icon-lock"></i> Безопасность</h6>
+        <h6 class="heading-hr"><i class="icon-lock"></i> <span translate="TEXT_SETTINGS_SECURITY"></span></h6>
 
         <div class="form-group">
             <div class="row">
                 <div class="col-md-6">
-                    <label>Новый пароль:</label>
+                    <label translate="LABEL_NEW_PASSWORD"></label>
                     <input type="password" class="form-control" ng-model="credential.password">
                 </div>
                 <div class="col-md-6">
-                    <label>Пароль повторно:</label>
+                    <label translate="LABEL_NEW_PASSWORD_AGAIN"></label>
                     <input type="password" class="form-control" ng-model="credential.passwordRepeat">
                 </div>
             </div>
@@ -83,18 +83,18 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label>Уведомления: </label>
+                    <label translate="LABEL_NOTIFICATION"></label>
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" class="styled" checked="checked">
-                            Истечение срока действия пароля
+                            <input type="checkbox" class="styled">
+                            <span translate="TEXT_SETTINGS_EXPIRE_DAYS_FOR_PASS"></span>
                         </label>
                     </div>
 
                     <div class="checkbox">
                         <label>
-                            <input type="checkbox" class="styled">
-                            Файлы для загрузги подготовлены
+                            <input type="checkbox" class="styled" checked="checked">
+                            <span translate="TEXT_SETTINGS_FILES_READY"></span>
                         </label>
                     </div>
                 </div>
@@ -102,7 +102,7 @@
         </div>
 
         <div class="text-right">
-            <input type="submit" value="Применить изменения" class="btn btn-success" ng-disabled="credentialForm.$invalid || credentialForm.$pristine">
+            <button type="button" class="btn btn-success" ng-disabled="credentialForm.$invalid || credentialForm.$pristine" translate="BUTTON_APPLY" ng-click="applyChanges(credential)"></button>
         </div>
 
     </form>

@@ -19,6 +19,8 @@ class Exception extends \Exception
     // Strategy
     const STRATEGY_NOT_FOUND   = 6000;
     const STRATEGY_EMPTY_ITEMS = 6001;
+    const STRATEGY_RESTRICTED_ELEMENT = 6002;
+    const STRATEGY_WRONG_SETTINGS = 6003;
 
     // Package
     const PACKAGE_NOT_FOUND      = 5000;

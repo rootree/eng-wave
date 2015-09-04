@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
-    <title>EngWave App</title>
+    <title>EngWave</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="css/londinium-theme.css" rel="stylesheet" type="text/css">
@@ -19,51 +19,54 @@
 
 <div class="overlay" id="overlay" ng-show="preLoader || isLoading">
     <div class="opacity"></div>
-    <i class="icon-spinner2 spin"></i> Загрузка приложения...
+    <i class="icon-spinner2 spin"></i> Loading...
 </div>
 
 <div ng-show="!preLoader" id="mainApp">
     <!-- Navbar -->
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-right">
-                <span class="sr-only">Главное меню</span>
+            <button type="button" class="navbar-toggle " data-toggle="collapse" data-target=".navbar-right">
+                <span class="sr-only" translate="TEXT_MAIN_MENU"></span>
                 <i class="icon-grid3"></i>
             </button>
-            <a class="navbar-brand" href="#"><img src="images/logo.png" alt="Londinium"></a>
-
+            <button type="button" class="navbar-toggle" id="submenu"  >
+                <span class="sr-only" translate="TEXT_MAIN_MENU"></span>
+                <i class="icon-paragraph-justify"></i>
+            </button>
+            <a class="navbar-brand" href="#"><b>EngWave</b></a>
         </div>
 
         <ul class="nav navbar-nav navbar-right collapse" ng-show="!userSettings.authenticated">
             <li ng-class="currentController == 'RegController' ? 'active' : '' ">
-                <a href="#/reg"><i class="icon-user-plus3"></i> <span>Регистрация</span></a>
+                <a href="#/reg"><i class="icon-user-plus3"></i> <span translate="TITLE_REGISTRATION"></span></a>
             </li>
             <li ng-class="currentController == 'LoginController' ? 'active' : '' ">
-                <a href="#/login"><i class="icon-lock2"></i> <span>Авторизация</span></a>
+                <a href="#/login"><i class="icon-lock2"></i> <span translate="TITLE_AUTH"></span></a>
             </li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right collapse" id="navbar-menu" ng-show="userSettings.authenticated">
             <li ng-class="currentController == 'WordsController' ? 'active' : ''">
                 <a href="#/">
-                    <i class="icon-volume-medium"></i> <span>Слова</span>
+                    <i class="icon-volume-medium"></i> <span translate="TITLE_WORDS"></span>
                 </a>
             </li>
             <li ng-class="currentController == 'StrategiesController' ? 'active' : ''">
                 <a href="#/strategies">
-                    <i class="icon-wave2"></i> <span>Стратегии</span>
+                    <i class="icon-wave2"></i> <span translate="TITLE_STRATEGIES"></span>
                 </a>
             </li>
             <li ng-class="currentController == 'DownloadsController' ? 'active' : ''">
                 <a href="#/downloads">
                     <i class="icon-download"></i>
                     <span class="label label-default">{{ userSettings.readyToDownload }}</span>
-                    <span >Загрузки</span>
+                    <span translate="TITLE_DOWNLOADS"></span>
                 </a>
             </li>
             <li ng-class="currentController == 'PackagesController' ? 'active' : ''">
                 <a href="#/packages">
-                    <i class="icon-folder2"></i> <span>Пакеты</span>
+                    <i class="icon-folder2"></i> <span translate="TITLE_PACKS"></span>
                 </a>
             </li>
             <li class="user dropdown">
@@ -73,8 +76,8 @@
                     <i class="caret"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right icons-right">
-                    <li ng-class="currentController == 'SettingsController' ? 'active' : ''"><a href="#/settings"><i class="icon-user"></i> Профайл</a></li>
-                    <li><a ng-click="globalLogout()"><i class="icon-exit"></i> Выйти</a></li>
+                    <li ng-class="currentController == 'SettingsController' ? 'active' : ''"><a href="#/settings"><i class="icon-user"></i> <span translate="TITLE_SETTINGS"></span></a></li>
+                    <li><a ng-click="globalLogout()"><i class="icon-exit"></i> <span translate="BUTTON_QUIT"></span></a></li>
                 </ul>
             </li>
         </ul>
@@ -87,17 +90,14 @@
 
     <!-- Footer -->
     <div class="footer navbar-fixed-bottom">
-        <div class="pull-left">&copy; 2014. EngWave app</div>
+        <div class="pull-left">&copy; 2014-<?php echo date('Y') ?>. EngWave</div>
         <div class="pull-right icons-group">
-            <a ng-class="currentController == 'SupportController' ? 'active' : ''" href="#/support">Предложения / Поддержка</a>
-            <a href="http://engwave.com">О проекте</a>
+            <a ng-class="currentController == 'SupportController' ? 'active' : ''" href="#/support" translate="TEXT_FEED_BACK_SUPPORT"></a>
+            <a href="http://engwave.com" translate="TITLE_ABOUT"></a>
         </div>
     </div>
     <!-- /footer -->
 </div>
-
-
-
 
 <!-- Default modal -->
 <div id="tutorialModal" class="modal fade" tabindex="-1" role="dialog">
@@ -105,7 +105,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Туториал</h4>
+                <h4 class="modal-title" translate="TEXT_TUTORIAL"></h4>
             </div>
 
             <div class="modal-body with-padding">
@@ -114,16 +114,13 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">
-                    <i class="icon-checkmark-circle"></i> Спасибо
+                    <i class="icon-checkmark-circle"></i> <span translate="TEXT_THANK_YOU"></span>
                 </button>
             </div>
         </div>
     </div>
 </div>
 <!-- /default modal -->
-
-
-
 
 <script type="text/javascript">
     document.globalSettings = <?= $this->globalSettings ?>;

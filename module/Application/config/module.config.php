@@ -113,6 +113,15 @@ return array(
                         ),
                     ),
                 ),
+                'reset-demo-user' => array(
+                    'options' => array(
+                        'route'    => 'reset-demo-user',
+                        'defaults' => array(
+                            'controller' => __NAMESPACE__ . '\Controller\Cli',
+                            'action'     => 'resetDemoUser',
+                        ),
+                    ),
+                ),
             ),
         ),
     ),

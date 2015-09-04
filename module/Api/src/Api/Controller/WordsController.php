@@ -111,6 +111,7 @@ class WordsController extends AbstractApiController
                 /** @var WordEntity $newWordEntity */
                 $newWordEntity = $wordForm->getData();
                 $newWordEntity->setFkUser($this->getUser());
+                $newWordEntity->setCreatedAt(new \DateTime());
 
                 /** @var \Application\Service\Word $wordService  */
                 $wordService = $this->getServiceLocator()->get('Application\Service\Word');
@@ -124,11 +125,13 @@ class WordsController extends AbstractApiController
 
                     $wordEntity->setFkSpeakerSource($speakerEntity);
 
-                    $word          = $wordEntity->getSourceSimple();
-                    $language      = $wordEntity->getFkLanguageSource();
-                    $speakerEntity = $wordService->getSpeaker($word, $language);
+                    $word = $wordEntity->getSourceSimple();
+                    if ($word) {
+                        $language      = $wordEntity->getFkLanguageSource();
+                        $speakerEntity = $wordService->getSpeaker($word, $language);
 
-                    $wordEntity->setFkSpeakerSourceSimple($speakerEntity);
+                        $wordEntity->setFkSpeakerSourceSimple($speakerEntity);
+                    }
 
                     // ----
                     $word          = $wordEntity->getTarget();
@@ -138,10 +141,12 @@ class WordsController extends AbstractApiController
                     $wordEntity->setFkSpeakerTarget($speakerEntity);
 
                     $word          = $wordEntity->getTargetSimple();
-                    $language      = $wordEntity->getFkLanguageTarget();
-                    $speakerEntity = $wordService->getSpeaker($word, $language);
+                    if ($word) {
+                        $language      = $wordEntity->getFkLanguageTarget();
+                        $speakerEntity = $wordService->getSpeaker($word, $language);
 
-                    $wordEntity->setFkSpeakerTargetSimple($speakerEntity);
+                        $wordEntity->setFkSpeakerTargetSimple($speakerEntity);
+                    }
 
                     $wordService->save($newWordEntity);
 

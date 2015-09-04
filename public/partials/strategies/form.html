@@ -11,7 +11,7 @@
                 <div class="form-group">
                     <div class="row">
                         <div class="col-md-12">
-                            <label ng-bind="(!isEditingStrategy) ? 'Название новой стратегии' : 'Название стратегии'">:</label>
+                            <label translate="LABEL_STRATEGY_NAME">:</label>
                             <input type="text" class="form-control input-lg" ng-model="strategyTitle" required>
                         </div>
                     </div>
@@ -21,22 +21,23 @@
 
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <h6 class="panel-title"><i class="icon-cogs"></i> Элементы</h6>
+                            <h6 class="panel-title"><i class="icon-cogs"></i> <span translate="TEXT_ELEMENTS"></span></h6>
+                        </div>
+                        <div class="well">
+                            <a  ng-click="add(ITEM_TARGET)" class=" btn btn-xs btn-success strategy-element-add" translate="TEXT_TRANSLATION"></a>
+                            <a  ng-click="add(ITEM_TARGET_SIMPLE)" class="  btn btn-xs btn-success strategy-element-add" translate="TEXT_TRANSLATION_EXAMPLE"></a>
+                            <a  ng-click="add(ITEM_SILENCE)" class=" btn btn-xs btn-warning strategy-element-add" translate="TEXT_SILENT"></a>
+                            <a  ng-click="add(ITEM_SOURCE)" class="  btn btn-xs btn-info strategy-element-add" translate="TEXT_ORIGINAL"></a>
+                            <a  ng-click="add(ITEM_SOURCE_SIMPLE)" class="  btn btn-xs btn-info strategy-element-add" translate="TEXT_ORIGINAL_EXAMPLE"></a>
 
-                            <a  ng-click="add(ITEM_TARGET)" class="pull-right  btn btn-xs btn-success">Перевод</a>
-                            <a  ng-click="add(ITEM_TARGET_SIMPLE)" class="pull-right  btn btn-xs btn-success">Пример перевода</a>
-                            <a  ng-click="add(ITEM_SILENCE)" class="pull-right btn btn-xs btn-warning">Тишина</a>
-                            <a  ng-click="add(ITEM_SOURCE)" class="pull-right  btn btn-xs btn-info">Оригинал</a>
-                            <a  ng-click="add(ITEM_SOURCE_SIMPLE)" class="pull-right  btn btn-xs btn-info">Пример оригинала</a>
+                        </div>
 
-                            <span class="pull-right label label-block strategy-label">Добавить: </span>
-
+                        <div class="panel-heading">
+                            <h6 class="panel-title"><i class="icon-soundcloud"></i> <span translate="TEXT_ELEMENTS_ADDED"></span></h6>
                         </div>
                         <div class="panel-body">
 
-                            <div ng-show="!sortableSourceItems.length" class="help-block">
-                                Добавьте элементы для воспроизведения.
-                            </div>
+                            <div ng-show="!sortableSourceItems.length" class="help-block" translate="TEXT_ADD_ELEMENTS"></div>
 
                             <ul id="sortable" class="list-group nav nav-pills nav-stacked">
                                 <li ng-repeat="(i, item) in sortableSourceItems | orderBy:'sort'" class="list-group-item"
@@ -57,20 +58,20 @@
                                         </move-icon>
                                     </span>
 
-                                    <item-name ng-switch-when="1">
-                                        Оригинал
+                                    <item-name ng-switch-when="1" translate="TEXT_ORIGINAL">
+
                                     </item-name>
-                                    <item-name ng-switch-when="2">
-                                        Тишина
+                                    <item-name ng-switch-when="2" translate="TEXT_SILENT">
+
                                     </item-name>
-                                    <item-name ng-switch-when="4">
-                                        Пример оригинала
+                                    <item-name ng-switch-when="4" translate="TEXT_ORIGINAL_EXAMPLE">
+
                                     </item-name>
-                                    <item-name ng-switch-when="5">
-                                        Пример перевода
+                                    <item-name ng-switch-when="5" translate="TEXT_TRANSLATION_EXAMPLE">
+
                                     </item-name>
-                                    <item-name ng-switch-when="3">
-                                        Перевод
+                                    <item-name ng-switch-when="3" translate="TEXT_TRANSLATION">
+
                                     </item-name>
 
                                     <div class="row" ng-if="!isEmptyR(item.settings)">
@@ -78,46 +79,44 @@
                                         <hr class="item-settings"/>
 
                                         <div class="form-group">
-                                            <label class="col-sm-2 control-label">Настройка: </label>
+                                            <label class="col-sm-2 control-label" translate="TEXT_ELEMENT_SETTINGS"></label>
                                             <div class="col-sm-10">
 
                                                 <div class="radio">
                                                     <label>
-                                                        <input type="radio" name="mute-type-{{ $index }}" class="styled"  ng-model="item.settings.type" value="1" ng-selected="item.settings.type == 1">
-                                                        Время оригинала
+                                                        <input type="radio" name="mute-type-{{ $index }}" class="styled"  ng-model="item.settings.type" value="1" ng-selected="item.settings.type == 1" >
+                                                        <span translate="TEXT_ORIGINAL_TIME"></span></label>
+                                                </div>
+
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="mute-type-{{ $index }}" class="styled"  ng-model="item.settings.type" value="2" ng-selected="item.settings.type == 2" translate="TEXT_TRANSLATION_TIME">
+                                                        <span translate="TEXT_TRANSLATION_TIME"></span></label>
+                                                </div>
+
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="mute-type-{{ $index }}" class="styled"  ng-model="item.settings.type" value="4" ng-selected="item.settings.type == 4" translate="TEXT_ORIGINAL_EXAMPLE_TIME">
+                                                        <span translate="TEXT_ORIGINAL_EXAMPLE_TIME"></span>
                                                     </label>
                                                 </div>
 
                                                 <div class="radio">
                                                     <label>
-                                                        <input type="radio" name="mute-type-{{ $index }}" class="styled"  ng-model="item.settings.type" value="2" ng-selected="item.settings.type == 2">
-                                                        Время перевода
+                                                        <input type="radio" name="mute-type-{{ $index }}" class="styled"  ng-model="item.settings.type" value="5" ng-selected="item.settings.type == 5" translate="TEXT_TRANSLATION_EXAMPLE_TIME">
+                                                        <span translate="TEXT_TRANSLATION_EXAMPLE_TIME"></span>
                                                     </label>
                                                 </div>
 
                                                 <div class="radio">
                                                     <label>
-                                                        <input type="radio" name="mute-type-{{ $index }}" class="styled"  ng-model="item.settings.type" value="4" ng-selected="item.settings.type == 4">
-                                                        Время примера оригинала
-                                                    </label>
-                                                </div>
-
-                                                <div class="radio">
-                                                    <label>
-                                                        <input type="radio" name="mute-type-{{ $index }}" class="styled"  ng-model="item.settings.type" value="5" ng-selected="item.settings.type == 5">
-                                                        Время примера перевода
-                                                    </label>
-                                                </div>
-
-                                                <div class="radio">
-                                                    <label>
-                                                        <input type="radio" name="mute-type-{{ $index }}" class="styled" ng-model="item.settings.type" value="3" ng-selected="item.settings.type == 3">
-                                                        Тишина на определённое время
+                                                        <input type="radio" name="mute-type-{{ $index }}" class="styled" ng-model="item.settings.type" value="3" ng-selected="item.settings.type == 3" translate="TEXT_SILENT_TIME">
+                                                        <span translate="TEXT_SILENT_TIME"></span>
                                                     </label>
                                                 </div>
 
                                                 <div class="col-md-5" ng-disable="item.settings.type != 3">
-                                                    <label>Время в секундах:</label>
+                                                    <label translate="TEXT_TIME_IN_SECONDS"></label>
                                                     <input  ng-disabled="item.settings.type != 3" type="text" class="form-control" ng-model="item.settings.seconds" />
                                                 </div>
 
@@ -135,8 +134,8 @@
                 </div>
 
                 <div class="form-actions text-right">
-                    <button type="button" class="btn btn-default" ng-click="cancelStrategyCommit()" >Отмена</button>
-                    <button type="submit" class="btn btn-success" ng-disabled="strategyForm.$invalid || !sortableSourceItems.length" ng-bind="(!isEditingStrategy) ? 'Добавить' : 'Изменить'">></button>
+                    <button type="button" class="btn btn-default" ng-click="cancelStrategyCommit(0)" translate="BUTTON_CANCEL"></button>
+                    <button type="submit" class="btn btn-success" ng-disabled="strategyForm.$invalid || !sortableSourceItems.length"  translate="BUTTON_OK"></button>
                 </div>
             </form>
 

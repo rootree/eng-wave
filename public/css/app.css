@@ -68,12 +68,48 @@ table.words-table tr td:first-child{
     padding: 10px 16px;
 }
 .navbar-fixed-top{
-    -webkit-box-shadow: 0 8px 6px -6px black;
-    -moz-box-shadow: 0 8px 6px -6px black;
-    box-shadow: 0 8px 6px -6px black;
+
 }
 .growl-info {
     color: #725A32 !important;
     background-color: #FFFDF0 !important;
     border: 1px solid #E9DDC4 !important;
+}
+#submenu {
+    display: none;
+}
+.strategy-element-add {
+    margin-bottom: 3px;
+}
+.word-content-example {
+    margin-top: 10px;
+    border-top: 1px solid #e7e7e7;
+}
+@media (max-width: 480px){
+    .word-content {
+        text-align: center !important;
+    }
+    .paginator_bottom {
+        margin-bottom: 5px;
+    }
+    .jGrowl.bottom-right {
+        bottom: 25px;
+    }
+    .strategy-element-add {
+        margin-bottom: 3px;
+    }
+    #submenu {
+        display: inline-block;
+    }
+}
+@media (max-width: 767px) {
+    .word-content {
+        text-align: center !important;;
+    }
+    .word-entity{
+        margin: 0;
+    }
+    #submenu {
+        display: inline-block;
+    }
 }

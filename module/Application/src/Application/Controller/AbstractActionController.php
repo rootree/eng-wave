@@ -16,6 +16,7 @@ use Application\Model\Entity\PackageUser as PackageUserEntity;
 use Application\Model\Entity\Strategy as StrategyEntity;
 use Application\Model\Entity\StrategyItem as StrategyItemEntity;
 use Application\Service\Store as StoreService;
+use Application\Service\User as UserService;
 
 abstract class AbstractActionController extends ZendAbstractActionController
 {
@@ -27,6 +28,10 @@ abstract class AbstractActionController extends ZendAbstractActionController
         $languageService = $this->getServiceLocator()->get('Application\Service\Language');
         $languageEntities = $languageService->getAllLanguages();
 
+        $globalSettings['demo'] = array(
+            'email' => UserService::DEMO_USER_EMAIL,
+            'password' => UserService::DEMO_USER_PASSWORD
+        );
         $globalSettings['languages'] = $this->prepareLanguages($languageEntities);
         $globalSettings['CSRF']      = $this->getCsrfHash();
 
@@ -286,6 +291,8 @@ abstract class AbstractActionController extends ZendAbstractActionController
             'desc'  => $packageEntity->getDesc(),
             'sort'  => $packageEntity->getSort(),
             'level' => $packageEntity->getLevel(),
+            'languageSource' => $packageEntity->getFkLanguageSource()->getIso2(),
+            'languageTarget' => $packageEntity->getFkLanguageTarget()->getIso2(),
             'count' => $packageEntity->getWordsList()->count(),
         ];
     }

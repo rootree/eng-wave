@@ -4,6 +4,7 @@ namespace Application\Model\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Application\Model\Entity\Download as DownloadEntity;
+use Zend\Feed\Exception\RuntimeException;
 
 class Download extends EntityRepository
 {

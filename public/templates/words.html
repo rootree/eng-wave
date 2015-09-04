@@ -2,13 +2,13 @@
 <div class="page-container" ng-init="predicate = 'source'; reverse=0">
 
     <!-- Sidebar -->
-    <div class="sidebar collapse" id="navbar-icons">
+    <div class="sidebar " id="navbar-icons">
         <div class="sidebar-content">
 
             <div class="user-menu dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"  ng-click="isAddingNewGroup = true">
                     <div class="user-info">
-                        Добавить группу <span>Всего групп: {{ userSettings.groups.length }}</span>
+                        <div translate="BUTTON_ADD_GROUP"></div> <span><desc translate="TEXT_WORDS_TOTAL_GROUP"></desc>: {{ userSettings.groups.length }}</span>
                     </div>
                 </a>
             </div>
@@ -16,10 +16,10 @@
             <!-- Main navigation -->
             <ul class="navigation nav-stacked">
                 <li ng-repeat="group in userSettings.groups | orderBy:'title'" ng-class="group.id==userSettings.settings.currentGroup ? 'active ' : ''">
-                    <a ng-click="getGroup(group.id)">
+                    <a ng-click="getGroup(group.id);closeSubMenu();">
                         <div class="row">
-                            <div class="col-md-10" ng-bind-html="group.title"></div>
-                            <div class="col-md-2 pull-right">
+                            <div class="col-md-10 col-xs-10 " ng-bind-html="group.title"></div>
+                            <div class="col-md-2 col-xs-2 pull-right">
                                 <span class="label label-info words-count-label">{{ group.count }}</span>
                             </div>
                         </div>
@@ -46,18 +46,22 @@
             <div class="page-header">
 
                 <div class="page-title">
-                    <h3 ng-dblclick="editingGroup = 1"><span ng-bind-html="currentGroupTitle"></span> <small>Всего слов в группе: {{words.length}}</small></h3>
+                    <h3 ng-dblclick="editingGroup = 1"><span ng-bind-html="currentGroupTitle"></span> <small><span translate="TEXT_WORDS_TOTAL_WORDS_GROUP"></span>: {{words.length}}</small></h3>
+                </div>
+
+                <div class="visible-xs header-element-toggle" id="headerButtons" onclick="$('#headerButtonsPanel').toggleClass('in');">
+                    <a class="btn btn-primary btn-icon collapsed"><i class="icon-insert-template"></i></a>
                 </div>
 
                 <div class="header-buttons">
-                    <div class="collapse" id="header-buttons">
+                    <div class="collapse" id="headerButtonsPanel">
                         <div class="well">
                             <div class="btn-group">
-                                <button class="btn btn-primary" ng-click="showFromForNewWord();" type="button">Добавить новое слово</button>
+                                <button class="btn btn-primary" ng-click="showFromForNewWord();" type="button" translate="BUTTON_ADD_NEW_WORD"></button>
                                 <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><span class="caret caret-split"></span></button>
                                 <ul class="dropdown-menu dropdown-menu-right icons-right">
-                                    <li><a ng-click="editingGroup = 1; isAddingNewWord = 0;"><i class="icon-pencil4"></i> Отредактировать</a></li>
-                                    <li ><a ng-click="deleteGroup(userSettings.settings.currentGroup)"><i class="icon-remove3"></i> Удалить</a></li>
+                                    <li><a ng-click="editingGroup = 1; isAddingNewWord = 0;"><i class="icon-pencil4"></i> <span translate="BUTTON_EDIT"></span></a></li>
+                                    <li ><a ng-click="deleteGroup(userSettings.settings.currentGroup)"><i class="icon-remove3"></i> <span translate="BUTTON_DELETE"></span></a></li>
                                 </ul>
                             </div>
                         </div>
@@ -75,9 +79,9 @@
 
             <div ng-show="!(words|filter:q).length && !q && !editingGroup">
                 <div class="alert alert-block alert-warning fade in">
-                    <h6><i class="icon-info2"></i> Пустая группа</h6>
+                    <h6><i class="icon-info2"></i> <span translate="TEXT_WORDS_EMPTY_GROUP"></span></h6>
                     <hr>
-                    <p>Текущая группа не содержит слов. Вы можете наполнить её.</p>
+                    <p translate="TEXT_WORDS_EMPTY_GROUP_DESC"></p>
                 </div>
                 <br/>
             </div>

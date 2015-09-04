@@ -1,8 +1,8 @@
-<form role="form" ng-submit="addNewWord(newWordEntity)" name="addWordForm" ng-show="isAddingNewWord && !editingGroup">
+<form role="form" name="addWordForm" ng-show="isAddingNewWord && !editingGroup">
     <div class="panel panel-default">
 
         <div class="panel-heading">
-            <h6 class="panel-title"><i class="icon-file-plus"></i> Добавление слова</h6>
+            <h6 class="panel-title"><i class="icon-file-plus"></i> <span translate="TEXT_ADDING_WORD"></span></h6>
         </div>
 
         <div class="panel-body">
@@ -10,7 +10,7 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-6">
-                        <label>Группа:</label>
+                        <label translate="LABEL_GROUP"></label>
                         <select class="form-control select" tabindex="1" ng-model="newWordEntity.fkWordsGroup" name="group" ng-disabled="userSettings.groups.length<2">
                             <option ng-repeat="group in userSettings.groups | orderBy:'title'" ng-bind-html="group.title" value="{{ group.id }}" ng-selected="userSettings.settings.currentGroup==group.id">
                             </option>
@@ -24,15 +24,15 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-6">
-                        <label>Оригинал:</label>
+                        <label translate="LABEL_ORIGINAL"></label>
                         <textarea rows="5" cols="5" ng-model="newWordEntity.source" tabindex="2" name="source" ng-minlength="3" ng-maxlength="250" required="required" class="elastic form-control"></textarea>
-                        <span class="label label-block label-info text-right" ng-show="addWordForm.source.$error.minlength">
-                            Минимальная длинна слова три символа.
+                        <span class="label label-block label-info text-right" ng-show="addWordForm.source.$error.minlength" translate="TEXT_WORD_LIMITATION">
+
                         </span>
                     </div>
 
                     <div class="col-md-6">
-                        <label>Перевод:</label>
+                        <label translate="LABEL_TRANSLATION"></label>
                         <textarea rows="5" cols="5" ng-model="newWordEntity.target" tabindex="3" name="target" ng-minlength="3" ng-maxlength="250" required="required" class="elastic form-control"></textarea>
                     </div>
                 </div>
@@ -41,12 +41,12 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-6">
-                        <label>Пример:</label>
+                        <label translate="LABEL_EXAMPLE"></label>
                         <textarea rows="5" cols="5" ng-model="newWordEntity.sourceSimple" tabindex="2" name="sourceSimple" ng-minlength="3" ng-maxlength="1250" class="elastic form-control"></textarea>
                     </div>
 
                     <div class="col-md-6">
-                        <label>Пример:</label>
+                        <label translate="LABEL_EXAMPLE"></label>
                         <textarea rows="5" cols="5" ng-model="newWordEntity.targetSimple" tabindex="3" name="targetSimple" ng-minlength="3" ng-maxlength="1250" class="elastic form-control"></textarea>
                     </div>
                 </div>
@@ -55,19 +55,19 @@
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-6">
-                        <label>Язык оригинала:</label>
+                        <label translate="LABEL_ORIGIN_LANG"></label>
                         <div>
                             <label class="btn " ng-repeat="language in globalSettings.languages" >
-                                <input class="styled" ng-model="newWordEntity.fkLanguageSource" value="{{ language.id }}" type="radio" name="fkLanguageSource" ng-disabled="language.disabled" ng-checked="$first"/> {{ language.title }}
+                                <input ng-selected="$first" class="styled" ng-model="newWordEntity.fkLanguageSource" value="{{ language.id }}" type="radio" name="fkLanguageSource" ng-disabled="language.disabled" ng-checked="$first"/> {{ language.titleEn }}
                             </label>
                         </div>
                     </div>
 
                     <div class="col-md-6">
-                        <label>Язык перевода:</label>
+                        <label translate="LABEL_TRANSLATION_LANG"></label>
                         <div>
                             <label class="btn " ng-repeat="language in globalSettings.languages" >
-                                <input class="styled" ng-model="newWordEntity.fkLanguageTarget" value="{{ language.id }}" type="radio" name="fkLanguageTarget" ng-disabled="language.disabled" ng-checked="$last"/> {{ language.title }}
+                                <input ng-selected="!$first" class="styled" ng-model="newWordEntity.fkLanguageTarget" value="{{ language.id }}" type="radio" name="fkLanguageTarget" ng-disabled="language.disabled" ng-checked="$last"/> {{ language.titleEn }}
                             </label>
                         </div>
                     </div>
@@ -76,12 +76,12 @@
 
             <div class="form-actions text-right">
 
-                <button type="reset" value="Отмена" class="btn btn-default" ng-click="$parent.isAddingNewWord = 0" ng-disabled="!words.length">Отмена</button>
+                <button type="reset"  class="btn btn-default" ng-click="resetPageParameters()" ng-disabled="!words.length" translate="BUTTON_CANCEL"></button>
 
                 <!-- Split button -->
                 <div class="btn-group dropup">
-                    <button type="submit" class="btn btn-success" ng-disabled="addWordForm.$invalid">Добавить слово</button>
-                    <button type="submit" class="btn btn-success" ng-disabled="addWordForm.$invalid" ng-click="$parent.isAddingNewWord = 0">И закрыть форму</button>
+                    <button type="button" class="btn btn-success" ng-disabled="addWordForm.$invalid" translate="BUTTON_ADD_WORD" ng-click="addNewWord(newWordEntity);"></button>
+                    <button type="button" class="btn btn-success" ng-disabled="addWordForm.$invalid" ng-click="addNewWord(newWordEntity);resetPageParameters();" translate="BUTTON_ADD_WORD_AND_CLOSE"></button>
                 </div>
 
             </div>

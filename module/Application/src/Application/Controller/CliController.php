@@ -23,4 +23,13 @@ class CliController extends AbstractCliController
 
         $downloadService->proceedDownloads();
     }
+
+    public function resetDemoUserAction()
+    {
+        /** @var \Application\Service\User $downloadService  */
+        $downloadService = $this->getServiceLocator()->get('Application\Service\User');
+
+        $downloadService->resetDemoUser();
+    }
 }
+

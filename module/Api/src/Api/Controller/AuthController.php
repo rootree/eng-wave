@@ -9,18 +9,12 @@
 
 namespace Api\Controller;
 
-use Application\Controller\AbstractActionController,
-        Zend\Authentication\Adapter\DbTable,
+use Zend\Authentication\Adapter\DbTable,
         Zend\Session\Container as SessionContainer,
         Zend\View\Model\JsonModel,
         Api\Form\Login;
-use Zend\Json\Json as ZendJson;
 use Application\Model\Entity\User as UserEntity;
-use Application\Model\Entity\UserSettings as UserSettingsEntity;
-use Application\Model\Entity\WordsGroup as WordsGroupEntity;
 use Api\Model\Exception as ApiException;
-use Application\Model\Entity\Strategy as StrategyEntity;
-use Application\Model\Entity\StrategyItem as StrategyItemEntity;
 
 class AuthController extends AbstractAuthController
 {
@@ -98,63 +92,17 @@ class AuthController extends AbstractAuthController
                     throw new ApiException(null, ApiException::AUTH_EMAIL_EXISTS);
                 }
 
-                $entityManager->beginTransaction();
-
-                /** @var UserEntity $newUserEntity */
-                $newUserEntity = $userForm->getData();
-                $newUserEntity->setPassword(md5($newUserEntity->getPassword()));
-                $newUserEntity->setCreatedAt(new \DateTime());
-                $newUserEntity = $userService->save($newUserEntity);
-
-                if ($newUserEntity) {
-
-                    $wordsGroupEntity = new WordsGroupEntity();
-
-                    $wordsGroupEntity->setTitle($data['initial']['group']);
-                    $wordsGroupEntity->setCreatedAt(new \DateTime());
-                    $wordsGroupEntity->setFkUser($newUserEntity);
-
-                    /** @var \Application\Service\WordsGroup $wordsGroupService  */
-                    $wordsGroupService = $this->getServiceLocator()->get('Application\Service\WordsGroup');
-                    $wordsGroupEntity = $wordsGroupService->saveGroupEntity($wordsGroupEntity);
-
-                    if ($wordsGroupEntity) {
-                        $settings = $userService->settingsTemplate($wordsGroupEntity);
-                        $settings = new UserSettingsEntity(ZendJson::encode($settings));
-                        $newUserEntity->setSettings($settings);
-                        $userService->save($newUserEntity);
-                    }
-
-                    /** @var StrategyEntity $strategyEntity */
-                    $strategyEntity = new StrategyEntity();
-                    $strategyEntity->setFkUser($newUserEntity);
-                    $strategyEntity->setCreatedAt(new \DateTime());
-                    $strategyEntity->setTitle($data['initial']['strategy']);
-
-                    /** @var \Application\Service\Strategy $strategyService  */
-                    $strategyService = $this->getServiceLocator()->get('Application\Service\Strategy');
-                    $strategyEntity = $strategyService->save($strategyEntity);
-
-                    if ($strategyEntity) {
-                        $items = [
-                            $strategyService->getItemTemplate(StrategyItemEntity::TYPE_SOURCE),
-                            $strategyService->getItemTemplate(StrategyItemEntity::TYPE_SILENCE),
-                            $strategyService->getItemTemplate(StrategyItemEntity::TYPE_TARGET),
-                            $strategyService->getItemTemplate(StrategyItemEntity::TYPE_SOURCE),
-                            $strategyService->getItemTemplate(StrategyItemEntity::TYPE_TARGET)
-                        ];
-                        $strategyService->bindStrategyItems($strategyEntity, $newUserEntity, $items);
-                        $entityManager->refresh($strategyEntity);
-                    }
-
-                    $entityManager->commit();
-
+                try {
+                    $newUserEntity = $userService->createUser(
+                        $userForm->getData(),
+                        $data['initial']['group'],
+                        $data['initial']['strategy']
+                    );
                     return $this->auth($newUserEntity->getEmail(), $userForm->get('password')->getValue());
-
-                } else {
-                    $entityManager->rollback();
+                } catch (\RuntimeException $e) {
                     throw new ApiException(null, ApiException::COMMON_LOGICAL_ERROR);
                 }
+
             } else {
                 throw new ApiException(null, ApiException::COMMON_INCORRECT_ARGUMENT);
             }

@@ -10,43 +10,42 @@
 
                     <strategy-item ng-repeat="item in strategy.items | orderBy:'sort'" ng-switch on="item.type">
 
-                        <div class="label label-info" ng-switch-when="1">
-                            Оригинал
+                        <div class="label label-info" ng-switch-when="1" translate="TEXT_ORIGINAL">
+
                         </div>
-                        <div class="label label-info" ng-switch-when="1">
-                            Пример оригинала
+                        <div class="label label-info" ng-switch-when="1" translate="TEXT_ORIGINAL_EXAMPLE">
+
                         </div>
-                        <div class="label label-warning" ng-switch-when="2">
-                            Тишина
+                        <div class="label label-warning" ng-switch-when="2" style="text-wrap: none;">
+                            <span style="display: inline;" translate="TEXT_SILENT"></span>
                             <settings ng-switch on="item.settings.type">
-                                <silent-type ng-switch-when="1">
-                                    на время оригинала
+                                <silent-type ng-switch-when="1" translate="TEXT_SILENT_DURING_ORIG_TIME">
+
                                 </silent-type>
-                                <silent-type ng-switch-when="2">
-                                    на время перевода
+                                <silent-type ng-switch-when="2" translate="TEXT_SILENT_DURING_TRANS_TIME">
+
                                 </silent-type>
-                                <silent-type ng-switch-when="4">
-                                    на время примера оригинала
+                                <silent-type ng-switch-when="4" translate="TEXT_SILENT_DURING_ORIG_EXAM_TIME">
+
                                 </silent-type>
-                                <silent-type ng-switch-when="5">
-                                    на время примера перевода
+                                <silent-type ng-switch-when="5" translate="TEXT_SILENT_DURING_TRANS_EXAM_TIME">
+
                                 </silent-type>
                                 <silent-type ng-switch-when="3">
-                                    на {{ item.settings.seconds }} сек.
+                                    {{ item.settings.seconds }} <span style="display: inline;" translate="TEXT_SILENT_IN_SEC"></span>
                                 </silent-type>
                             </settings>
                         </div>
-                        <div class="label label-success" ng-switch-when="3">
-                            Перевод
+                        <div class="label label-success" ng-switch-when="3" translate="TEXT_TRANSLATION">
+
                         </div>
-                        <div class="label label-success" ng-switch-when="5">
-                            Пример перевода
+                        <div class="label label-success" ng-switch-when="5" translate="TEXT_TRANSLATION_EXAMPLE">
+
                         </div>
 
                     </strategy-item>
 
-                    <div ng-show="!strategy.items.length" class="help-block">
-                        Данная стратегия не содержит элементов. Вы не сможете использовать её для скачивания файлов.
+                    <div ng-show="!strategy.items.length" class="help-block" translate="TEXT_EMPTY_STRATEGY_WARNING">
                     </div>
                 </div>
             </div>

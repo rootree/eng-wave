@@ -6,13 +6,16 @@
     <!-- Page header -->
     <div class="page-header">
         <div class="page-title">
-            <h3 >Стратегии повторения <small>Стратегии определят последовательность воспроизведения оригинальной фразы, её перевода и тишины. На время тишины вы можете проговаривать фразу для лучшего запоминания.</small></h3>
+            <h3 ><span translate="TITLE_STRATEGIES"></span> <small><span translate="TEXT_STRATEGIES_COUNT"></span>: {{userSettings.strategies.length}}</small></h3>
+        </div>
+        <div class="visible-xs header-element-toggle" id="headerButtons" onclick="$('#headerButtonsPanel').toggleClass('in');">
+            <a class="btn btn-primary btn-icon collapsed"><i class="icon-insert-template"></i></a>
         </div>
         <div class="header-buttons">
-            <div class="collapse" id="header-buttons">
+            <div class="collapse" id="headerButtonsPanel">
                 <div class="well">
                     <div class="btn-group">
-                        <button type="button" ng-disabled="addingSourceStrategy" class=" btn btn-primary  " ng-click="cancelStrategyCommit(); isAddingStrategy = 1" >Добавить стратегию</button>
+                        <button type="button" ng-disabled="addingSourceStrategy" class=" btn btn-primary" ng-click="cancelStrategyCommit(1);"  translate="BUTTON_ADD_STRATEGY"></button>
                     </div>
                 </div>
             </div>
@@ -25,16 +28,16 @@
 
             <div ng-show="!userSettings.strategies.length">
                 <div class="alert alert-block alert-warning fade in">
-                    <h6><i class="icon-info2"></i> Пусто</h6>
+                    <h6><i class="icon-info2"></i> <span translate="TEXT_STRATEGIES_EMPTY"></span></h6>
                     <hr>
-                    <p>Ни одной из стратегий для оригинальных слов не найдено. Добавьте хотя бы одну, иначе вы не сможете загрузить для прослушивания ваши слова.</p>
+                    <p translate="TEXT_STRATEGIES_EMPTY_DESC"></p>
                 </div>
                 <br/>
             </div>
 
             <div ng-include src="addStrategyTpl" onLoad="applyDrag();"></div>
 
-            <div  class="row">
+            <div  class="row" >
                 <div ng-repeat="strategy in userSettings.strategies | orderBy:'sort'">
                     <div ng-include src="strategy.tpl" onLoad="applyDrag();"></div>
                 </div>

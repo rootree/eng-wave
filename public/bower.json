@@ -1,6 +1,6 @@
 {
-  "name": "AngularJS + RequireJS Example",
-  "version": "0.1",
+  "name": "AngularJS + RequireJS EngWave Application",
+  "version": "0.2",
   "main": "index.html",
   "ignore": [
     "**/.*",

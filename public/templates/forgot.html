@@ -1,25 +1,25 @@
 <div class="units-row">
     <div class="unit-centered unit-30">
         <div ng-show="isLoggedIn">
-            <p>
-                У вас уже есть личный кабинет, для регистрации надо выйте из текушего кабинета.
+            <p translate="TEXT_FORGOT_AUTH">
+
             </p>
             <p>
-                <button type="submit" class="btn-green width-100" ng-click="globalLogout()">Выйти</button>
+                <button type="submit" class="btn-green width-100" ng-click="globalLogout()" translate="BUTTON_QUIT"></button>
             </p>
         </div>
         <div ng-show="!isLoggedIn">
             <form ng-submit="login()" class="forms">
                 <label>
-                    Email <span class="forms-desc">Будет выслана письмо восстановления.</span>
-                    <input type="email" name="email" placeholder="email" ng-model="credentials.email" required class="width-100" />
+                    <span translate="LABEL_YOUR_EMAIL"></span> <span class="forms-desc" translate="TEXT_FORGOT_EMAIL_DESC"></span>
+                    <input type="email" name="email" placeholder="your@mail.com" ng-model="credentials.email" required class="width-100" />
                 </label>
                 <p>
-                    <button type="submit" class="btn-green width-100">Восстановить пароль</button>
+                    <button type="submit" class="btn-green width-100" translate="BUTTON_RESTORE"></button>
                 </p>
 
                 <span class="forms-desc">
-                    <a href="#/login">Отмена</a>
+                    <a href="#/login" translate="BUTTON_CANCEL"></a>
                 </span>
             </form>
         </div>

@@ -38,7 +38,8 @@ class AbstractApiController extends AbstractActionController
         $currentController = $routeMatch->getParam('controller');
         $authToken = $this->params()->fromQuery('_auth_token');
         if (
-            (empty($authToken) || $this->getCsrfHash() != $authToken) &&
+            //(empty($authToken) || $this->getCsrfHash() != $authToken) &&
+            (empty($authToken)) &&
             !in_array($currentController, $this->controllersWithoutAuth)
         ) {
             $method = 'authRequiredAction';

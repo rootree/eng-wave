@@ -93,10 +93,11 @@ class Download
                 $speakerTargetSimpleEntity = $wordsEntity->getFkSpeakerTargetSimple();
 
                 if (
+                    $speakerSourceEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS ||
                     $speakerTargetEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS ||
-                    $speakerTargetEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS ||
-                    $speakerTargetSimpleEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS ||
-                    $speakerTargetSimpleEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS) {
+                    ($speakerTargetSimpleEntity && $speakerTargetSimpleEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS) ||
+                    ($speakerSourceSimpleEntity && $speakerSourceSimpleEntity->getStatus() == SpeakerEntity::STATUS_IN_PROGRESS)
+                ) {
                     $deferWordsEntities[] = $wordsEntity;
                     continue;
                 }
@@ -107,7 +108,7 @@ class Download
                         continue;
                     }
                 }
-                if ($speakerSourceSimpleEntity->getStatus() == SpeakerEntity::STATUS_FRESH) {
+                if ($speakerSourceSimpleEntity && $speakerSourceSimpleEntity->getStatus() == SpeakerEntity::STATUS_FRESH) {
                     $bites = $this->speakerService->createSound($speakerSourceSimpleEntity);
                     if (!$bites) {
                         continue;
@@ -119,7 +120,7 @@ class Download
                         continue;
                     }
                 }
-                if ($speakerTargetSimpleEntity->getStatus() == SpeakerEntity::STATUS_FRESH) {
+                if ($speakerTargetSimpleEntity && $speakerTargetSimpleEntity->getStatus() == SpeakerEntity::STATUS_FRESH) {
                     $bites = $this->speakerService->createSound($speakerTargetSimpleEntity);
                     if (!$bites) {
                         continue;
@@ -156,27 +157,29 @@ class Download
         $speakerTargetSimpleEntity = $wordEntity->getFkSpeakerTargetSimple();
 
         $sourceFile = $this->storeService->getSpeakPath($speakerSourceEntity->getId(), StoreService::TYPE_SPEAKER);
-        $sourceSimpleFile =
-            $this->storeService->getSpeakPath($speakerSourceSimpleEntity->getId(), StoreService::TYPE_SPEAKER);
+        $sourceSimpleFile = $speakerSourceSimpleEntity
+            ? $this->storeService->getSpeakPath($speakerSourceSimpleEntity->getId(), StoreService::TYPE_SPEAKER)
+            : null;
 
         $targetFile = $this->storeService->getSpeakPath($speakerTargetEntity->getId(), StoreService::TYPE_SPEAKER);
-        $targetSimpleFile =
-            $this->storeService->getSpeakPath($speakerTargetSimpleEntity->getId(), StoreService::TYPE_SPEAKER);
+        $targetSimpleFile = $speakerTargetSimpleEntity
+            ? $this->storeService->getSpeakPath($speakerTargetSimpleEntity->getId(), StoreService::TYPE_SPEAKER)
+            : null;
 
         $sourceMp3Editor = new Mp3Editor($sourceFile);
-        $sourceSimpleMp3Editor = new Mp3Editor($sourceSimpleFile);
+        $sourceSimpleMp3Editor = $sourceSimpleFile ? new Mp3Editor($sourceSimpleFile) : null;
 
         $targetMp3Editor = new Mp3Editor($targetFile);
-        $targetSimpleMp3Editor = new Mp3Editor($targetSimpleFile);
+        $targetSimpleMp3Editor = $targetSimpleFile ? new Mp3Editor($targetSimpleFile) : null;
 
         $silenceFile = $this->storeService->getSilenceFile();
         $silenceMp3Editor = new Mp3Editor($silenceFile);
 
         $sourceMp3TagEditor = new Mp3Tag($sourceFile);
-        $sourceSimpleMp3TagEditor = new Mp3Tag($sourceSimpleFile);
+        $sourceSimpleMp3TagEditor = $sourceSimpleFile? new Mp3Tag($sourceSimpleFile) : null;
 
         $targetMp3TagEditor = new Mp3Tag($targetFile);
-        $targetSimpleMp3TagEditor = new Mp3Tag($targetSimpleFile);
+        $targetSimpleMp3TagEditor = $targetSimpleFile? new Mp3Tag($targetSimpleFile) : null;
 
         $pieceCollection = [];
 
@@ -191,7 +194,9 @@ class Download
                     break;
                 case StrategyItemEntity::TYPE_SOURCE_SIMPLE:
                     // $pieceCollection[] = $sourceFile;
-                    $pieceCollection[] = clone $sourceSimpleMp3Editor;
+                    if ($sourceSimpleMp3Editor) {
+                        $pieceCollection[] = clone $sourceSimpleMp3Editor;
+                    }
                     break;
                 case StrategyItemEntity::TYPE_TARGET:
                     // $pieceCollection[] = $targetFile;
@@ -199,7 +204,9 @@ class Download
                     break;
                 case StrategyItemEntity::TYPE_TARGET_SIMPLE:
                     // $pieceCollection[] = $targetFile;
-                    $pieceCollection[] = clone $targetSimpleMp3Editor;
+                    if ($targetSimpleMp3Editor) {
+                        $pieceCollection[] = clone $targetSimpleMp3Editor;
+                    }
                     break;
                 case StrategyItemEntity::TYPE_SILENCE:
                     /** @var SilentSettings $settings */
@@ -210,13 +217,17 @@ class Download
                             $silentSecond = $sourceMp3TagEditor->getPlaytimeInSeconds();
                             break;
                         case SilentSettings::TYPE_SOURCE_SIMPLE:
-                            $silentSecond = $sourceSimpleMp3TagEditor->getPlaytimeInSeconds();
+                            if ($sourceSimpleMp3TagEditor) {
+                                $silentSecond = $sourceSimpleMp3TagEditor->getPlaytimeInSeconds();
+                            }
                             break;
                         case SilentSettings::TYPE_TARGET:
                             $silentSecond = $targetMp3TagEditor->getPlaytimeInSeconds();
                             break;
                         case SilentSettings::TYPE_TARGET_SIMPLE:
-                            $silentSecond = $targetSimpleMp3TagEditor->getPlaytimeInSeconds();
+                            if ($targetSimpleMp3TagEditor) {
+                                $silentSecond = $targetSimpleMp3TagEditor->getPlaytimeInSeconds();
+                            }
                             break;
                         case SilentSettings::TYPE_DEFINED:
                             $silentSecond = $settings->getSeconds();
@@ -266,7 +277,7 @@ class Download
     {
         $downloadItemPath = $this->storeService->getSpeakPath($wordEntity->getId(), StoreService::TYPE_DOWNLOAD_ITEM);
 
-        $tag = sprintf('%s - %s', $wordEntity->getSource(), $wordEntity->getTarget());
+        $tag = sprintf('%s', $wordEntity->getSource(), $wordEntity->getTarget());
 
         $mp3TagEditor = new Mp3Tag($downloadItemPath);
         $mp3TagEditor->editTag($tag);

@@ -16,13 +16,28 @@ define(['./module'], function (controllers) {
         $scope.credentials = { email: "", password: "" };
 
         $scope.login = function() {
-            AuthenticationService.login($scope.credentials).success(function(response) {
-                $rootScope.userSettings = response.userSettings;
-                $rootScope.userSettings.groupsContent = [];
-                document.globalSettings.CSRF = response.CSRF;
-                $location.path('/');
-            });
+            $rootScope.isDemo = false;
+            AuthenticationService.login($scope.credentials).success(_authorized);
         };
 
+        $scope.demo = function() {
+            var demoCredentials = {
+                email : document.globalSettings.demo.email,
+                password : document.globalSettings.demo.password
+            };
+            $rootScope.isDemo = true;
+            AuthenticationService.login(demoCredentials).success(_authorized);
+        };
+
+        $scope.development = function() {
+            FlashService.success($translate.instant('MESSAGE_DEVELOPING'));
+        };
+
+        var _authorized = function(response) {
+            $rootScope.userSettings = response.userSettings;
+            $rootScope.userSettings.groupsContent = [];
+            document.globalSettings.CSRF = response.CSRF;
+            $location.path('/');
+        };
     });
 });

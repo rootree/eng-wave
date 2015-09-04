@@ -28,8 +28,5 @@ define(['./module'], function (controllers) {
             $scope.userName = $rootScope.userSettings.credential.name;
         }
 
-        $.jGrowl('test', {  theme: 'growl-info'}); // sticky: true,
-
-
     });
 });

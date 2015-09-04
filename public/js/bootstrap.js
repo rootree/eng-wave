@@ -21,7 +21,16 @@ define([
 
         console.log('domReady');
 
-        ng.module("app").run(function($rootScope, $location, $timeout, $translate, AuthenticationService, FlashService, SessionService, TutorialService) {
+        ng.module("app").run(function(
+            $rootScope,
+            $location,
+            $timeout,
+            $translate,
+            AuthenticationService,
+            FlashService,
+            SessionService,
+            TutorialService
+        ) {
 
             // $translate,
             // $translate.use('en_US');
@@ -36,14 +45,21 @@ define([
             $rootScope.$on('$routeChangeStart', function(event, next, current) {
                 if(_(routesThatRequireAuth).contains($location.path()) && !AuthenticationService.isLoggedIn()) {
                     $location.path('/login');
-                    FlashService.show("Для продолжения авторизуйтесь");
+                    FlashService.show($translate.instant('MESSAGE_REQUIRED_AUTH'));
                 }
             });
             $rootScope.$on("$routeChangeSuccess", function(event, current, previous){
                 //Change page title, based on Route information
-                $rootScope.pageTitle = current.$$route.title;
+                $rootScope.pageTitle = $translate.instant(current.$$route.title);
                 $rootScope.currentController = current.$$route.controller;
                 TutorialService.page(current.$$route.hasTutorial, current.$$route.controller);
+                $('body').removeClass('offcanvas-active');
+                $('#navbar-menu').removeClass('in');
+                if (current.$$route.hasSideMenu) {
+                    $('#submenu').show();
+                } else {
+                    $('#submenu').hide();
+                }
             });
             SessionService.set('authenticated', 0);
             $rootScope.isLoading = false;
@@ -61,10 +77,10 @@ define([
             $rootScope.globalLogout = function() {
                 if (!AuthenticationService.isLoggedIn()) {
                     $location.path('/login');
-                    FlashService.show('Выход из аккаунта уже сделан');
+                    FlashService.show($translate.instant('MESSAGE_LOGOUT_WAS_BEFORE'));
                 } else {
                     AuthenticationService.logout().success(function(response) {
-                        FlashService.show('Выход из аккаунта произведён');
+                        FlashService.show($translate.instant('MESSAGE_LOGOUT_COMPLETE'));
                         $location.path('/login');
                     });
                 }
@@ -83,7 +99,10 @@ define([
             $('.navigation .disabled a, .navbar-nav > .disabled > a').click(function (e){
                 e.preventDefault();
             });
-
+            $('#submenu').click(function (e){
+                e.preventDefault();
+                $('body').toggleClass('offcanvas-active');
+            });
         });
         ng.bootstrap(document, ['app']);
     });

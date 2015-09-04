@@ -30,6 +30,7 @@ class Email
         $downloadURL = sprintf('%sdownload/hash/%s', $this->settings['url'], $downloadEntity->getHash());
 
         $mail = new Mail\Message();
+        $mail->setFrom('no-replay@engwave.com', 'EngWave robot');
         $mail->setBody($downloadURL);
         $mail->addTo($userEntity->getEmail(), $userEntity->getName());
         $mail->setSubject($downloadEntity->getFkWordsGroup()->getTitle());

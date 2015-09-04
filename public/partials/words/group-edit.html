@@ -3,22 +3,22 @@
     <div class="panel panel-default">
 
         <div class="panel-heading">
-            <h6 class="panel-title"><i class="icon-pencil4"></i> Редактирование группы</h6>
+            <h6 class="panel-title"><i class="icon-pencil4"></i> <span translate="TEXT_EDITING_GROUP"></span></h6>
         </div>
 
         <div class="panel-body">
             <div class="form-group">
                 <div class="row">
                     <div class="col-md-12">
-                        <label>Название:</label>
+                        <label translate="LABEL_NAME"></label>
                         <input type="text" class="form-control input-lg" ng-model="currentGroupTitle" required>
                     </div>
                 </div>
             </div>
 
             <div class="form-actions text-right">
-                <button type="button" class="btn btn-default" ng-click="cancelGroupChanging()">Отмена</button>
-                <button type="submit" class="btn btn-success" ng-disabled="editingGroupForm.$invalid || editingGroupForm.$pristine">Сохранить</button>
+                <button type="button" class="btn btn-default" ng-click="cancelGroupChanging()" translate="BUTTON_CANCEL"></button>
+                <button type="submit" class="btn btn-success" ng-disabled="editingGroupForm.$invalid || editingGroupForm.$pristine" translate="BUTTON_SAVE"></button>
             </div>
         </div>
 

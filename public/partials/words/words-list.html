@@ -3,7 +3,9 @@
     <div class="panel panel-default">
 
         <div class="table-footer">
-            <ui-pagination cur="$parent.pagination.cur" total="$parent.pagination.total" display="{{$parent.pagination.display}}" ng-show="($parent.words|filter:$parent.q).length && $parent.pagination.total>1" ></ui-pagination>
+            <div class="paginator_bottom">
+                <ui-pagination cur="$parent.pagination.cur" total="$parent.pagination.total" display="{{$parent.pagination.display}}" ng-show="($parent.words|filter:$parent.q).length && $parent.pagination.total>1" ></ui-pagination>
+            </div>
 
             <div class="col-md-3 input-group" ng-show="words.length">
                 <input type="text" class="form-control" placeholder="Поиск" ng-change="onSearch(obj)" ng-model="$parent.q" />
@@ -15,18 +17,18 @@
 
         <div class="panel-heading"></div>
 
-        <div class="table-responsive" ng-show="(words|filter:q).length">
+        <div class="" ng-show="(words|filter:q).length">
             <table class="table table-hover table-check words-table ">
                 <thead>
                     <tr>
                         <th class="text-centered">
                             &nbsp;<input type="checkbox" class="styled" value="all" ng-model="$parent.checkedAllWords" ng-checked="$parent.checkedAllWords"/>
                         </th>
-                        <th class="col-md-5" ng-click="predicate = 'source'; reverse=!reverse" ng-class="predicate == 'source' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
-                            <a>Оригинал</a>
+                        <th class="col-md-5 word-content" ng-click="predicate = 'source'; reverse=!reverse" ng-class="predicate == 'source' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                            <a translate="TEXT_ORIGINAL"></a>
                         </th>
-                        <th class="col-md-5" ng-click="predicate = 'target'; reverse=!reverse" ng-class="predicate == 'target' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
-                            <a>Перевод</a>
+                        <th class="col-md-5 word-content" ng-click="predicate = 'target'; reverse=!reverse" ng-class="predicate == 'target' ? (reverse ? 'sorting_asc' : 'sorting_desc') : 'sorting'">
+                            <a translate="TEXT_TRANSLATION"></a>
                         </th>
                         <th></th>
                     </tr>
@@ -39,16 +41,24 @@
                         </td>
                         <td>
                             <div class="row">
-                                <div class="col-md-1">
+                                <div class="col-md-1 col-lg-1 visible-md visible-lg">
                                     <button class="btn btn-primary btn-icon btn-xs tip" type="button" ng-click="play(word.id + '-source-btn', word, 1)">
                                         <i id="{{ word.id }}-source-btn" class="icon-play3"></i>
                                     </button>
-
                                 </div>
-                                <div class="col-md-9 ">
-                                    <div class="word-entity" ng-bind-html="word.source"></div>
+                                <div class="col-md-8 col-sm-12 col-xs-12">
+                                    <div class="word-content word-entity " ng-bind-html="word.source"></div>
                                 </div>
-                                <div class="col-md-2 text-right">
+                                <div class="col-xs-12 col-xs-12 col-md-12 col-lg-12 word-content-example" ng-show="word.sourceSimple">
+                                    <div class="word-content word-entity " ng-bind-html="word.sourceSimple"></div>
+                                </div>
+                                <div class="col-sm-12 col-xs-12 visible-sm visible-xs text-center">
+                                    <hr/>
+                                    <button class="btn btn-primary btn-icon btn-xs tip" type="button" ng-click="play(word.id + '-source-btn', word, 1)">
+                                        <i id="{{ word.id }}-source-small-btn" class="icon-play3"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-2 pull-right visible-md visible-lg">
                                     <img ng-src="/img/flag/{{ word.sourceLang }}.png" title="{{ word.source_lang }}" class="words-flag"/>
                                 </div>
                             </div>
@@ -56,23 +66,32 @@
                         </td>
                         <td >
                             <div class="row">
-                                <div class="col-md-1" >
+                                <div class="col-md-1 col-lg-1 visible-md visible-lg">
                                     <button class="btn btn-primary btn-icon btn-xs tip" type="button" ng-click="play(word.id + '-target-btn', word, 2)">
                                         <i id="{{ word.id }}-target-btn" class="icon-play3"></i>
                                     </button>
                                 </div>
-                                <div class="col-md-9">
-                                    <div class="word-entity" ng-bind-html="word.target"></div>
+                                <div class="col-md-8 col-sm-12 col-xs-12">
+                                    <div class="word-content word-entity " ng-bind-html="word.target"></div>
                                 </div>
-                                <div class="col-md-2  text-right">
+                                <div class="col-xs-12 col-xs-12 col-md-12 col-lg-12 word-content-example" ng-show="word.targetSimple">
+                                    <div class="word-content word-entity " ng-bind-html="word.targetSimple"></div>
+                                </div>
+                                <div class="col-sm-12 col-xs-12 visible-sm visible-xs text-center">
+                                    <hr/>
+                                    <button class="btn btn-primary btn-icon btn-xs tip" type="button" ng-click="play(word.id + '-target-btn', word, 2)">
+                                        <i id="{{ word.id }}-target-small-btn" class="icon-play3"></i>
+                                    </button>
+                                </div>
+                                <div class="col-md-2  pull-right visible-md visible-lg">
                                     <img ng-src="/img/flag/{{ word.targetLang }}.png" title="{{ word.target_lang }}" class="words-flag"/>
                                 </div>
                             </div>
 
                         </td>
                         <td class="text-center">
-                            <button class="btn btn-primary btn-icon btn-xs tip" ng-click="editWord(word, $index)"><i class="icon-pencil4"></i></button>
-                            <button class="btn btn-primary btn-icon btn-xs tip" ng-click="deleteWord(word.id, $index)"><i class="icon-remove3"></i></button>
+                            <button class="btn btn-primary btn-icon btn-xs tip strategy-element-add" ng-click="editWord(word, $index)"><i class="icon-pencil4"></i></button>
+                            <button class="btn btn-primary btn-icon btn-xs tip strategy-element-add" ng-click="deleteWord(word.id, $index)"><i class="icon-remove3"></i></button>
                         </td>
                     </tr>
                 </tbody>
@@ -80,59 +99,60 @@
         </div>
 
         <div class="table-footer" ng-show="(words|filter:q).length">
-            <div class="table-actions">
-                <div ng-show="selectedItems">
+            <div class="table-actions col-sm-12 col-md-6">
+                <div ng-show="selectedItems ">
 
-                    <span class="input-group dropup" ng-show="actionTypeOnSelectedItems != 'Move'">
-                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                            Действия над выбранными словами ({{selectedItems}} шт.)<span class="caret"></span>
+                    <span class="col-xs-12 col-sm-12 input-group dropup" ng-show="actionTypeOnSelectedItems != 'Move'">
+                        <button type="button" class="btn btn-default dropdown-toggle col-xs-12 col-sm-12" data-toggle="dropdown">
+                            <span translate="TEXT_SELECTED_ACTION"></span>: {{selectedItems}} <span translate="TEXT_PSC"></span><span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                            <li><a ng-click="actionTypeOnSelectedItems = 'Move'">Переместить</a></li>
-                            <li><a ng-click="deleteGroupWords()">Удалить</a></li>
+                            <li><a ng-click="moveToOtherGroup()" translate="BUTTON_MOVE"></a></li>
+                            <li><a ng-click="deleteGroupWords()" translate="BUTTON_DELETE"></a></li>
                         </ul>
                     </span><!-- /btn-group -->
 
                     <form ng-submit="submitChangingGroup()" ng-show="actionTypeOnSelectedItems == 'Move'" class="form-inline">
                         <div class="form-group" style="margin-top: -1px;">
                             <select class="form-control" ng-model="moveToGroup" name="moveToGroup" id="moveToGroup">
-                                <option value="" disabled=disabled>Выберите группу для переноса</option>
+                                <option value="" disabled=disabled translate="TEXT_SELECT_GROUP"></option>
                                 <option ng-repeat="group in userSettings.groups | orderBy:'title'" value="{{ group.id }}" ng-bind-html="group.title" ng-disabled="userSettings.settings.currentGroup==group.id">
                                 </option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-success">Переместить в группу</button>
-                        </div>
-                        <div class="form-group">
-                            <button type="button" ng-click="actionTypeOnSelectedItems = '';" class="btn btn-default">Отмена</button>
+                            <!-- Is not working -->
+                            <button type="submit" class="btn btn-success" translate="BUTTON_MOVE_TO_GROUP"></button>
+                            <button type="button" ng-click="actionTypeOnSelectedItems = ''" class="btn btn-default" translate="BUTTON_CANCEL"></button>
                         </div>
                     </form>
                 </div>
 
                 <div ng-show="!selectedItems" class="text-muted">
                     <div ng-show="!q">
-                        Всего слов: {{words.length}}
+                        <span translate="TEXT_ALL_WORDS"></span>: {{words.length}}
                     </div>
 
                     <div ng-show="q">
-                        Найдено слов: {{(words|filter:q).length}} из {{words.length}}
+                        <span translate="TEXT_FOUND_WORDS"></span>: {{(words|filter:q).length}} / {{words.length}}
                     </div>
                 </div>
             </div>
 
-            <ui-pagination cur="pagination.cur" total="pagination.total" display="{{pagination.display}}"  ng-show="(words|filter:q).length && pagination.total>1" ></ui-pagination>
+            <div ng-show="actionTypeOnSelectedItems != 'Move'" class="text-muted">
+                <ui-pagination cur="pagination.cur" total="pagination.total" display="{{pagination.display}}"  ng-show="(words|filter:q).length && pagination.total>1" ></ui-pagination>
+            </div>
         </div>
     </div>
 </div>
 
 <div ng-show="q && !(words|filter:q).length">
     <div class="alert alert-block alert-warning fade in block-inner">
-        <h6><i class="icon-info2"></i> Ничего не найдено</h6>
+        <h6><i class="icon-info2"></i> <span translate="TEXT_NOTHING_FOUND"></span></h6>
         <hr>
-        <p>При текущем фильтре ни одно слово найдено не было.</p>
+        <p translate="TEXT_NOTHING_FOUND_DESC"></p>
         <div class="text-left">
-            <a class="btn btn-primary" ng-click="cleanSearch()"><i class="icon-remove3"></i> Сбросить фильтр</a>
+            <a class="btn btn-primary" ng-click="cleanSearch()"><i class="icon-remove3"></i> <span translate="BUTTON_RESET_FILTER"></span></a>
         </div>
     </div>
 </div>

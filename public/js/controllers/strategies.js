@@ -13,7 +13,7 @@ define(['./module'], function (controllers) {
         };
         $scope.dropStrategy = function(strategy) {
             if ($scope.isAddingStrategy || $scope.isEditingStrategy) {
-                $scope.cancelStrategyCommit();
+                $scope.cancelStrategyCommit(0);
                 return;
             }
             StrategiesService.dropStrategy(strategy.id).
@@ -40,7 +40,7 @@ define(['./module'], function (controllers) {
             //sortableEle.refresh();
         };
         $scope.editStrategy = function(strategy) {
-            $scope.cancelStrategyCommit();
+            $scope.cancelStrategyCommit(0);
             $scope.sortableSourceItems = angular.copy(strategy.items);
             $scope.strategyTitle = strategy.title;
             $scope.strategyID = strategy.id;
@@ -48,11 +48,15 @@ define(['./module'], function (controllers) {
             $scope.isEditingStrategy = 1;
             _.defer(function(){_focusOnAddingForm();});
         };
-        $scope.cancelStrategyCommit = function() {
+        $scope.cancelStrategyCommit = function(status) {
+            if (status) {
+                $scope.isAddingStrategy = 1;
+            } else {
+                $scope.isAddingStrategy = 0;
+            }
             _resetForms();
             _dropFocusOnStrategyForm();
             $scope.isEditingStrategy = 0;
-            $scope.isAddingStrategy = 0;
         };
         $scope.delete = function(index) {
             $scope.sortableSourceItems.splice(index,1);
@@ -75,7 +79,8 @@ define(['./module'], function (controllers) {
             _.each(newValue, function(item){ item.sort = iterator; iterator++; });
             $scope.sortableSourceItems = newValue;
         }, true);
-        $scope.$watch("isAddingStrategy", function(newValue, oldValue) {
+        $scope.$watch('isAddingStrategy', function(newValue, oldValue) {
+            console.log(newValue);
             if (newValue) {
                 _addStrategy();
             } else {
@@ -123,8 +128,8 @@ define(['./module'], function (controllers) {
         var _addStrategyOnServer = function (strategyTitle) {
             StrategiesService.addStrategy(strategyTitle, $scope.sortableSourceItems).
                 success(function(response) {
-                    FlashService.success('Новая стратегия добавлена');
-                    $scope.cancelStrategyCommit();
+                    FlashService.success($translate.instant('MESSAGE_NEW_STRATEGY_ADDED'));
+                    $scope.cancelStrategyCommit(0);
                     response.strategy.tpl = TMP_ITEM_STRATEGY;
                     $rootScope.userSettings.strategies.unshift(response.strategy);
                 });
@@ -133,7 +138,7 @@ define(['./module'], function (controllers) {
             StrategiesService.updateStrategy(strategyID, strategyTitle, $scope.sortableSourceItems).
                 success(function(response) {
                     FlashService.success($translate.instant('MESSAGE_STRATEGY_SAVED'));
-                    $scope.cancelStrategyCommit();
+                    $scope.cancelStrategyCommit(0);
                     var strategy = _.findWhere($rootScope.userSettings.strategies, {id: strategyID});
                     strategy.title = strategyTitle;
                     strategy.items = $scope.sortableSourceItems;

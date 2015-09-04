@@ -36,8 +36,14 @@ return array(
             return new \Application\Service\Package($em, $wordService);
         },
         'Application\Service\User' => function (ServiceLocatorInterface $sl) {
+
             $em = $sl->get('Doctrine\ORM\EntityManager');
-            return new \Application\Service\User($em);
+
+            $wordsGroupService = $sl->get('Application\Service\WordsGroup');
+            $strategyService   = $sl->get('Application\Service\Strategy');
+            $packageService   = $sl->get('Application\Service\Package');
+
+            return new \Application\Service\User($em, $wordsGroupService, $strategyService, $packageService);
         },
         'Application\Service\Store' => function (ServiceLocatorInterface $sl) {
             $storeConfig = $sl->get('config');

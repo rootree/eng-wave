@@ -1,6 +1,6 @@
 define(['./module'], function (services) {
     'use strict';
-    return services.factory('SoundService',  ['FlashService', function (FlashService) {
+    return services.factory('SoundService',  ['FlashService', '$translate', function (FlashService, $translate) {
 
         var ICON_PLAY = 'icon-play3';
         var ICON_STOP = 'icon-stop2';
@@ -48,7 +48,9 @@ define(['./module'], function (services) {
                     onloaderror: function() {
                         lastSoundStatus = STATUS_IS_STOPPED;
                         buttonElement.attr('class', ICON_PLAY);
-                        FlashService.error('Не возмжно проиграть звук');
+                        FlashService.error($translate.instant('MESSAGE_ERROR_ON_SOUND'));
+                        console.log('Problem with: ' + soundfile);
+                        lastSoundObject = null;
                     },
                     onend: function() {
                         lastSoundStatus = STATUS_IS_STOPPED;

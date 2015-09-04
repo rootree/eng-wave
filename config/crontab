@@ -5,3 +5,6 @@ PATH=/etc:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 # Speak words
 * * * * * cd /var/eng/app && php public/index.php words-speaker
+
+# Speak words
+0 1 * * * cd /var/eng/app && php public/index.php reset-demo-user
